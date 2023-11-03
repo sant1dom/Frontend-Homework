@@ -1,0 +1,5 @@
+*.db
+.idea
+*.iml
+venv
+.gitattributes
