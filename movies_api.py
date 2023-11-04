@@ -4,6 +4,8 @@ from fastapi import FastAPI, Depends, HTTPException
 from pydantic import BaseModel
 from sqlalchemy import create_engine
 from sqlalchemy.orm import DeclarativeBase, mapped_column, Mapped, sessionmaker, Session
+from starlette.responses import FileResponse
+from starlette.staticfiles import StaticFiles
 
 
 class Movie(BaseModel):
@@ -251,7 +253,10 @@ def read_root():
     return {"message": "Enjoy the movies!"}
 
 
-@app.get("../movies", response_model=list[Movie])
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
+
+@app.get("/movies", response_model=list[Movie])
 async def get_movies(db: Session = Depends(get_db)) -> list[Movie]:
     movies = db.query(DBMovie).all()
     return [Movie(**movie.__dict__) for movie in movies]
@@ -290,7 +295,7 @@ async def delete_movie(movie_id: int, db: Session = Depends(get_db)):
 
 @app.get("/movies/search", response_model=list[Movie])
 async def search_movies(title: str | None = None, release_year: int | None = None, db: Session = Depends(get_db)) -> \
-list[Movie]:
+        list[Movie]:
     movies = db.query(DBMovie)
     if title is not None:
         movies = movies.filter(DBMovie.title.like(f"%{title}%"))
@@ -306,3 +311,8 @@ async def get_movie(movie_id: int, db: Session = Depends(get_db)) -> Movie:
     if db_movie is None:
         raise HTTPException(status_code=404, detail="Movie not found")
     return Movie(**db_movie.__dict__)
+
+
+@app.get("/prova")
+async def prova():
+    return FileResponse(path="static/templates/index.html")
