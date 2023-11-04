@@ -250,7 +250,7 @@ app = FastAPI(lifespan=lifespan)
 
 @app.get("/")
 def read_root():
-    return {"message": "Enjoy the movies!"}
+    return FileResponse(path="static/templates/index.html")
 
 
 app.mount("/static", StaticFiles(directory="static"), name="static")

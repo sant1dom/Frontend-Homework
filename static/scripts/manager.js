@@ -54,7 +54,21 @@ class Manager {
         //Svuoto se contiene precedente ricerca
         container_search_main.innerHTML = "";
 
-        let movies = await this.getJson("movies/search");
+        let url = "movies/search?";
+        if (this.#query != null) {
+            for (let field of ["title", "release_year"]) {
+                let value = this.#query.get(field);
+                if (value != "") {
+                    url += field + "=" + value + "&";
+                    let input = document.getElementById("input_" + field);
+                    input.value = value;
+                }
+            }
+        }
+
+        container_search_main.innerHTML = "";
+
+        let movies = await this.getJson(url);
         for (let movie of movies) {
             container_search_main.innerHTML += `
                 <a href="/read?id=${movie.id}">${movie.title}</a>
@@ -70,10 +84,21 @@ class Manager {
         container_read.style.display = "block";
 
         let movie = await this.getJson("movies/" + id);
-        container_read_main.innerHTML += `
+
+        container_read_main.innerHTML = `
 			ID: ${movie.id}
 			<br>
 			Titolo: ${movie.title}
+			<br>
+			Anno: ${movie.release_year}
+			<br>
+			Durata: ${movie.movie_length}
+			<br>
+			Genere: ${movie.genre}
+			<br>
+			Lingua: ${movie.language}
+			<br>
+			IMDB: <a href="${movie.imdb_url}" target="_blank">Vedi su IMDB</a>
 			<br>
 			<a href="/update?id=${movie.id}">Modifica</a>
 			<br>
@@ -95,10 +120,20 @@ class Manager {
         container_update.style.display = "block";
 
         let movie = await this.getJson("movies/" + id);
-        container_update_main.innerHTML += `
+        container_update_main.innerHTML = `
 			ID: ${movie.id}
 			<br>
 			Titolo: ${movie.title}
+			<br>
+			Anno: ${movie.release_year}
+			<br>
+			Durata: ${movie.movie_length}
+			<br>
+			Genere: ${movie.genre}
+			<br>
+			Lingua: ${movie.language}
+			<br>
+			IMDB: <a href="${movie.imdb_url}" target="_blank"></a>
 			<br>
 			<a onclick="alert('TODO')">Salve le modifiche</a>
 			<br>
@@ -114,10 +149,20 @@ class Manager {
         container_delete.style.display = "block";
 
         let movie = await this.getJson("movies/" + id);
-        container_delete_main.innerHTML += `
+        container_delete_main.innerHTML = `
 			ID: ${movie.id}
 			<br>
 			Titolo: ${movie.title}
+			<br>
+			Anno: ${movie.release_year}
+			<br>
+			Durata: ${movie.movie_length}
+			<br>
+			Genere: ${movie.genre}
+			<br>
+			Lingua: ${movie.language}
+			<br>
+			IMDB: <a href="${movie.imdb_url}" target="_blank"></a>
 			<br>
 			<a href="/update?id=${movie.id}">Modifica</a>
 			<br>
