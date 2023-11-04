@@ -313,6 +313,22 @@ async def get_movie(movie_id: int, db: Session = Depends(get_db)) -> Movie:
     return Movie(**db_movie.__dict__)
 
 
-@app.get("/prova")
-async def prova():
+@app.get("/create")
+async def create():
+    return FileResponse(path="static/templates/index.html")
+
+@app.get("/update")
+async def update():
+    return FileResponse(path="static/templates/index.html")
+
+@app.get("/read")
+async def read():
+    return FileResponse(path="static/templates/index.html")
+
+@app.get("/delete")
+async def delete():
+    return FileResponse(path="static/templates/index.html")
+
+@app.get("/search")
+async def search():
     return FileResponse(path="static/templates/index.html")
