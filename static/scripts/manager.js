@@ -44,19 +44,23 @@ class Manager {
 	}
 
 	async create(){
-		console.log("Hai chiamato la funzione: Create")
+		console.log("Hai chiamato la funzione: Create");
+		prova.innerHTML += "Hai chiamato la funzione: Create";
 	}
 
 	async update(){
-		console.log("Hai chiamato la funzione: Update")
+		console.log("Hai chiamato la funzione: Update");
+		prova.innerHTML += "Hai chiamato la funzione: Update";
 	}
 
 	async read(){
-		console.log("Hai chiamato la funzione: Read")
+		console.log("Hai chiamato la funzione: Read");
+		prova.innerHTML += "Hai chiamato la funzione: Read";
 	}
 
 	async delete(){
 		console.log("Hai chiamato la funzione: Delete")
+		prova.innerHTML += "Hai chiamato la funzione: Delete";
 	}
 
 	async search(){
