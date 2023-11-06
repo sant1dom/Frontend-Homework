@@ -1,3 +1,5 @@
+import concurrent
+from concurrent.futures import ThreadPoolExecutor
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Depends, HTTPException
@@ -6,6 +8,9 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import DeclarativeBase, mapped_column, Mapped, sessionmaker, Session
 from starlette.responses import FileResponse
 from starlette.staticfiles import StaticFiles
+
+import requests
+from bs4 import BeautifulSoup
 
 
 class Movie(BaseModel):
@@ -16,6 +21,7 @@ class Movie(BaseModel):
     genre: str
     language: str
     imdb_url: str
+    imdb_image: str = None
 
 
 class MovieCreate(BaseModel):
@@ -245,7 +251,19 @@ async def lifespan(app: FastAPI):
     Base.metadata.drop_all(bind=engine)
 
 
+def get_imdb_image(movie: Movie):
+    headers = {
+        "User-Agent": 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36'
+    }
+    src = BeautifulSoup(requests.get(movie.imdb_url, headers=headers).content, "html.parser").find("img",
+                                                                                                   class_="ipc-image").get(
+        "src")
+    movie.imdb_image = src
+
+
 app = FastAPI(lifespan=lifespan)
+
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 
 @app.get("/")
@@ -253,13 +271,13 @@ def read_root():
     return FileResponse(path="static/templates/index.html")
 
 
-app.mount("/static", StaticFiles(directory="static"), name="static")
-
-
 @app.get("/movies", response_model=list[Movie])
 async def get_movies(db: Session = Depends(get_db)) -> list[Movie]:
     movies = db.query(DBMovie).all()
-    return [Movie(**movie.__dict__) for movie in movies]
+    movies = [Movie(**movie.__dict__) for movie in movies]
+    with ThreadPoolExecutor(max_workers=len(movies)) as executor:
+        executor.map(get_imdb_image, movies)
+    return movies
 
 
 @app.put("/movies/{movie_id}", response_model=Movie)
@@ -274,7 +292,7 @@ async def update_movie(movie_id: int, movie: MovieUpdate, db: Session = Depends(
     return Movie(**db_movie.__dict__)
 
 
-@app.post("../movies", response_model=Movie)
+@app.post("/movies", response_model=Movie)
 async def create_movie(movie: MovieCreate, db: Session = Depends(get_db)) -> Movie:
     db_movie = DBMovie(**movie.model_dump())
     db.add(db_movie)
@@ -294,15 +312,20 @@ async def delete_movie(movie_id: int, db: Session = Depends(get_db)):
 
 
 @app.get("/movies/search", response_model=list[Movie])
-async def search_movies(title: str | None = None, release_year: int | None = None, db: Session = Depends(get_db)) -> \
+async def search_movies(title: str | None = None, release_year: int | None = None, db: Session = Depends(get_db), withimages: bool | None = None) -> \
         list[Movie]:
     movies = db.query(DBMovie)
     if title is not None:
         movies = movies.filter(DBMovie.title.like(f"%{title}%"))
     if release_year is not None:
         movies = movies.filter(DBMovie.release_year == release_year)
-    print(movies.all())
-    return [Movie(**movie.__dict__) for movie in movies.all()]
+    movies = movies.all()
+    movies = [Movie(**movie.__dict__) for movie in movies]
+    # Get the image from IMDB for each movie in parallel
+    if withimages:
+        with ThreadPoolExecutor(max_workers=len(movies)) as executor:
+            executor.map(get_imdb_image, movies)
+    return movies
 
 
 @app.get("/movies/{movie_id}", response_model=Movie)
@@ -310,24 +333,30 @@ async def get_movie(movie_id: int, db: Session = Depends(get_db)) -> Movie:
     db_movie = db.query(DBMovie).filter(DBMovie.id == movie_id).first()
     if db_movie is None:
         raise HTTPException(status_code=404, detail="Movie not found")
-    return Movie(**db_movie.__dict__)
+    movie = Movie(**db_movie.__dict__)
+    get_imdb_image(movie)
+    return movie
 
 
 @app.get("/create")
 async def create():
     return FileResponse(path="static/templates/index.html")
 
+
 @app.get("/update")
 async def update():
     return FileResponse(path="static/templates/index.html")
+
 
 @app.get("/read")
 async def read():
     return FileResponse(path="static/templates/index.html")
 
+
 @app.get("/delete")
 async def delete():
     return FileResponse(path="static/templates/index.html")
+
 
 @app.get("/search")
 async def search():
