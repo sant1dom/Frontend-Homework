@@ -268,7 +268,11 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 
 @app.get("/")
 def read_root():
-    return FileResponse(path="static/templates/index.html")
+    return FileResponse(path="static/aroma-master/index.html")
+
+@app.get("/favourites")
+def read_root():
+    return FileResponse(path="static/aroma-master/category.html")
 
 
 @app.get("/movies", response_model=list[Movie])
