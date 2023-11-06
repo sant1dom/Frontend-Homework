@@ -6,11 +6,13 @@ from fastapi import FastAPI, Depends, HTTPException
 from pydantic import BaseModel
 from sqlalchemy import create_engine
 from sqlalchemy.orm import DeclarativeBase, mapped_column, Mapped, sessionmaker, Session
+from starlette.requests import Request
 from starlette.responses import FileResponse
 from starlette.staticfiles import StaticFiles
 
 import requests
 from bs4 import BeautifulSoup
+from starlette.templating import Jinja2Templates
 
 
 class Movie(BaseModel):
@@ -265,10 +267,11 @@ app = FastAPI(lifespan=lifespan)
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
+templates = Jinja2Templates(directory="static/aroma-master")
 
 @app.get("/")
-def read_root():
-    return FileResponse(path="static/aroma-master/index.html")
+def read_root(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request})
 
 @app.get("/favourites")
 def read_root():

@@ -1,15 +1,11 @@
 // Store information in localStorage
 document.addEventListener('DOMContentLoaded', async function() {
     const array = [];
-    var films;
-    //Get all the movies and create the divs
-    await fetch('http://127.0.0.1:8000/movies')
-                .then(response => response.json())
-                .then(data => {
-                    const moviesList = document.getElementById('movies-list');
-
-                    data.forEach(movie => {
-                        const movieElement = `<div class="col-md-6 col-lg-4 col-xl-3" id="${movie.id}">
+    moviesList.innerHTML = '<div class="spinner"></div>'
+    let films = await (await fetch('http://127.0.0.1:8000/movies')).json();
+    moviesList.innerHTML = '';
+    films.forEach(movie => {
+       const movieElement =  `<div class="col-md-6 col-lg-4 col-xl-3" id="${movie.id}">
                                                     <div class="card text-center card-product">
                                                         <div class="card-product__img">
                                                             <img class="card-img" src="${movie.imdb_image}" alt="">
@@ -26,14 +22,10 @@ document.addEventListener('DOMContentLoaded', async function() {
                                                         </div>
                                                     </div>
                                                 </div>`;
-                        moviesList.insertAdjacentHTML('beforeend', movieElement);
-                    });
-                    films = data; //mi metto i film in una variabile
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
+        moviesList.insertAdjacentHTML('beforeend', movieElement);
+    });
 
+    
     //Manage the heart icons            
     const elements = document.querySelectorAll('[id^="cuore"]');
     for (let i = 0; i < elements.length; i++) {
