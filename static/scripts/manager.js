@@ -45,10 +45,21 @@ class Manager {
         this[this.#controller](this.#id);
     }
 
+    updateUrl(page) {
+        let url = "/" + page;
+        window.history.replaceState({}, document.title, url);
+    }
+
+    goSearch(title = "", release_year = ""){
+        this.updateUrl("search?title=" + title + "&release_year=" + release_year)
+        manager.search()
+        return false;
+    }
+
     async search() {
         console.log("Hai chiamato la funzione: Search")
 
-        document.querySelector(".container").style.display = "none";
+        this.hideContainers();
         container_search.style.display = "block";
 
         //Svuoto se contiene precedente ricerca
@@ -71,16 +82,22 @@ class Manager {
         let movies = await this.getJson(url);
         for (let movie of movies) {
             container_search_main.innerHTML += `
-                <a href="/read?id=${movie.id}">${movie.title}</a>
+                <a onclick="return manager.goRead(${movie.id})" href="/read?id=${movie.id}">${movie.title}</a>
                 <br>
             `;
         }
     }
 
+    goRead(id){
+        this.updateUrl("read?id=" + id)
+        manager.read(id)
+        return false;
+    }
+
     async read(id) {
         console.log("Hai chiamato la funzione: Read");
-        document.querySelector(".container").style.display = "none";
 
+        this.hideContainers();
         container_read.style.display = "block";
 
         let movie = await this.getJson("movies/" + id);
@@ -100,23 +117,35 @@ class Manager {
 			<br>
 			IMDB: <a href="${movie.imdb_url}" target="_blank">Vedi su IMDB</a>
 			<br>
-			<a href="/update?id=${movie.id}">Modifica</a>
+			<a onclick="return manager.goUpdate(${movie.id})" href="/update?id=${movie.id}">Modifica</a>
 			<br>
-			<a href="/delete?id=${movie.id}">Cancella</a>
+			<a onclick="return manager.goDelete(${movie.id})" href="/delete?id=${movie.id}">Cancella</a>
 		`;
+    }
+
+    goCreate(id){
+        this.updateUrl("create")
+        manager.create()
+        return false;
     }
 
     async create() {
         console.log("Hai chiamato la funzione: Create");
 
-        document.querySelector(".container").style.display = "none";
+        this.hideContainers();
         container_create.style.display = "block";
+    }
+
+    goUpdate(id){
+        this.updateUrl("update?id=" + id)
+        manager.update(id)
+        return false;
     }
 
     async update(id) {
         console.log("Hai chiamato la funzione: Update");
 
-        document.querySelector(".container").style.display = "none";
+        this.hideContainers();
         container_update.style.display = "block";
 
         let movie = await this.getJson("movies/" + id);
@@ -137,15 +166,20 @@ class Manager {
 			<br>
 			<a onclick="alert('TODO')">Salve le modifiche</a>
 			<br>
-			<a href="/delete?id=${movie.id}">Cancella</a>
+			<a onclick="return manager.goDelete(${movie.id})" href="/delete?id=${movie.id}">Cancella</a>
 		`;
     }
 
+    goDelete(id){
+        this.updateUrl("delete?id=" + id)
+        manager.delete()
+        return false;
+    }
 
     async delete(id) {
         console.log("Hai chiamato la funzione: Delete")
 
-        document.querySelector(".container").style.display = "none";
+        this.hideContainers();
         container_delete.style.display = "block";
 
         let movie = await this.getJson("movies/" + id);
@@ -164,7 +198,7 @@ class Manager {
 			<br>
 			IMDB: <a href="${movie.imdb_url}" target="_blank"></a>
 			<br>
-			<a href="/update?id=${movie.id}">Modifica</a>
+			<a onclick="return manager.goUpdate(${movie.id})" onclick="return manager.goUpdate(${movie.id})" href="/update?id=${movie.id}">Modifica</a>
 			<br>
 			<a onclick="alert('TODO')">Conferma cancellazione</a>
 		`;
@@ -182,6 +216,13 @@ class Manager {
 
         return json;
     };
+
+    hideContainers(){
+        const containers = document.querySelectorAll(".container");
+        containers.forEach((container) => {
+          container.style.display = "none";
+        });
+    }
 }
 
 console.log("Starting");
