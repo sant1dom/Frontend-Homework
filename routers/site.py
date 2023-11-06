@@ -16,7 +16,7 @@ def read_root(request: Request):
 
 @router.get("/favourites", tags=["site"])
 def read_root():
-    return FileResponse(path="static/aroma-master/category.html")
+    return templates.TemplateResponse("favourites.html", {"request": request})
 
 
 @router.get("/create", tags=["site"])
