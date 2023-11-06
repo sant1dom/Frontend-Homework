@@ -26,9 +26,9 @@
 .spinner {
 	width: 10vh;
     height: 10vh;
-	position: absolute;
-	margin-top: 5vh;
-	margin-left: 5vh;
+	position: relative;
+	margin-top: 10%;
+	margin-left: 50%;
 	border-radius: 50%;
 	border: 5px solid #eaf5fe;
 	border-right-color: #5597d4;

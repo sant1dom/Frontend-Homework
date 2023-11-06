@@ -274,8 +274,8 @@ def read_root(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
 @app.get("/favourites")
-def read_root():
-    return FileResponse(path="static/aroma-master/category.html")
+def read_root(request: Request):
+    return templates.TemplateResponse("favourites.html", {"request": request})
 
 
 @app.get("/movies", response_model=list[Movie])

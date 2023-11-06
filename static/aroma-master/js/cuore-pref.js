@@ -1,19 +1,22 @@
 // Get information from localStorage
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', async function() {
     for (let i = 0; i < localStorage.length; i++) {
         const key = localStorage.key(i);
-        const item = JSON.parse(localStorage.getItem(key));
+        prefe.innerHTML = '<div class="spinner"></div>'
+        let item = await (await fetch('http://127.0.0.1:8000/movies/' + key)).json();
+        prefe.innerHTML = '';
+        //const item = JSON.parse(localStorage.getItem(key));
 
 
 
-        const container = document.querySelector('#prefe');
+        //const container = document.querySelector('#prefe');
         if (item) {
 
             const html = `
             <div class="col-md-6 col-lg-4">
                 <div class="card text-center card-product">
                   <div class="card-product__img">
-                  <img class="card-img" src="https://posters.movieposterdb.com/20_09/2020/6723592/l_6723592_46561c38.jpg" alt="">
+                  <img class="card-img" src="${item.imdb_image}" alt="">
                     <ul class="card-product__imgOverlay">
                       <li><button><i class="ti-search"></i></button></li>
                       <li><button><i class="ti-shopping-cart"></i></button></li>
@@ -21,15 +24,15 @@ document.addEventListener('DOMContentLoaded', function() {
                     </ul>
                   </div>
                   <div class="card-body">
-                    <p>Accessories</p>
+                    <p>${item.release_year}</p>
                     <h4 class="card-product__title"><a href="#">${item.title}</a></h4>
-                    <p class="card-product__price">$150.00</p>
+                    <p class="card-product__price">${item.genre}</p>
                   </div>
                 </div>
               </div>
             `
             
-            container.insertAdjacentHTML('beforeend', html);
+            prefe.insertAdjacentHTML('beforeend', html);
         }
     }
 });

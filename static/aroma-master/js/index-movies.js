@@ -16,9 +16,9 @@ document.addEventListener('DOMContentLoaded', async function() {
                                                             </ul>
                                                         </div>
                                                         <div class="card-body">
-                                                            <p>Beauty</p>
+                                                            <p>${movie.release_year}</p>
                                                             <h4 class="card-product__title"><a href="single-product.html">${movie.title}</a></h4>
-                                                            <p class="card-product__price">$150.00</p>
+                                                            <p class="card-product__price">${movie.genre}</p>
                                                         </div>
                                                     </div>
                                                 </div>`;
