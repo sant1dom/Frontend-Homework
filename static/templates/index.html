@@ -14,7 +14,7 @@
             Quest DIV è visibile solo in ricerca.
         </h1>
 
-        <a href="/create">Crea nuovo</a>
+        <a href="/create" onclick="return manager.goCreate()">Crea nuovo</a>
 
         <form>
             <input type="text" name="title" id="input_title" value="">
@@ -31,6 +31,12 @@
         <h1>
             Quest DIV è visibile solo in Creazione
         </h1>
+
+        <a href="/search" onclick="return manager.goSearch()">
+            Torna alla ricerca
+        </a>
+        <br>
+
         <div id="container_create_main">
 
         </div>
@@ -40,6 +46,12 @@
         <h1>
             Quest DIV è visibile solo in Modifica
         </h1>
+
+        <a href="/search" onclick="return manager.goSearch()">
+            Torna alla ricerca
+        </a>
+        <br>
+
         <div id="container_update_main">
 
         </div>
@@ -49,6 +61,12 @@
         <h1>
             Quest DIV è visibile solo in Pagina di cancellazione
         </h1>
+
+        <a href="/search" onclick="return manager.goSearch()">
+            Torna alla ricerca
+        </a>
+        <br>
+
         <div id="container_delete_main">
 
         </div>
@@ -58,6 +76,12 @@
         <h1>
             Quest DIV è visibile solo in Lettura
         </h1>
+
+        <a href="/search" onclick="return manager.goSearch()">
+            Torna alla ricerca
+        </a>
+        <br>
+
         <div id="container_read_main">
 
         </div>
