@@ -15,7 +15,7 @@ def read_root(request: Request):
 
 
 @router.get("/favourites", tags=["site"])
-def read_root():
+def read_root(request: Request):
     return templates.TemplateResponse("favourites.html", {"request": request})
 
 
