@@ -18,6 +18,13 @@ def read_root(request: Request):
 def read_root(request: Request):
     return templates.TemplateResponse("favourites.html", {"request": request})
 
+@router.get("/watchlist", tags=["site"])
+def read_root(request: Request):
+    return templates.TemplateResponse("watchlist.html", {"request": request})
+
+# @router.get("/movies/{id}", tags=["site"])
+# def get_movie_by_id(request: Request):
+#     return templates.TemplateResponse("single-product.html", {"request": request})
 
 @router.get("/create", tags=["site"])
 async def create():
