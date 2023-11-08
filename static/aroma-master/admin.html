@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>MovieDB - Home</title>
+  <title>MovieDB - Admin panel</title>
 	<link rel="icon" href="static/aroma-master/img/Fevicon.png" type="image/png">
   <link rel="stylesheet" href="static/aroma-master/vendors/bootstrap/bootstrap.min.css">
   <link rel="stylesheet" href="static/aroma-master/vendors/fontawesome/css/all.min.css">
@@ -23,16 +23,38 @@
 	<!--================ End Header Menu Area =================-->
 
   <main class="site-main">
-    <!-- ================ trending product section start ================= -->  
-    <section class="section-margin calc-60px">
-      <div class="container" style="text-align: center;">
-        <div class="section-intro pb-60px">
-          <h2>Trending <span class="section-intro__style">Films</span></h2>
+    <!--================Order Details Area =================-->
+    
+  <section class="order_details section-margin--small">
+    <div class="container">
+        <h2><button class="button button--active button-contactForm" onclick="window.open('/admin/operation');">Add a new film</button></h2>
+        <h4>or</h4>
+    </div>
+
+    <div class="container">
+
+      <h2>Edit/Delete existing films</h2>
+      <div class="order_details_table">
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Film</th>
+                <th scope="col">Edit</th>
+                <th scope="col">Delete</th>
+              </tr>
+            </thead>
+            <tbody id="lista">
+              <tr></tr>
+            </tbody>
+          </table>
         </div>
-        <div id="moviesList" class="row"></div> <!--DIV CHE CONTIENE TUTTI I FILM-->
       </div>
-    </section>
-    <!-- ================ trending product section end ================= -->  
+
+    </div>
+  </section>
+  <!--================End Order Details Area =================--> 
+
   </main>
 
   <!--================ Start footer Area  =================-->	
@@ -49,6 +71,6 @@
   <script src="static/aroma-master/vendors/jquery.ajaxchimp.min.js"></script>
   <script src="static/aroma-master/vendors/mail-script.js"></script>
   <script src="static/aroma-master/js/main.js"></script>
-  <script src="static/aroma-master/js/index-movies.js"></script>
+  <script src="static/aroma-master/js/admin.js"></script>
 </body>
 </html>

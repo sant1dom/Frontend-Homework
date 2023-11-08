@@ -26,6 +26,14 @@ def read_root(request: Request):
 def get_movie_by_id(request: Request, id: int):
     return templates.TemplateResponse("movie-detail.html", {"request": request, "id": id})
 
+@router.get("/admin", tags=["site"])
+def read_root(request: Request):
+    return templates.TemplateResponse("admin.html", {"request": request})
+
+@router.get("/admin/operation", tags=["site"])
+def read_root(request: Request):
+    return templates.TemplateResponse("admin-operation.html", {"request": request})
+
 @router.get("/create", tags=["site"])
 async def create():
     return FileResponse(path="static/templates/index.html")
