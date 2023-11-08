@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         const movieElement = `<div class="col-md-6 col-lg-4 col-xl-3" id="${movie.id}">
                                         <div class="card text-center card-product">
                                             <div class="card-product__img">
-                                                <a href="/movies/${movie.id}">
+                                                <a href="/films/${movie.id}">
                                                     <img class="card-img" src="${movie.imdb_image}" alt="">
                                                 </a>
                                                 <ul class="card-product__imgOverlay">
@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', async function () {
                                             </div>
                                             <div class="card-body">
                                                 <p>${movie.movie_length} min.</p>
-                                                <h4 class="card-product__title"><a href="/movies/${movie.id}">${movie.title}</a></h4>
+                                                <h4 class="card-product__title"><a href="/films/${movie.id}">${movie.title}</a></h4>
                                                 <p class="card-product__price">${movie.genre}</p>
                                                 
                                             </div>
@@ -114,16 +114,16 @@ document.addEventListener('DOMContentLoaded', async function () {
             const watchlist = JSON.parse(localStorage.getItem('watchlist')) || [];
 
             if (watchlist.includes(key)) {
-                el.classList.remove('clock-full');
-                el.classList.add('clock');
+                el.classList.remove('clk-full');
+                el.classList.add('clk');
 
                 const index = watchlist.indexOf(key);
                 if (index > -1) {
                     watchlist.splice(index, 1);
                 }
             } else {
-                el.classList.remove('clock');
-                el.classList.add('clock-full');
+                el.classList.remove('clk');
+                el.classList.add('clk-full');
                 watchlist.push(key);
             }
 

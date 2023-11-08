@@ -19,17 +19,17 @@ document.addEventListener('DOMContentLoaded', async function() {
           <div class="col-md-6 col-lg-4 col-xl-3" id="${item.id}">
               <div class="card text-center card-product">
                <div class="card-product__img">
-               <a href="/movies/${item.id}">
+               <a href="/films/${item.id}">
                <img class="card-img" src="${item.imdb_image}" alt="">
                </a>
                  <ul class="card-product__imgOverlay">
-                   <li><button><i class="clk"></i></button></li>
+                   <li><button id="clock1"><i></i></button></li>
                    <li><button id="cuore1"><i class="heart-full"></i></button></li>
                  </ul>
                </div>
                <div class="card-body">
                  <p>${item.release_year}</p>
-                 <h4 class="card-product__title"><a href="/movies/${item.id}">${item.title}</a></h4>
+                 <h4 class="card-product__title"><a href="/films/${item.id}">${item.title}</a></h4>
                  <p class="card-product__price">${item.genre}</p>
                </div>
               </div>
@@ -44,7 +44,6 @@ document.addEventListener('DOMContentLoaded', async function() {
 
   const array = [];
   const elements = document.querySelectorAll('[id^="cuore"]');
-  console.log(elements.length)
   for (let i = 0; i < elements.length; i++) {
       array[i] = elements[i];
       array[i].addEventListener('click', function() {
@@ -78,4 +77,55 @@ document.addEventListener('DOMContentLoaded', async function() {
           console.log(`Element ${favourites.includes(key) ? 'removed from' : 'added to'} local storage: ${key}`);
       });
   }
+
+  const arr = [];
+  const els = document.querySelectorAll('[id^="clock"]');
+  for (let i = 0; i < els.length; i++) {
+      arr[i] = els[i];
+      var el = arr[i].querySelector('i');
+
+      var par = el;
+      for (let j = 0; j < 6; j++) {
+          par = par.parentNode;
+      }
+      const key = par.id;
+      
+      const watchlist = JSON.parse(localStorage.getItem('watchlist')) || [];
+
+      if (watchlist.includes(key)) {
+          el.classList.add('clk-full');
+      } else {
+          el.classList.add('clk');
+      }
+
+      arr[i].addEventListener('click', function () {
+          var el = arr[i].querySelector('i');
+
+          var par = el;
+          for (let j = 0; j < 6; j++) {
+              par = par.parentNode;
+          }
+          const key = par.id;
+
+          const watchlist = JSON.parse(localStorage.getItem('watchlist')) || [];
+
+          if (watchlist.includes(key)) {
+              el.classList.remove('clk-full');
+              el.classList.add('clk');
+
+              const index = watchlist.indexOf(key);
+              if (index > -1) {
+                  watchlist.splice(index, 1);
+              }
+          } else {
+              el.classList.remove('clk');
+              el.classList.add('clk-full');
+              watchlist.push(key);
+          }
+
+          localStorage.setItem('watchlist', JSON.stringify(watchlist));
+          console.log(`Film ${watchlist.includes(key) ? 'added to' : 'removed from'} watchlist: ${key}`);
+      });
+  }
+
  });
