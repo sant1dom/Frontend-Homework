@@ -10,7 +10,7 @@ async function film(id){
     lngth.innerHTML = `Durata: ${f.movie_length}`;
     console.log(f.movie_length)
     language.innerHTML = `Lingua: ${f.language}`;
-    IMDBurl.innerHTML = `Pagina IMDB: ${f.imdb_url}`;
+    IMDBurl.innerHTML = `<a href="${f.imdb_url}">Pagina IMDB</a>`;
 
     const watchlist = JSON.parse(localStorage.getItem('watchlist')) || [];
 
