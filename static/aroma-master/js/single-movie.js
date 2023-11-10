@@ -7,7 +7,7 @@ async function film(id){
                         </div>`; 
     year.innerHTML = `Anno di uscita: ${f.release_year}`;
     genre.innerHTML = `Genere: ${f.genre}`;
-    lngth.innerHTML = `Durata: ${f.movie_length}`;
+    lngth.innerHTML = `Durata: ${f.movie_length} mins`;
     console.log(f.movie_length)
     language.innerHTML = `Lingua: ${f.language}`;
     IMDBurl.innerHTML = `<a href="${f.imdb_url}">Pagina IMDB</a>`;
