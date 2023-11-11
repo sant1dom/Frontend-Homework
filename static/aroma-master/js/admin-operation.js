@@ -44,7 +44,7 @@ function sendMovieForm(){
             .then(response => {
                 if (!response.ok) {
                     console.log(response);
-                    alert('There was a problem with the Update operation: ' + response.statusText);
+                    alert('There was a problem with the PUT method: ' + response.statusText);
                     return;
                 }
 
@@ -53,14 +53,14 @@ function sendMovieForm(){
             })
     }
     else if (method == "create"){
-        fetch(`/movies/`, {
+        fetch(`/movies`, {
                 method: 'POST',
                 body: JSON.stringify(formData),
             })
             .then(response => {
                 if (!response.ok) {
                     console.log(response);
-                    alert('There was a problem with the Create operation: ' + response.statusText);
+                    alert('There was a problem with the POST method: ' + response.statusText);
                     return;
                 }
 
