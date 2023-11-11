@@ -51,7 +51,7 @@ class Manager {
     }
 
     goSearch(title = "", release_year = ""){
-        this.updateUrl("search?title=" + title + "&release_year=" + release_year)
+        this.updateUrl("advancedSearch?title=" + title + "&release_year=" + release_year)
         manager.search()
         return false;
     }
@@ -65,7 +65,7 @@ class Manager {
         //Svuoto se contiene precedente ricerca
         container_search_main.innerHTML = "";
 
-        let url = "movies/search?";
+        let url = "movies/advancedSearch?";
         if (this.#query != null) {
             for (let field of ["title", "release_year"]) {
                 let value = this.#query.get(field);
