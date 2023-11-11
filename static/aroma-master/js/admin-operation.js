@@ -12,7 +12,7 @@ async function fillForm(id) {
 
 function sendMovieForm(){
     let count_error = 0;
-    let formData = new FormData();
+    let formData = {};
 
     const checks = ["title", "release_year", "movie_length", "genre", "language", "imdb_url"];
     for (let i in checks)
@@ -21,7 +21,7 @@ function sendMovieForm(){
         const value = document.getElementById(field + "_input").value;
         const error = document.getElementById(field + "_error");
 
-        formData.append(field, value);
+        formData[field] = value;
 
         if (value == ""){
             count_error++;
@@ -39,7 +39,7 @@ function sendMovieForm(){
     if (method == "update"){
         fetch(`/movies/${movie_id}`, {
                 method: 'PUT',
-                body: formData,
+                body: JSON.stringify(formData),
             })
             .then(response => {
                 if (!response.ok) {
@@ -55,7 +55,7 @@ function sendMovieForm(){
     else if (method == "create"){
         fetch(`/movies/`, {
                 method: 'POST',
-                body: formData,
+                body: JSON.stringify(formData),
             })
             .then(response => {
                 if (!response.ok) {
