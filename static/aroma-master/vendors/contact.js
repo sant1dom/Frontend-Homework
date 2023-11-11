@@ -12,47 +12,56 @@ $(document).ready(function(){
     $(function() {
         $('#contactForm').validate({
             rules: {
-                name: {
+                title: {
                     required: true,
                     minlength: 2
                 },
-                subject: {
+                release_year: {
                     required: true,
                     minlength: 4
                 },
-                number: {
+                movie_length: {
                     required: true,
-                    minlength: 5
+                    minlength: 2
                 },
-                email: {
+                genre: {
                     required: true,
-                    email: true
+                    minlength: 2
                 },
-                message: {
+                language: {
                     required: true,
-                    minlength: 20
+                    minlength: 2
+                },
+                imdb_url: {
+                    required: true,
+                    minlength: 4
                 }
             },
             messages: {
-                name: {
-                    required: "come on, you have a name, don't you?",
-                    minlength: "your name must consist of at least 2 characters"
+                title: {
+                    required: "Write Title",
+                    minlength: "Title must consist of at least 2 characters"
                 },
-                subject: {
-                    required: "come on, you have a subject, don't you?",
-                    minlength: "your subject must consist of at least 4 characters"
+                release_year: {
+                    required: "Write Release year",
+                    minlength: "Movie's release_year must consist of at least 4 characters"
                 },
-                number: {
-                    required: "come on, you have a number, don't you?",
-                    minlength: "your Number must consist of at least 5 characters"
+                movie_length: {
+                    required: "Write Length",
+                    minlength: "Length must consist of at least 2 characters"
                 },
-                email: {
-                    required: "no email, no message"
+                genre: {
+                    required: "Write Genre",
+                    minlength: "Movie's title must consist of at least 2 characters"
                 },
-                message: {
-                    required: "um...yea, you have to write something to send this form.",
-                    minlength: "thats all? really?"
-                }
+                language: {
+                    required: "Write Language",
+                    minlength: "Language must consist of at least 2 characters"
+                },
+                imdb_url: {
+                    required: "Write IMDB url",
+                    minlength: "IMDB url must consist of at least 4 characters"
+                },
             },
             submitHandler: function(form) {
                 $(form).ajaxSubmit({

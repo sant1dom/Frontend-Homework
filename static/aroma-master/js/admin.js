@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     films.forEach(film => {
         const movieElement = `<tr id="${film.id}">
                                 <td><p>${film.title}</p></td>
-                                <td><h5><button class="btn btn-primary" onclick="window.open('/admin/operation/');">EDIT</button></h5></td>
+                                <td><h5><button class="btn btn-primary" onclick="window.open('/admin/update/${film.id}');">EDIT</button></h5></td>
                                 <td><p><button class="btn btn-danger" onclick="openConfirmationPopup(${film.id}, '${film.title}')">DELETE</button></p></td>
                               </tr>`;
         lista.insertAdjacentHTML('afterbegin', movieElement);

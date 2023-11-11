@@ -30,7 +30,11 @@ def get_movie_by_id(request: Request, id: int):
 def read_root(request: Request):
     return templates.TemplateResponse("admin.html", {"request": request})
 
-@router.get("/admin/operation", tags=["site"])
+@router.get("/admin/create", tags=["site"])
+def read_root(request: Request):
+    return templates.TemplateResponse("admin-operation.html", {"request": request})
+
+@router.get("/admin/update/{id}", tags=["site"])
 def read_root(request: Request):
     return templates.TemplateResponse("admin-operation.html", {"request": request})
 

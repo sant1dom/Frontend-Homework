@@ -5,15 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>MovieDB - Admin operation</title>
-	<link rel="icon" href="../static/aroma-master/img/Fevicon.png" type="image/png">
-  <link rel="stylesheet" href="../static/aroma-master/vendors/bootstrap/bootstrap.min.css">
-  <link rel="stylesheet" href="../static/aroma-master/vendors/fontawesome/css/all.min.css">
-	<link rel="stylesheet" href="../static/aroma-master/vendors/themify-icons/themify-icons.css">
-	<link rel="stylesheet" href="../static/aroma-master/vendors/linericon/style.css">
-  <link rel="stylesheet" href="../static/aroma-master/vendors/owl-carousel/owl.theme.default.min.css">
-  <link rel="stylesheet" href="../static/aroma-master/vendors/owl-carousel/owl.carousel.min.css">
+	<link rel="icon" href="/static/aroma-master/img/Fevicon.png" type="image/png">
+  <link rel="stylesheet" href="/static/aroma-master/vendors/bootstrap/bootstrap.min.css">
+  <link rel="stylesheet" href="/static/aroma-master/vendors/fontawesome/css/all.min.css">
+	<link rel="stylesheet" href="/static/aroma-master/vendors/themify-icons/themify-icons.css">
+	<link rel="stylesheet" href="/static/aroma-master/vendors/linericon/style.css">
+  <link rel="stylesheet" href="/static/aroma-master/vendors/owl-carousel/owl.theme.default.min.css">
+  <link rel="stylesheet" href="/static/aroma-master/vendors/owl-carousel/owl.carousel.min.css">
 
-  <link rel="stylesheet" href="../static/aroma-master/css/style.css">
+  <link rel="stylesheet" href="/static/aroma-master/css/style.css">
 </head>
 <body>
   <!--================ Start Header Menu Area =================-->
@@ -28,32 +28,36 @@
         <div class="col-md-8 col-lg-9">
           <form action="#/" class="form-contact contact_form" action="contact_process.php" method="post" id="contactForm" novalidate="novalidate">
             <div class="row">
-              <div class="col-lg-5">
+              <div class="col-lg-12">
                 <div class="form-group">
-                  <input class="form-control" name="name" id="subject" type="text" placeholder="Enter film's title">
+                  Title:
+                  <br>
+                  <input class="form-control" name="title" id="title" type="text" placeholder="">
                 </div>
                 <div class="form-group">
-                  <input class="form-control" name="email" id="subject" type="text" placeholder="Enter film's release year">
+                  Release year:
+                  <br>
+                  <input class="form-control" name="release_year" id="release_year" type="text" placeholder="">
                 </div>
                 <div class="form-group">
-                  <input class="form-control" name="subject" id="subject" type="text" placeholder="Enter film's length">
+                  Length:
+                  <br>
+                  <input class="form-control" name="movie_length" id="movie_length" type="text" placeholder="">
                 </div>
                 <div class="form-group">
-                  <input class="form-control" name="subject" id="subject" type="text" placeholder="Enter film's genre">
+                  Genre:
+                  <br>
+                  <input class="form-control" name="genre" id="genre" type="text" placeholder="">
                 </div>
                 <div class="form-group">
-                  <input class="form-control" name="subject" id="subject" type="text" placeholder="Enter film's language">
+                  Language:
+                  <br>
+                  <input class="form-control" name="language" id="language" type="text" placeholder="">
                 </div>
                 <div class="form-group">
-                  <input class="form-control" name="subject" id="subject" type="text" placeholder="Enter film's IMDB page URL">
-                </div>
-                <div class="form-group">
-                  <input class="form-control" name="subject" id="subject" type="text" placeholder="Enter film's image URL">
-                </div>
-              </div>
-              <div class="col-lg-7">
-                <div class="form-group">
-                    <textarea class="form-control different-control w-100" name="message" id="message" cols="30" rows="5" placeholder="Enter Message"></textarea>
+                  IMDB's URL:
+                  <br>
+                  <input class="form-control" name="imdb_url" id="imdb_url" type="text" placeholder="">
                 </div>
               </div>
             </div>
@@ -71,16 +75,17 @@
 	{% include 'footer.html' %}
 	<!--================ End footer Area  =================-->
 
-  <script src="../static/aroma-master/vendors/jquery/jquery-3.2.1.min.js"></script>
-  <script src="../static/aroma-master/vendors/bootstrap/bootstrap.bundle.min.js"></script>
-  <script src="../static/aroma-master/vendors/skrollr.min.js"></script>
-  <script src="../static/aroma-master/vendors/owl-carousel/owl.carousel.min.js"></script>
-  <script src="../static/aroma-master/vendors/nice-select/jquery.nice-select.min.js"></script>
-  <script src="../static/aroma-master/vendors/jquery.form.js"></script>
-  <script src="../static/aroma-master/vendors/jquery.validate.min.js"></script>
-  <script src="../static/aroma-master/vendors/contact.js"></script>
-  <script src="../static/aroma-master/vendors/jquery.ajaxchimp.min.js"></script>
-  <script src="../static/aroma-master/vendors/mail-script.js"></script>
-  <script src="../static/aroma-master/js/main.js"></script>
+  <script src="/static/aroma-master/vendors/jquery/jquery-3.2.1.min.js"></script>
+  <script src="/static/aroma-master/vendors/bootstrap/bootstrap.bundle.min.js"></script>
+  <script src="/static/aroma-master/vendors/skrollr.min.js"></script>
+  <script src="/static/aroma-master/vendors/owl-carousel/owl.carousel.min.js"></script>
+  <script src="/static/aroma-master/vendors/nice-select/jquery.nice-select.min.js"></script>
+  <script src="/static/aroma-master/vendors/jquery.form.js"></script>
+  <script src="/static/aroma-master/vendors/jquery.validate.min.js"></script>
+  <script src="/static/aroma-master/vendors/contact.js"></script>
+  <script src="/static/aroma-master/vendors/jquery.ajaxchimp.min.js"></script>
+  <script src="/static/aroma-master/vendors/mail-script.js"></script>
+  <script src="/static/aroma-master/js/main.js"></script>
+  <script src="/static/aroma-master/js/admin.js"></script>
 </body>
 </html>
