@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     const arr = [];
     moviesList.innerHTML = '<div class="spinner"></div>'
     await new Promise((resolve) => setTimeout(resolve, 500));
-    let films = await (await fetch('http://127.0.0.1:8000/movies')).json();
+    let films = await (await fetch('/movies')).json();
     moviesList.innerHTML = '';
     films.forEach(movie => {
         const movieElement = `<div class="col-md-6 col-lg-4 col-xl-3" id="${movie.id}">

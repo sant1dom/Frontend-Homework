@@ -1,5 +1,5 @@
 async function film(id){
-    var f = await (await fetch('http://127.0.0.1:8000/movies/' + id)).json();
+    var f = await (await fetch('/movies/' + id)).json();
     console.log(f)
     title.innerHTML = f.title;
     poster.innerHTML = `<div class="single-prd-item">

@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', async function() {
   
     // Create an array of promises
     const fetchWatchlist = watchlist.map(key => 
-      fetch('http://127.0.0.1:8000/movies/' + key)
+      fetch('/movies/' + key)
         .then(response => response.json())
     );
   

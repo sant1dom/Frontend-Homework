@@ -1,11 +1,11 @@
 document.addEventListener('DOMContentLoaded', async function () {
 
-    let films = await (await fetch('http://127.0.0.1:8000/movies')).json();
+    let films = await (await fetch('/movies')).json();
     films.forEach(film => {
         const movieElement = `<tr id="${film.id}">
                                 <td><p>${film.title}</p></td>
-                                <td><h5><button class="btn btn-primary" onclick="window.open('/admin/operation');">EDIT</button></h5></td>
-                                <td><p><button class="btn btn-danger" onclick="openConfirmationPopup(${film.id})">DELETE</button></p></td>
+                                <td><h5><button class="btn btn-primary" onclick="window.open('/admin/operation/');">EDIT</button></h5></td>
+                                <td><p><button class="btn btn-danger" onclick="openConfirmationPopup(${film.id}, '${film.title}')">DELETE</button></p></td>
                               </tr>`;
         lista.insertAdjacentHTML('afterbegin', movieElement);
     });
@@ -13,16 +13,17 @@ document.addEventListener('DOMContentLoaded', async function () {
 
 });
 
-function openConfirmationPopup(movieId) {
+function openConfirmationPopup(movieId, movieTitle) {
     const popupHTML = `<div id="overlay"></div>
                                   <div id="confirmationPopup">
-                                    <h5>Are you sure you want to delete the movie?</h5>
+                                    <h5>Are you sure you want to delete the movie '${movieTitle}'?</h5>
                                     <br>
                                     <button class="btn btn-warning" onclick="closeConfirmationPopup()">CANCEL</button>
                                     <button class="btn btn-danger" onclick="deleteMovie(${movieId})">DELETE</button>
                                   </div>`;
 
-    popup.insertAdjacentHTML('beforeend',popupHTML);
+    //popup.insertAdjacentHTML('beforeend',popupHTML);
+    popup.innerHTML = popupHTML;
     // Mostra il popup e l'overlay
     document.getElementById("overlay").style.display = "block";
     document.getElementById("confirmationPopup").style.display = "block";
@@ -37,7 +38,7 @@ function closeConfirmationPopup() {
 function deleteMovie(id){
     closeConfirmationPopup();
 
-    fetch(`http://127.0.0.1:8000/movies/${id}`, {
+    fetch(`/movies/${id}`, {
                 method: 'DELETE'
             })
             .then(response => {

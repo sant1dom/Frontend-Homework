@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 
   // Create an array of promises
   const fetchFavourites = favourites.map(key => 
-    fetch('http://127.0.0.1:8000/movies/' + key)
+    fetch('/movies/' + key)
       .then(response => response.json())
   );
   
@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 
   
   //Riempio dinamicamente le opzioni del filtro sui generi
-let films = await (await fetch('http://127.0.0.1:8000/movies')).json();
+let films = await (await fetch('/movies')).json();
 let insertedGenres = []; // Array per memorizzare i generi già inseriti
 films.forEach((film) => {
    if (film && !insertedGenres.includes(film.genre)) { // Controllo se il genere è già stato inserito
