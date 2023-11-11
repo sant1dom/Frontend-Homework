@@ -6,8 +6,8 @@ from starlette.templating import Jinja2Templates
 
 router = APIRouter()
 
-
 templates = Jinja2Templates(directory="static/aroma-master")
+
 
 @router.get("/", tags=["site"])
 def read_root(request: Request):
@@ -18,25 +18,45 @@ def read_root(request: Request):
 def read_root(request: Request):
     return templates.TemplateResponse("favourites.html", {"request": request})
 
+
 @router.get("/watchlist", tags=["site"])
 def read_root(request: Request):
     return templates.TemplateResponse("watchlist.html", {"request": request})
+
 
 @router.get("/films/{id}", tags=["site"])
 def get_movie_by_id(request: Request, id: int):
     return templates.TemplateResponse("movie-detail.html", {"request": request, "id": id})
 
+
 @router.get("/admin", tags=["site"])
 def read_root(request: Request):
     return templates.TemplateResponse("admin.html", {"request": request})
+
 
 @router.get("/admin/create", tags=["site"])
 def read_root(request: Request):
     return templates.TemplateResponse("admin-operation.html", {"request": request})
 
+
 @router.get("/admin/update/{id}", tags=["site"])
 def read_root(request: Request):
     return templates.TemplateResponse("admin-operation.html", {"request": request})
+
+
+@router.get("/search", tags=["site"])
+async def search(request: Request):
+    return templates.TemplateResponse("search.html", {"request": request})
+
+
+@router.get("/create", tags=["site"])
+async def create():
+    return FileResponse(path="static/templates/index.html")
+
+
+@router.get("/update", tags=["site"])
+async def update():
+    return FileResponse(path="static/templates/index.html")
 
 
 @router.get("/read", tags=["site"])
@@ -46,9 +66,4 @@ async def read():
 
 @router.get("/delete", tags=["site"])
 async def delete():
-    return FileResponse(path="static/templates/index.html")
-
-
-@router.get("/search", tags=["site"])
-async def search():
     return FileResponse(path="static/templates/index.html")
