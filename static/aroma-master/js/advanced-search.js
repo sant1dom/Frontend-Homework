@@ -10,6 +10,17 @@
     languagesList.forEach(lang => {
         language.add(new Option(lang, lang));
     });
+
+    title.value = new URLSearchParams(window.location.search).get("title")
+    if (title.value) {
+        submit.click()
+        searchDiv.classList.remove("show")
+        showFilters.innerHTML = "Show filters &darr;";
+    } else {
+        showFilters.innerHTML =  "Hide filters &uarr;" ;
+    }
+
+
 })()
 
 async function advancedSearch(event) {
@@ -22,8 +33,8 @@ async function advancedSearch(event) {
         if (value !== '') url += `${key}=${value}&`
     })
     const movies = await (await fetch(url)).json();
-    if (movies["detail"]){
-        results.innerHTML = movies.detail
+    if (movies.detail) {
+        results.innerHTML = `<div class="col-md-4 col-lg-3 col-sm-6 text-center">${movies.detail}</div>`
     } else {
         movies.forEach(movie => {
             let loading = true;
@@ -38,8 +49,7 @@ async function advancedSearch(event) {
                                                 <div class="card-body">
                                                     <p>${movie.movie_length} min.</p>
                                                     <h4 class="card-product__title"><a href="/films/${movie.id}">${movie.title}</a></h4>
-                                                    <p class="card-product__price">${movie.genre}</p>
-                                                    
+                                                    <p class="card-product__price">${movie.genre}</p>   
                                                 </div>
                                             </div>
                                           </div>`;
@@ -51,4 +61,9 @@ async function advancedSearch(event) {
 }
 
 searchForm.addEventListener("submit", advancedSearch)
+
+
+showFilters.addEventListener("click", () => {
+    showFilters.innerHTML = showFilters.innerHTML === "Hide filters ↑" ? "Show filters &darr;" : "Hide filters &uarr;";
+});
 

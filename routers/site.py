@@ -45,8 +45,8 @@ def read_root(request: Request):
 
 
 @router.get("/search", tags=["site"])
-async def search(request: Request):
-    return templates.TemplateResponse("search.html", {"request": request})
+async def search(request: Request, title: str | None = None):
+    return templates.TemplateResponse("search.html", {"request": request, "search": title})
 
 
 @router.get("/create", tags=["site"])
