@@ -125,6 +125,7 @@ async def update_movie(movie_id: int, movie: MovieUpdate, db: Session = Depends(
         raise HTTPException(status_code=404, detail="Movie not found")
     for key, value in movie.model_dump().items():
         setattr(db_movie, key, value)
+    get_imdb_image(db_movie)
     db.commit()
     db.refresh(db_movie)
     return Movie(**db_movie.__dict__)
@@ -133,6 +134,7 @@ async def update_movie(movie_id: int, movie: MovieUpdate, db: Session = Depends(
 @app.post("/movies", response_model=Movie)
 async def create_movie(movie: MovieCreate, db: Session = Depends(get_db)) -> Movie:
     db_movie = DBMovie(**movie.model_dump())
+    get_imdb_image(db_movie)
     db.add(db_movie)
     db.commit()
     db.refresh(db_movie)
@@ -151,20 +153,22 @@ async def delete_movie(movie_id: int, db: Session = Depends(get_db)):
 
 @app.get("/movies/search", response_model=list[Movie])
 async def search_movies(
-    title: str | None = None,
-    release_year: int | None = None,
-    genre: str | None = None,
-    language: str | None = None,
-    duration_min: int | None = None,
-    duration_max: int | None = None,
-    db: Session = Depends(get_db)
+        title: str | None = None,
+        release_year_min: int | None = None,
+        release_year_max: int | None = None,
+        genre: str | None = None,
+        language: str | None = None,
+        duration_min: int | None = None,
+        duration_max: int | None = None,
+        db: Session = Depends(get_db)
 ) -> list[Movie]:
     # Workaround for getting the correct title
     title = f"%{title}%" if title is not None else None
 
     query_parameters = {
         'title': DBMovie.title.like,
-        'release_year': DBMovie.release_year.__eq__,
+        'release_year_min': DBMovie.release_year.__ge__,
+        'release_year_max': DBMovie.release_year.__le__,
         'genre': DBMovie.genre.__eq__,
         'language': DBMovie.language.__eq__,
         'duration_min': DBMovie.movie_length.__ge__,
@@ -175,16 +179,12 @@ async def search_movies(
         if locals()[key] is not None:
             filters.append(value(locals()[key]))
 
-    if not filters:
-        raise HTTPException(status_code=400, detail="No search criteria provided")
-
     movies = db.query(DBMovie).filter(and_(*filters)).all()
 
     if not movies:
         raise HTTPException(status_code=404, detail="No movies found with the given criteria")
 
     return [Movie(**movie.__dict__) for movie in movies]
-
 
 
 @app.get("/movies/{movie_id}", response_model=Movie)
@@ -194,3 +194,17 @@ async def get_movie(movie_id: int, db: Session = Depends(get_db)) -> Movie:
         raise HTTPException(status_code=404, detail="Movie not found")
     movie = Movie(**db_movie.__dict__)
     return movie
+
+
+@app.get("/genres", response_model=list[str])
+async def get_genres(db: Session = Depends(get_db)) -> list[str]:
+    genres = db.query(DBMovie.genre).distinct().all()
+    genres = [genre[0] for genre in genres]
+    return genres
+
+
+@app.get("/languages", response_model=list[str])
+async def get_languages(db: Session = Depends(get_db)) -> list[str]:
+    languages = db.query(DBMovie.language).distinct().all()
+    languages = [language[0] for language in languages]
+    return languages
