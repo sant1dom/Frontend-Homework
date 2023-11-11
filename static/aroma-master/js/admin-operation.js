@@ -32,6 +32,10 @@ function sendMovieForm(){
         }
     }
 
+    if (count_error > 0){
+        return;
+    }
+
     if (method == "update"){
         fetch(`/movies/${movie_id}`, {
                 method: 'PUT',
@@ -39,13 +43,14 @@ function sendMovieForm(){
             })
             .then(response => {
                 if (!response.ok) {
-                    throw new Error('Network response was not ok');
+                    console.log(response);
+                    alert('There was a problem with the Update operation: ' + response.statusText);
+                    return;
                 }
-                alert('Movie updated successfully');
+
+                alert('Movie updated successfully, redirect to Home Page');
+                window.location.href = "/";
             })
-            .catch(error => {
-                console.error('There was a problem with the fetch operation: ', error);
-            });
     }
     else if (method == "create"){
         fetch(`/movies/`, {
@@ -54,16 +59,17 @@ function sendMovieForm(){
             })
             .then(response => {
                 if (!response.ok) {
-                    throw new Error('Network response was not ok');
+                    console.log(response);
+                    alert('There was a problem with the Create operation: ' + response.statusText);
+                    return;
                 }
-                alert('Movie updated successfully');
+
+                alert('Movie created successfully, redirect to Home Page');
+                window.location.href = "/";
             })
-            .catch(error => {
-                console.error('There was a problem with the fetch operation: ', error);
-            });
     }
 
-    return false;
+    return;
 }
 
 if (method == "update"){
