@@ -2,10 +2,12 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     let films = await (await fetch('/movies')).json();
     films.forEach(film => {
+        const title = film.title.replace(new RegExp('"', 'g'), "&quot;").replace(new RegExp("'", 'g'), "’");
+
         const movieElement = `<tr id="${film.id}">
-                                <td><p>${film.title}</p></td>
+                                <td><p>${title}</p></td>
                                 <td><h5><button class="btn btn-primary" onclick="window.open('/admin/update/${film.id}');">EDIT</button></h5></td>
-                                <td><p><button class="btn btn-danger" onclick="openConfirmationPopup(${film.id}, '${film.title}')">DELETE</button></p></td>
+                                <td><p><button class="btn btn-danger" onclick="openConfirmationPopup(${film.id}, '${title}')">DELETE</button></p></td>
                               </tr>`;
         lista.insertAdjacentHTML('afterbegin', movieElement);
     });
