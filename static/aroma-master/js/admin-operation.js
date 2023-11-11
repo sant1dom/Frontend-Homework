@@ -1,12 +1,77 @@
+let [empty, controller, method, movie_id] = window.location.pathname.split("/");
+
 async function fillForm(id) {
-    var f = await (await fetch('/movies/' + id)).json();
-    console.log(f)
+    var film = await (await fetch('/movies/' + id)).json();
+
+    const checks = ["title", "release_year", "movie_length", "genre", "language", "imdb_url"];
+    for (let i in checks) {
+        const field = checks[i];
+        document.getElementById(field + "_input").value = film[field];
+    }
 }
 
-let [controller, method, id] = window.location.pathname.split("/");
-alert([controller, method, id]);
+function sendMovieForm(){
+    let count_error = 0;
+    let formData = {};
 
+    const checks = ["title", "release_year", "movie_length", "genre", "language", "imdb_url"];
+    for (let i in checks)
+    {
+        const field = checks[i];
+        const value = document.getElementById(field + "_input").value;
+        const error = document.getElementById(field + "_error");
 
+        formData[field] = value;
 
-							
-                            
+        if (value == ""){
+            count_error++;
+            error.style.display = "block";
+        }
+        else{
+            error.style.display = "none";
+        }
+    }
+
+    if (count_error > 0){
+        return;
+    }
+
+    if (method == "update"){
+        fetch(`/movies/${movie_id}`, {
+                method: 'PUT',
+                body: JSON.stringify(formData),
+            })
+            .then(response => {
+                if (!response.ok) {
+                    console.log(response);
+                    alert('There was a problem with the PUT method: ' + response.statusText);
+                    return;
+                }
+
+                alert('Movie updated successfully, redirect to Home Page');
+                window.location.href = "/";
+            })
+    }
+    else if (method == "create"){
+        fetch(`/movies`, {
+                method: 'POST',
+                body: JSON.stringify(formData),
+            })
+            .then(response => {
+                if (!response.ok) {
+                    console.log(response);
+                    alert('There was a problem with the POST method: ' + response.statusText);
+                    return;
+                }
+
+                alert('Movie created successfully, redirect to Home Page');
+                window.location.href = "/";
+            })
+    }
+
+    return;
+}
+
+if (method == "update"){
+    fillForm(movie_id);
+}

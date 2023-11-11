@@ -38,15 +38,6 @@ def read_root(request: Request):
 def read_root(request: Request):
     return templates.TemplateResponse("admin-operation.html", {"request": request})
 
-@router.get("/create", tags=["site"])
-async def create():
-    return FileResponse(path="static/templates/index.html")
-
-
-@router.get("/update", tags=["site"])
-async def update():
-    return FileResponse(path="static/templates/index.html")
-
 
 @router.get("/read", tags=["site"])
 async def read():
