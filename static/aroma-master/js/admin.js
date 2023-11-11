@@ -42,10 +42,21 @@ function deleteMovie(id){
                 method: 'DELETE'
             })
             .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
                 console.log('Movie deleted successfully');
+                //remove the item from localStorage
+                const watchlist = JSON.parse(localStorage.getItem('watchlist')) || [];
+                const favourites = JSON.parse(localStorage.getItem('favourites')) || [];
+                const index1 = favourites.indexOf(id.toString());
+                const index2 = watchlist.indexOf(id.toString());
+                if (index1 > -1) {
+                    favourites.splice(index1, 1);
+                    localStorage.setItem('favourites', JSON.stringify(favourites));
+                }
+                if (index2 > -1) {
+                    watchlist.splice(index2, 1);
+                    localStorage.setItem('watchlist', JSON.stringify(watchlist));
+
+                }
                 const movieRow = document.getElementById(id);
 
                 // Rimuovi l'elemento graficamente se esiste
