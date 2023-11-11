@@ -1,3 +1,5 @@
+import { handleLists } from "./single-movie.js";
+
 document.addEventListener('DOMContentLoaded', async function () {
     const array = [];
     const arr = [];
@@ -5,6 +7,8 @@ document.addEventListener('DOMContentLoaded', async function () {
     await new Promise((resolve) => setTimeout(resolve, 500));
     let films = await (await fetch('/movies')).json();
     moviesList.innerHTML = '';
+    const watchlist = JSON.parse(localStorage.getItem('watchlist')) || [];
+    const favourites = JSON.parse(localStorage.getItem('favourites')) || [];
     films.forEach(movie => {
         const movieElement = `<div class="col-md-6 col-lg-4 col-xl-3" id="${movie.id}">
                                         <div class="card text-center card-product">
@@ -13,8 +17,8 @@ document.addEventListener('DOMContentLoaded', async function () {
                                                     <img class="card-img" src="${movie.imdb_image}" alt="">
                                                 </a>
                                                 <ul class="card-product__imgOverlay">
-                                                    <li><button id="clock1"><i></i></button></li>
-                                                    <li><button id="cuore1"><i></i></button></li>
+                                                    <li><button id="clock1" class="btn"></button></li>
+                                                    <li><button id="cuore1" class="btn"></button></li>
                                                 </ul>
                                             </div>
                                             <div class="card-body">
@@ -26,110 +30,99 @@ document.addEventListener('DOMContentLoaded', async function () {
                                         </div>
                                         </a>
                                     </div>`;
+
         moviesList.insertAdjacentHTML('beforeend', movieElement);
     });
 
+    const iconBtns = document.querySelectorAll('.btn');
+        iconBtns.forEach((btn) => {
+            var par = btn;
+            for (let j = 0; j < 5; j++) {
+                par = par.parentNode;
+            }
+            if(btn.id == 'clock1'){
+                if (watchlist.includes(par.id.toString())) {
+                    btn.innerHTML = `<i class="clk-full"></i>`
+                } else {
+                    btn.innerHTML = `<i class="clk"></i>`
+                }
+            }else if(btn.id == 'cuore1'){
+                if (favourites.includes(par.id.toString())) {
+                    btn.innerHTML = `<i class="heart-full"></i>`
+                } else {
+                    btn.innerHTML = `<i class="heart"></i>`
+                }
+            }
+            btn.addEventListener('click', function (event) {
+                handleLists(event, par.id);
+            });
+        });
 
 
     //Management of the heart icon------------------------------------------------//    
-    const elements = document.querySelectorAll('[id^="cuore"]');
-    for (let i = 0; i < elements.length; i++) {
-        array[i] = elements[i];
-        var element = array[i].querySelector('i');
+    // const elements = document.querySelectorAll('[id^="cuore"]');
+    // for (let i = 0; i < elements.length; i++) {
+    //     array[i] = elements[i];
+    //     var element = array[i].querySelector('i');
 
-        var par = element;
-        for (let j = 0; j < 6; j++) {
-            par = par.parentNode;
-        }
-        const key = par.id;
+    //     var par = element;
+    //     for (let j = 0; j < 6; j++) {
+    //         par = par.parentNode;
+    //     }
+    //     const key = par.id;
 
-        const favourites = JSON.parse(localStorage.getItem('favourites')) || [];
+    //     const favourites = JSON.parse(localStorage.getItem('favourites')) || [];
 
-        if (favourites.includes(key)) {
-            element.classList.add('heart-full');
-        } else {
-            element.classList.add('heart');
-        }
+    //     if (favourites.includes(key)) {
+    //         element.classList.add('heart-full');
+    //     } else {
+    //         element.classList.add('heart');
+    //     }
 
-        array[i].addEventListener('click', function () {
-            var element = array[i].querySelector('i');
+    //     array[i].addEventListener('click', function () {
+    //         var element = array[i].querySelector('i');
 
-            var par = element;
-            for (let j = 0; j < 6; j++) {
-                par = par.parentNode;
-            }
-            const key = par.id;
+    //         var par = element;
+    //         for (let j = 0; j < 6; j++) {
+    //             par = par.parentNode;
+    //         }
+    //         const key = par.id;
 
-            const favourites = JSON.parse(localStorage.getItem('favourites')) || [];
+    //         //favouritesIcon()
+    //     });
+    // }
 
-            if (favourites.includes(key)) {
-                element.classList.remove('heart-full');
-                element.classList.add('heart');
+    // //Management of the clock icon------------------------------------------------//        
+    // const els = document.querySelectorAll('[id^="clock"]');
+    // for (let i = 0; i < els.length; i++) {
+    //     arr[i] = els[i];
+    //     var el = arr[i].querySelector('i');
 
-                const index = favourites.indexOf(key);
-                if (index > -1) {
-                    favourites.splice(index, 1);
-                }
-            } else {
-                element.classList.remove('heart');
-                element.classList.add('heart-full');
-
-                favourites.push(key);
-            }
-
-            localStorage.setItem('favourites', JSON.stringify(favourites));
-            console.log(`Film ${favourites.includes(key) ? 'added to' : 'removed from'} favourites: ${key}`);
-        });
-    }
-
-    //Management of the clock icon------------------------------------------------//        
-    const els = document.querySelectorAll('[id^="clock"]');
-    for (let i = 0; i < els.length; i++) {
-        arr[i] = els[i];
-        var el = arr[i].querySelector('i');
-
-        var par = el;
-        for (let j = 0; j < 6; j++) {
-            par = par.parentNode;
-        }
-        const key = par.id;
+    //     var par = el;
+    //     for (let j = 0; j < 6; j++) {
+    //         par = par.parentNode;
+    //     }
+    //     const key = par.id;
         
-        const watchlist = JSON.parse(localStorage.getItem('watchlist')) || [];
+    //     const watchlist = JSON.parse(localStorage.getItem('watchlist')) || [];
 
-        if (watchlist.includes(key)) {
-            el.classList.add('clk-full');
-        } else {
-            el.classList.add('clk');
-        }
+    //     if (watchlist.includes(key)) {
+    //         el.classList.add('clk-full');
+    //     } else {
+    //         el.classList.add('clk');
+    //     }
 
-        arr[i].addEventListener('click', function () {
-            var el = arr[i].querySelector('i');
+    //     arr[i].addEventListener('click', function () {
+    //         var el = arr[i].querySelector('i');
 
-            var par = el;
-            for (let j = 0; j < 6; j++) {
-                par = par.parentNode;
-            }
-            const key = par.id;
+    //         var par = el;
+    //         for (let j = 0; j < 6; j++) {
+    //             par = par.parentNode;
+    //         }
+    //         const key = par.id;
 
-            const watchlist = JSON.parse(localStorage.getItem('watchlist')) || [];
-
-            if (watchlist.includes(key)) {
-                el.classList.remove('clk-full');
-                el.classList.add('clk');
-
-                const index = watchlist.indexOf(key);
-                if (index > -1) {
-                    watchlist.splice(index, 1);
-                }
-            } else {
-                el.classList.remove('clk');
-                el.classList.add('clk-full');
-                watchlist.push(key);
-            }
-
-            localStorage.setItem('watchlist', JSON.stringify(watchlist));
-            console.log(`Film ${watchlist.includes(key) ? 'added to' : 'removed from'} watchlist: ${key}`);
-        });
-    }
+    //         //watchlistIcon()
+    //     });
+    // }
 
 });

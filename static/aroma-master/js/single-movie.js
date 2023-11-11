@@ -1,16 +1,24 @@
-async function film(id){
+import {favouritesIcon, watchlistIcon} from './lists-buttons.js';
+
+document.addEventListener('DOMContentLoaded', async function() { film(); });
+
+async function film(){
+    
+    var path = window.location.pathname;
+    var parts = path.split('/');
+    var id = parts[parts.length - 1];
+
+    if(id){
     var f = await (await fetch('/movies/' + id)).json();
-    console.log(f)
-    title.innerHTML = f.title;
-    poster.innerHTML = `<div class="single-prd-item">
-                        <img class="img-fluid" src="${f.imdb_image}" alt=""></img>
-                        </div>`; 
-    year.innerHTML = `Anno di uscita: ${f.release_year}`;
-    genre.innerHTML = `Genere: ${f.genre}`;
-    lngth.innerHTML = `Durata: ${f.movie_length} mins`;
-    console.log(f.movie_length)
-    language.innerHTML = `Lingua: ${f.language}`;
-    IMDBurl.innerHTML = `<a href="${f.imdb_url}">Pagina IMDB</a>`;
+        title.innerHTML = f.title;
+        poster.innerHTML = `<div class="single-prd-item">
+                            <img class="img-fluid" src="${f.imdb_image}" alt=""></img>
+                            </div>`; 
+        year.innerHTML = `Anno di uscita: ${f.release_year}`;
+        genre.innerHTML = `Genere: ${f.genre}`;
+        lngth.innerHTML = `Durata: ${f.movie_length} mins`;
+        language.innerHTML = `Lingua: ${f.language}`;
+        IMDBurl.innerHTML = `<a href="${f.imdb_url}">Pagina IMDB</a>`;
 
     const watchlist = JSON.parse(localStorage.getItem('watchlist')) || [];
 
@@ -39,55 +47,18 @@ async function film(id){
         });
     });
 
-    return f
+    }
 }
 
-function handleLists(event, movie_id) {
+export function handleLists(event, movie_id) {
     event.preventDefault();
 
     const iconElement = event.currentTarget.querySelector('i');
 
     if (iconElement.classList.contains('clk') || iconElement.classList.contains('clk-full')) {
-        const watchlist = JSON.parse(localStorage.getItem('watchlist')) || [];
-
-        if (watchlist.includes(movie_id.toString())) {
-            iconElement.classList.remove('clk-full');
-            iconElement.classList.add('clk');
-
-            const index = watchlist.indexOf(movie_id.toString());
-            if (index > -1) {
-                watchlist.splice(index, 1);
-            }
-        } else {
-            iconElement.classList.remove('clk');
-            iconElement.classList.add('clk-full');
-            watchlist.push(movie_id.toString());
-        }
-
-        localStorage.setItem('watchlist', JSON.stringify(watchlist));
-        console.log(`Film ${watchlist.includes(movie_id.toString()) ? 'added to' : 'removed from'} watchlist: ${movie_id.toString()}`);
+        watchlistIcon(movie_id.toString(), iconElement);
     } else if (iconElement.classList.contains('heart') || iconElement.classList.contains('heart-full')) {
-        const favourites = JSON.parse(localStorage.getItem('favourites')) || [];
-
-        if (favourites.includes(movie_id.toString())) {
-            iconElement.classList.remove('heart-full');
-            iconElement.classList.add('heart');
-
-            const index = favourites.indexOf(movie_id.toString());
-            if (index > -1) {
-                favourites.splice(index, 1);
-            }
-        } else {
-            iconElement.classList.remove('heart');
-            iconElement.classList.add('heart-full');
-            favourites.push(movie_id.toString());
-        }
-        localStorage.setItem('favourites', JSON.stringify(favourites));
-        console.log(`Film ${favourites.includes(movie_id.toString()) ? 'added to' : 'removed from'} watchlist: ${movie_id.toString()}`);
+        favouritesIcon(movie_id.toString(), iconElement);
     }
 }
-
-
-
-							
-                            
+				
