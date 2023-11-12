@@ -10,6 +10,40 @@ async function fillForm(id) {
     }
 }
 
+function openErrorPopup(text){
+        const popupHTML = `<div id="overlay"></div>
+                                  <div id="confirmationPopup">
+                                    <h5>${text}</h5>
+                                    <button class="btn btn-danger" onclick="closeConfirmationPopup()">OK</button>
+                                  </div>`;
+
+    //popup.insertAdjacentHTML('beforeend',popupHTML);
+    popup.innerHTML = popupHTML;
+    // Mostra il popup e l'overlay
+    document.getElementById("overlay").style.display = "block";
+    document.getElementById("confirmationPopup").style.display = "block";
+}
+
+function openSuccessPopup(text){
+        const popupHTML = `<div id="overlay"></div>
+                                  <div id="confirmationPopup">
+                                    <h5>${text}</h5>
+                                    <button class="btn btn-success" onclick="window.location.href = '/'">Go Home</button>
+                                  </div>`;
+
+    //popup.insertAdjacentHTML('beforeend',popupHTML);
+    popup.innerHTML = popupHTML;
+    // Mostra il popup e l'overlay
+    document.getElementById("overlay").style.display = "block";
+    document.getElementById("confirmationPopup").style.display = "block";
+}
+
+function closeConfirmationPopup() {
+    // Nascondi il popup e l'overlay
+    document.getElementById("overlay").style.display = "none";
+    document.getElementById("confirmationPopup").style.display = "none";
+}
+
 function sendMovieForm(){
     let count_error = 0;
     let formData = {};
@@ -52,12 +86,11 @@ function sendMovieForm(){
             .then(response => {
                 if (!response.ok) {
                     console.log(response);
-                    alert('There was a problem with the PUT method: ' + response.statusText);
+                    openErrorPopup('There was a problem with the PUT method: ' + response.statusText);
                     return;
                 }
 
-                alert('Movie updated successfully, redirect to Home Page');
-                window.location.href = "/";
+                openSuccessPopup('Movie updated successfully');
             })
     }
     else if (method == "create"){
@@ -71,12 +104,11 @@ function sendMovieForm(){
             .then(response => {
                 if (!response.ok) {
                     console.log(response);
-                    alert('There was a problem with the POST method: ' + response.statusText);
+                    openErrorPopup('There was a problem with the POST method: ' + response.statusText);
                     return;
                 }
 
-                alert('Movie created successfully, redirect to Home Page');
-                window.location.href = "/";
+                openSuccessPopup('Movie created successfully');
             })
     }
 
