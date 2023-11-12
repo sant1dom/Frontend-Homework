@@ -77,7 +77,7 @@ async function sendMovieForm() {
             method: 'PUT',
             body: JSON.stringify(formData),
             headers: {
-                'Content-Type': 'application/jsonA'
+                'Content-Type': 'application/json'
             },
         });
 
