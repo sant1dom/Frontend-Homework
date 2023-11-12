@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     const items = await Promise.all(fetchWatchlist);
 
     items.forEach((item) => {
-        if (item) {
+        if (item.id) {
             const html = `
             <div class="col-md-6 col-lg-4 col-xl-3" id="${item.id}">
                 <div class="card text-center card-product">
