@@ -8,7 +8,7 @@ from pydantic import BaseModel
 from sqlalchemy import create_engine, and_, func
 from sqlalchemy.orm import DeclarativeBase, mapped_column, Mapped, sessionmaker, Session
 from starlette.staticfiles import StaticFiles
-
+import re
 from routers import site
 
 
@@ -89,10 +89,14 @@ def get_imdb_image(movie):
     headers = {
         "User-Agent": 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36'
     }
-    src = BeautifulSoup(requests.get(movie.imdb_url, headers=headers).content, "html.parser").find("img",
-                                                                                                   class_="ipc-image").get(
-        "src")
-    movie.imdb_image = src
+    url_pattern = re.compile(r'https://www\.imdb\.com/title/tt\d+/')
+    if url_pattern.match(movie.imdb_url):
+        src = BeautifulSoup(requests.get(movie.imdb_url, headers=headers).content, "html.parser") \
+            .find("img", class_="ipc-image") \
+            .get("src")
+        movie.imdb_image = src
+    else:
+        raise HTTPException(status_code=400, detail="Invalid IMDB URL")
 
 
 @asynccontextmanager
