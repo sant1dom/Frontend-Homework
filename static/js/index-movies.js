@@ -1,4 +1,4 @@
-import { handleLists } from "./single-movie.js";
+import {handleLists} from "./single-movie.js";
 
 document.addEventListener('DOMContentLoaded', async function () {
     const array = [];
@@ -35,27 +35,27 @@ document.addEventListener('DOMContentLoaded', async function () {
     });
 
     const iconBtns = document.querySelectorAll('.btn');
-        iconBtns.forEach((btn) => {
-            var par = btn;
-            for (let j = 0; j < 5; j++) {
-                par = par.parentNode;
+    iconBtns.forEach((btn) => {
+        let par = btn;
+        for (let j = 0; j < 5; j++) {
+            par = par.parentNode;
+        }
+        if (btn.id == 'clock1') {
+            if (watchlist.includes(par.id.toString())) {
+                btn.innerHTML = `<i class="clk-full"></i>`
+            } else {
+                btn.innerHTML = `<i class="clk"></i>`
             }
-            if(btn.id == 'clock1'){
-                if (watchlist.includes(par.id.toString())) {
-                    btn.innerHTML = `<i class="clk-full"></i>`
-                } else {
-                    btn.innerHTML = `<i class="clk"></i>`
-                }
-            }else if(btn.id == 'cuore1'){
-                if (favourites.includes(par.id.toString())) {
-                    btn.innerHTML = `<i class="heart-full"></i>`
-                } else {
-                    btn.innerHTML = `<i class="heart"></i>`
-                }
+        } else if (btn.id == 'cuore1') {
+            if (favourites.includes(par.id.toString())) {
+                btn.innerHTML = `<i class="heart-full"></i>`
+            } else {
+                btn.innerHTML = `<i class="heart"></i>`
             }
-            btn.addEventListener('click', function (event) {
-                handleLists(event, par.id);
-            });
+        }
+        btn.addEventListener('click', function (event) {
+            handleLists(event, par.id);
         });
+    });
 
 });
