@@ -6,7 +6,7 @@ from starlette.templating import Jinja2Templates
 
 router = APIRouter()
 
-templates = Jinja2Templates(directory="static/aroma-master")
+templates = Jinja2Templates(directory="static")
 
 
 @router.get("/", tags=["site"])
