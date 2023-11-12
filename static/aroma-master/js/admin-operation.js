@@ -21,7 +21,12 @@ function sendMovieForm(){
         const value = document.getElementById(field + "_input").value;
         const error = document.getElementById(field + "_error");
 
-        formData[field] = value;
+        if (field == "movie_length" || field == "release_year"){
+            formData[field] = parseInt(value);
+        }
+        else {
+            formData[field] = value;
+        }
 
         if (value == ""){
             count_error++;
@@ -40,6 +45,9 @@ function sendMovieForm(){
         fetch(`/movies/${movie_id}`, {
                 method: 'PUT',
                 body: JSON.stringify(formData),
+                headers: {
+                  'Content-Type': 'application/json'
+                },
             })
             .then(response => {
                 if (!response.ok) {
@@ -56,6 +64,9 @@ function sendMovieForm(){
         fetch(`/movies`, {
                 method: 'POST',
                 body: JSON.stringify(formData),
+                headers: {
+                  'Content-Type': 'application/json'
+                },
             })
             .then(response => {
                 if (!response.ok) {
