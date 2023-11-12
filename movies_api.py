@@ -188,7 +188,7 @@ async def search_movies(
 
 
 @app.get("/movies/{movie_id}", response_model=Movie)
-async def get_movie(movie_id: int, db: Session = Depends(get_db)) -> Movie:
+async def get_movie_by_id(movie_id: int, db: Session = Depends(get_db)) -> Movie:
     db_movie = db.query(DBMovie).filter(DBMovie.id == movie_id).first()
     if db_movie is None:
         raise HTTPException(status_code=404, detail="Movie not found")
