@@ -6,9 +6,9 @@ document.addEventListener('DOMContentLoaded', async function () {
 
 async function film() {
 
-    var path = window.location.pathname;
-    var parts = path.split('/');
-    var id = parts[parts.length - 1];
+    const path = window.location.pathname;
+    const parts = path.split('/');
+    const id = parts[parts.length - 1];
 
     if (id) {
         movieDetail.style.visibility = "hidden";

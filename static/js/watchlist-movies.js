@@ -1,18 +1,18 @@
-import {filters} from './filters.js'; 
+import {filters} from './filters.js';
 import {buttonsWatchlist} from './lists-buttons.js';
 
-document.addEventListener('DOMContentLoaded', async function() {
+document.addEventListener('DOMContentLoaded', async function () {
 
     const watchlist = JSON.parse(localStorage.getItem('watchlist')) || [];
     wlist.innerHTML = '<div class="spinner"></div>';
-  
-    const fetchWatchlist = watchlist.map(key => 
-      fetch('/movies/' + key)
-        .then(response => response.json())
+
+    const fetchWatchlist = watchlist.map(key =>
+        fetch('/movies/' + key)
+            .then(response => response.json())
     );
-    
+
     const items = await Promise.all(fetchWatchlist);
-  
+
     items.forEach((item) => {
         if (item) {
             const html = `
@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                 </div>
               </div>
             `
-            
+
             wlist.insertAdjacentHTML('beforeend', html);
         }
     });
@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     filters(items);
 
     buttonsWatchlist();
-  
+
 });
    
   

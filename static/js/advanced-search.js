@@ -17,7 +17,7 @@
         searchDiv.classList.remove("show")
         showFilters.innerHTML = "Show filters &darr;";
     } else {
-        showFilters.innerHTML =  "Hide filters &uarr;" ;
+        showFilters.innerHTML = "Hide filters &uarr;";
     }
 
 
