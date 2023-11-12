@@ -10,8 +10,8 @@ async function fillForm(id) {
     }
 }
 
-function openErrorPopup(text){
-        const popupHTML = `<div id="overlay"></div>
+function openErrorPopup(text) {
+    const popupHTML = `<div id="overlay"></div>
                                   <div id="confirmationPopup">
                                     <h5>${text}</h5>
                                     <button class="btn btn-danger" onclick="closeConfirmationPopup()">OK</button>
@@ -24,8 +24,8 @@ function openErrorPopup(text){
     document.getElementById("confirmationPopup").style.display = "block";
 }
 
-function openSuccessPopup(text){
-        const popupHTML = `<div id="overlay"></div>
+function openSuccessPopup(text) {
+    const popupHTML = `<div id="overlay"></div>
                                   <div id="confirmationPopup">
                                     <h5>${text}</h5>
                                     <button class="btn btn-success" onclick="window.location.href = '/'">Go Home</button>
@@ -44,77 +44,87 @@ function closeConfirmationPopup() {
     document.getElementById("confirmationPopup").style.display = "none";
 }
 
-function sendMovieForm(){
+async function sendMovieForm() {
     let count_error = 0;
     let formData = {};
 
     const checks = ["title", "release_year", "movie_length", "genre", "language", "imdb_url"];
-    for (let i in checks)
-    {
+    for (let i in checks) {
         const field = checks[i];
         const value = document.getElementById(field + "_input").value;
         const error = document.getElementById(field + "_error");
 
-        if (field == "movie_length" || field == "release_year"){
+        if (field == "movie_length" || field == "release_year") {
             formData[field] = parseInt(value);
-        }
-        else {
+        } else {
             formData[field] = value;
         }
 
-        if (value == ""){
+        if (value == "") {
             count_error++;
             error.style.display = "block";
-        }
-        else{
+        } else {
             error.style.display = "none";
         }
     }
 
-    if (count_error > 0){
+    if (count_error > 0) {
         return;
     }
 
-    if (method == "update"){
-        fetch(`/movies/${movie_id}`, {
-                method: 'PUT',
-                body: JSON.stringify(formData),
-                headers: {
-                  'Content-Type': 'application/json'
-                },
-            })
-            .then(response => {
-                if (!response.ok) {
-                    console.log(response);
-                    openErrorPopup('There was a problem with the PUT method: ' + response.statusText);
-                    return;
-                }
+    if (method == "update") {
+        const response = await fetch(`/movies/${movie_id}`, {
+            method: 'PUT',
+            body: JSON.stringify(formData),
+            headers: {
+                'Content-Type': 'application/jsonA'
+            },
+        });
 
-                openSuccessPopup('Movie updated successfully');
-            })
-    }
-    else if (method == "create"){
-        fetch(`/movies`, {
-                method: 'POST',
-                body: JSON.stringify(formData),
-                headers: {
-                  'Content-Type': 'application/json'
-                },
-            })
-            .then(response => {
-                if (!response.ok) {
-                    console.log(response);
-                    openErrorPopup('There was a problem with the POST method: ' + response.statusText);
-                    return;
-                }
+        if (!response.ok) {
+            json = await response.json();
 
-                openSuccessPopup('Movie created successfully');
-            })
+            if (json.detail == "Invalid IMDB URL") {
+                imdb_url_error.style.display = "block";
+                return;
+            }
+
+            console.log(response);
+            openErrorPopup('There was a problem with the PUT method: ' + response.statusText);
+            return;
+        }
+
+        openSuccessPopup('Movie updated successfully');
+
+    } else if (method == "create") {
+        const response = await fetch(`/movies`, {
+            method: 'POST',
+            body: JSON.stringify(formData),
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        });
+
+        if (!response.ok) {
+            json = await response.json();
+
+            if (json.detail == "Invalid IMDB URL") {
+                imdb_url_error.style.display = "block";
+                return;
+            }
+
+            console.log(response);
+            openErrorPopup('There was a problem with the POST method: ' + response.statusText);
+            return;
+        }
+
+        openSuccessPopup('Movie created successfully');
     }
+
 
     return;
 }
 
-if (method == "update"){
+if (method == "update") {
     fillForm(movie_id);
 }
