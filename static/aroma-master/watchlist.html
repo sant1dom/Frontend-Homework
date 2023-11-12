@@ -1,29 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>MovieDB - Watchlist</title>
-	<link rel="icon" href="static/aroma-master/img/Fevicon.png" type="image/png">
-  <link rel="stylesheet" href="static/aroma-master/vendors/bootstrap/bootstrap.min.css">
-  <link rel="stylesheet" href="static/aroma-master/vendors/fontawesome/css/all.min.css">
-	<link rel="stylesheet" href="static/aroma-master/vendors/themify-icons/themify-icons.css">
-	<link rel="stylesheet" href="static/aroma-master/vendors/linericon/style.css">
-  <link rel="stylesheet" href="static/aroma-master/vendors/owl-carousel/owl.theme.default.min.css">
-  <link rel="stylesheet" href="static/aroma-master/vendors/owl-carousel/owl.carousel.min.css">
-  <link rel="stylesheet" href="static/aroma-master/vendors/nice-select/nice-select.css">
+	{% include 'header.html' %}
   <link rel="stylesheet" href="static/aroma-master/vendors/nouislider/nouislider.min.css">
 
-  <link rel="stylesheet" href="static/aroma-master/css/style.css">
-  <link rel="stylesheet" href="static/aroma-master/css/heart-full.css">
-</head>
-<body>
-  <!--================ Start Header Menu Area =================-->
-	{% include 'header.html' %}
-	<!--================ End Header Menu Area =================-->
-
-	<!-- ================ category section start ================= -->		  
   <section class="section-margin--small mb-5">
     <div class="container">
       <div class="row">
@@ -31,33 +8,15 @@
           {% include 'filters.html' %}
         </div>
         <div class="col-xl-9 col-lg-8 col-md-7">
-          
           <section class="lattest-product-area pb-40 category-list">
             <h3>Watchlist</h3>
             <div id="wlist" class="row"></div>
           </section>
-          <!-- End Best Seller -->
         </div>
       </div>
     </div>
   </section>
-	<!-- ================ category section end ================= -->		  
 
-  <!--================ Start footer Area  =================-->	
+  <script defer src="/static/aroma-master/vendors/nouislider/nouislider.min.js"></script>
+  <script defer type="module" src="static/aroma-master/js/watchlist-movies.js"></script>
 	{% include 'footer.html' %}
-	<!--================ End footer Area  =================-->
-
-
-
-  <script src="static/aroma-master/vendors/jquery/jquery-3.2.1.min.js"></script>
-  <script src="static/aroma-master/vendors/bootstrap/bootstrap.bundle.min.js"></script>
-  <script src="static/aroma-master/vendors/skrollr.min.js"></script>
-  <script src="static/aroma-master/vendors/owl-carousel/owl.carousel.min.js"></script>
-  <script src="static/aroma-master/vendors/nice-select/jquery.nice-select.min.js"></script>
-  <script src="static/aroma-master/vendors/nouislider/nouislider.min.js"></script>
-  <script src="static/aroma-master/vendors/jquery.ajaxchimp.min.js"></script>
-  <script src="static/aroma-master/vendors/mail-script.js"></script>
-  <script src="static/aroma-master/js/main.js"></script>
-  <script type="module" src="static/aroma-master/js/watchlist-movies.js"></script>
-</body>
-</html>

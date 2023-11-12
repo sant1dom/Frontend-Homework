@@ -1,15 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>MovieDB - Favourites</title>
-  {% include 'common-links.html' %}
-</head>
-<body>
-
-	{% include 'header.html' %}
+{% include 'header.html' %}
+<link rel="stylesheet" href="static/aroma-master/vendors/nouislider/nouislider.min.css">
 	  
   <section class="section-margin--small mb-5">
     <div class="container">
@@ -25,9 +15,6 @@
     </div>
   </section>
 	  
+  <script defer src="/static/aroma-master/vendors/nouislider/nouislider.min.js"></script>
+  <script defer type="module" src="static/aroma-master/js/fav-movies.js"></script> 
   {% include 'footer.html' %}
-
-  {% include 'common-scripts.html' %}
-  <script type="module" src="static/aroma-master/js/fav-movies.js"></script>
-</body>
-</html>
