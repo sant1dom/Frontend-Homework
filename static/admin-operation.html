@@ -1,0 +1,73 @@
+  {% include 'header.html' %}
+
+  <section class="section-margin--small">
+    <div class="container">
+
+      <div class="row">
+        <div class="col-md-8 col-lg-9">
+          <form class="form-contact" onsubmit="return false">
+            <div class="row">
+              <div class="col-lg-12">
+                <div class="form-group">
+                  Title:
+                  <br>
+                  <input class="form-control" name="title" id="title_input" type="text" onchange="title_error.style.display = 'none'">
+                  <div id="title_error" style="display: none; color: red">
+                    Write Title
+                  </div>
+                </div>
+                <div class="form-group">
+                  Release year:
+                  <br>
+                  <input class="form-control" name="release_year" id="release_year_input" type="number" min=1800 max=2050 onchange="release_year_error.style.display = 'none'">
+                  <div id="release_year_error" style="display: none; color: red">
+                    Write Release year
+                  </div>
+                </div>
+                <div class="form-group">
+                  Length:
+                  <br>
+                  <input class="form-control" name="movie_length" id="movie_length_input" type="number" min=0 max=999 onchange="movie_length_error.style.display = 'none'">
+                  <div id="movie_length_error" style="display: none; color: red">
+                    Write Length
+                  </div>
+                </div>
+                <div class="form-group">
+                  Genre:
+                  <br>
+                  <input class="form-control" name="genre" id="genre_input" type="text" onchange="genre_error.style.display = 'none'">
+                  <div id="genre_error" style="display: none; color: red">
+                    Write Genre
+                  </div>
+                </div>
+                <div class="form-group">
+                  Language:
+                  <br>
+                  <input class="form-control" name="language" id="language_input" type="text" onchange="language_error.style.display = 'none'">
+                  <div id="language_error" style="display: none; color: red">
+                    Write Language
+                  </div>
+                </div>
+                <div class="form-group">
+                  IMDB's URL:
+                  <br>
+                  <input class="form-control" name="imdb_url" id="imdb_url_input" type="text" onchange="imdb_url_error.style.display = 'none'">
+                  <div id="imdb_url_error" style="display: none; color: red">
+                    Write IMDB's URL
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="form-group text-center text-md-right mt-3">
+              <button id="sendMovieButton" onclick="sendMovieForm(); return false;" class="button button--active button-contactForm">Confirm</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div id="popup"></div>
+
+  <script defer src="/static/js/admin-operation.js"></script>
+	{% include 'footer.html' %}

@@ -1,0 +1,35 @@
+{% include 'header.html' %}
+
+<div class="product_image_area">
+    <div class="container">
+        <div class="spinner" id="spinner"></div>
+        <div class="row s_product_inner" id="movieDetail">
+            <div>
+                <div id="poster"></div>
+            </div>
+            <div class="col-lg-5 offset-lg-1">
+                <div>
+                    <h3 id="title"></h3>
+                    <div id={{ id|tojson }} class="card_area d-flex align-items-center">
+                        <a class="icon_btn" href="#"></a>
+                        <a class="icon_btn" href="#"></a>
+                    </div>
+                    <ul class="list-spacing">
+                        <li id="year"></li>
+                        <li id="genre"></li>
+                        <li id="lngth"></li>
+                        <li id="language"></li>
+                        <li id="IMDBurl"></li>
+                        <li id="plot" class="title"></li>
+                        <li id="director" class="title"></li>
+                        <li id="ratings" class="title"></li>
+                        <li id="boxoffice" class="title"></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script defer type="module" src="/static/js/single-movie.js"></script>
+{% include 'footer.html' %}

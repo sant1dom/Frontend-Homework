@@ -1,0 +1,39 @@
+  {% include 'header.html' %}
+
+  <main class="site-main">
+    
+  <section class="order_details section-margin--small">
+    <div class="container">
+        <h2><button class="btn btn-success" onclick="window.open('/admin/create');">Add a new film</button></h2>
+        <h4>or</h4>
+    </div>
+
+    <div class="container">
+
+      <h2>Edit/Delete existing films</h2>
+      <div class="order_details_table">
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Film</th>
+                <th scope="col">Edit</th>
+                <th scope="col">Delete</th>
+              </tr>
+            </thead>
+            <tbody id="lista">
+              <tr></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  </main>
+
+  <div id="popup"></div>
+
+  <script defer src="/static/js/admin.js"></script>
+	{% include 'footer.html' %}
