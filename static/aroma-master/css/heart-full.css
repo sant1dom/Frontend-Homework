@@ -110,3 +110,15 @@ a {
     background: #8894ff;
     margin-right: 10px;
 }
+
+a.icon_btn:hover {
+    background: blue;
+}
+
+ul.list-spacing {
+    padding-top: 2%;
+}
+
+li.title {
+    padding-top: 2%;
+}
