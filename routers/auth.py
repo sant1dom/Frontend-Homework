@@ -8,7 +8,7 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from starlette.responses import Response
 
 from database import db_dependency, DBUser
-from models import UserCreate, User, Token
+from models import UserCreate, User, Token, UserReturn
 
 router = APIRouter(
     prefix="/auth",
@@ -51,14 +51,14 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_bearer)]):
         raise HTTPException(status_code=401, detail="Invalid credentials")
 
 
-@router.post("/register", status_code=201, response_model=User)
+@router.post("/register", status_code=201, response_model=UserReturn)
 async def create_user(user: UserCreate, db: db_dependency):
-    db_user = DBUser(**user.model_dump())
+    db_user = DBUser(email=user.email, hashed_password=user.password, is_active=True, is_superuser=False, profile_image="https://www.deviantart.com/not-a-hazard/art/Avatar-Base-for-Download-537682183")
     db_user.hashed_password = bcrypt_context.hash(db_user.hashed_password)
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
-    return User(**db_user.__dict__)
+    return UserReturn(**db_user.__dict__)
 
 
 @router.post("/login")

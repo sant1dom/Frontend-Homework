@@ -5,15 +5,43 @@ import Button from "../components/Button";
 import axios from "axios";
 import {login} from "../store/store";
 import {useDispatch} from "react-redux";
-import {useNavigate} from "react-router-dom";
-import Cookies from 'js-cookie';
+import {Link, useNavigate} from "react-router-dom";
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const [validationErrors, setValidationErrors] = useState({});
+    const [loginError, setLoginError] = useState(false);
+
+    const EMAIL_REQUIRED = 'Please enter your email';
+    const INVALID_EMAIL = 'Please enter a valid email address';
+    const PASSWORD_REQUIRED = 'Please enter your password';
+    const INVALID_USER = 'Invalid email or password';
+
+    const validateForm = (currentEmail, currentPassword) => {
+        const errors = {};
+
+        if (!currentEmail) {
+            errors.email = EMAIL_REQUIRED;
+        } else {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(currentEmail)) {
+                errors.email = INVALID_EMAIL;
+            }
+        }
+
+        if (!currentPassword) {
+            errors.password = PASSWORD_REQUIRED;
+        }
+        return errors;
+    };
+
     const handleLogin = () => {
+        if (!validateForm()) {
+            return;
+        }
         axios.post('http://localhost:8000/auth/login', {
             username: email,
             password: password
@@ -27,14 +55,24 @@ const Login = () => {
             const data = response.data;
             dispatch(login({
                 token: data.access_token,
-                userId: data.userId,
+                userId: data.id,
                 email: data.email,
-                isAuth: true
+                photo: data.profile_image,
+                is_superuser: data.is_superuser,
             }));
             navigate('/');
         }).catch((error) => {
             console.log(error);
+            setLoginError(true);
         });
+    }
+
+    function handleInputChange(e, setState) {
+        const {type, value} = e.target;
+        const errors = validateForm(type === "email" ? value : email, type === "password" ? value : password)
+        setState(value)
+        setValidationErrors(errors)
+        setLoginError(false)
     }
 
     return (
@@ -47,13 +85,16 @@ const Login = () => {
                         Email
                     </label>
                     <input
-                        type="text"
+                        type="email"
                         id="email"
-                        className="w-full border p-2 rounded"
+                        className={`w-full border p-2 rounded ${validationErrors.email ? 'border-red-500' : ''}`}
                         placeholder="Enter your email"
                         value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        onChange={(e) => {
+                            handleInputChange(e, setEmail)
+                        }}
                     />
+                    {validationErrors.email && <p className="text-red-500 text-xs mt-1">{validationErrors.email}</p>}
                 </div>
 
                 <div className="mb-6">
@@ -63,15 +104,24 @@ const Login = () => {
                     <input
                         type="password"
                         id="password"
-                        className="w-full border p-2 rounded"
+                        className={`w-full border p-2 rounded ${validationErrors.password ? 'border-red-500' : ''}`}
                         placeholder="Enter your password"
                         value={password}
-                        onChange={(e) => setPassword(e.target.value)}
+                        onChange={(e) => {
+                            handleInputChange(e, setPassword)
+                        }}
                     />
+                    {validationErrors.password &&
+                        <p className="text-red-500 text-xs mt-1">{validationErrors.password}</p>}
                 </div>
+                {loginError && <><p className="text-red-500 text-xs mt-1">{INVALID_USER}</p><br/></>}
 
-                <Button label="Login" onClick={handleLogin}/>
-
+                <Button label="Login" onClick={handleLogin} rounded={true} disabled={!(Object.keys(validationErrors).length === 0)}/>
+                <div className="text-center mt-4">
+                    <Link to="/register" className="text-blue-400 hover:text-blue-800">
+                        Don't have an account? Register here.
+                    </Link>
+                </div>
             </div>
         </div>
     );

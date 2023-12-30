@@ -33,7 +33,14 @@ class User(BaseModel):
     hashed_password: str
     email: str
     is_active: bool
-    is_superuser: bool
+    is_superuser: bool = False
+    profile_image: str = None
+
+class UserReturn(BaseModel):
+    id: int
+    email: str
+    is_active: bool
+    is_superuser: bool = False
     profile_image: str = None
 
 class UserCreate(BaseModel):

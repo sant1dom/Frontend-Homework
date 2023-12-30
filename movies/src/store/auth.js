@@ -1,4 +1,4 @@
-import {configureStore, createSlice} from "@reduxjs/toolkit";
+import {createSlice} from "@reduxjs/toolkit";
 
 const auth = createSlice({
     name: 'auth',
@@ -6,9 +6,9 @@ const auth = createSlice({
         isAuth: false,
         token: null,
         userId: null,
-        name: null,
         email: null,
         photo: null,
+        is_superuser: null,
     },
     reducers: {
         login(state, action) {
@@ -17,6 +17,7 @@ const auth = createSlice({
             state.userId = action.payload.userId;
             state.email = action.payload.email;
             state.photo = action.payload.photo;
+            state.is_superuser = action.payload.is_superuser;
         },
         logout(state) {
             state.isAuth = false;
@@ -24,6 +25,7 @@ const auth = createSlice({
             state.userId = null;
             state.email = null;
             state.photo = null;
+            state.is_superuser = null;
         },
     },
 });

@@ -9,6 +9,7 @@ import {useDispatch} from "react-redux";
 import axios from "axios";
 import {login} from "./store/store";
 import Cookies from 'js-cookie';
+import Registration from "./pages/Registration";
 
 function App() {
     const dispatch = useDispatch();
@@ -45,6 +46,7 @@ function App() {
                     <Route path="/" element={<Layout/>}>
                         <Route index element={<Home/>}/>
                         <Route path="/login" element={<Login/>}/>
+                        <Route path="/register" element={<Registration/>}/>
                     </Route>
                 </Routes>
             </div>
