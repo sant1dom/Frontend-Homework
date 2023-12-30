@@ -1,122 +1,103 @@
+import time
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import asynccontextmanager
 
 import requests
 from bs4 import BeautifulSoup
 from fastapi import FastAPI, Depends, HTTPException
+from fastapi_csrf_protect import CsrfProtect
 from pydantic import BaseModel
 from sqlalchemy import create_engine, and_, func
 from sqlalchemy.orm import DeclarativeBase, mapped_column, Mapped, sessionmaker, Session
+from starlette.middleware import Middleware
+from fastapi.middleware.cors import CORSMiddleware
+from starlette.requests import Request
 from starlette.staticfiles import StaticFiles
 import re
-from routers import site
 
+from LogConfig import LogConfig
+from database import Base, engine, fill_db, get_db, DBMovie
+from exceptions_handlers import rate_limit_exceeded_handler
+from models import Movie, MovieUpdate, MovieCreate
+from routers import site, auth
+from routers.auth import user_dependency
 
-class Movie(BaseModel):
-    id: int
-    title: str
-    release_year: int
-    movie_length: int
-    genre: str
-    language: str
-    imdb_url: str
-    imdb_image: str = None
+from slowapi import Limiter
+from slowapi.util import get_remote_address
+from slowapi.errors import RateLimitExceeded
 
+import logging
+from logging.config import dictConfig
 
-class MovieCreate(BaseModel):
-    title: str
-    release_year: int
-    movie_length: int
-    genre: str
-    language: str
-    imdb_url: str
-
-
-class MovieUpdate(BaseModel):
-    title: str
-    release_year: int
-    movie_length: int
-    genre: str
-    language: str
-    imdb_url: str
-
-
-DATABASE_URL = "sqlite:///./movies.db"
-
-
-class Base(DeclarativeBase):
-    pass
-
-
-class DBMovie(Base):
-    __tablename__ = "movies"
-
-    id: Mapped[int] = mapped_column(primary_key=True, index=True)
-    title: Mapped[str] = mapped_column(nullable=False)
-    release_year: Mapped[int] = mapped_column(nullable=False)
-    movie_length: Mapped[int] = mapped_column(nullable=False)
-    genre: Mapped[str] = mapped_column(nullable=False)
-    language: Mapped[str] = mapped_column(nullable=False)
-    imdb_url: Mapped[str] = mapped_column(nullable=False)
-    imdb_image: Mapped[str] = mapped_column(nullable=True)
-
-
-engine = create_engine(DATABASE_URL, echo=True)
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
-
-def get_db():
-    database = SessionLocal()
-    try:
-        yield database
-    finally:
-        database.close()
-
-
-def fill_movies():
-    db = SessionLocal()
-    with open("movies.json", "r", encoding="utf-8") as f:
-        movies = f.read()
-    movies = eval(movies)
-    for movie in movies:
-        db_movie = DBMovie(**movie)
-        db.add(db_movie)
-    db.commit()
-    db.close()
-
-
-def get_imdb_image(movie):
-    headers = {
-        "User-Agent": 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36'
-    }
-    url_pattern = re.compile(r'https://www\.imdb\.com/title/tt\d+/')
-    if url_pattern.match(movie.imdb_url):
-        src = BeautifulSoup(requests.get(movie.imdb_url, headers=headers).content, "html.parser") \
-            .find("img", class_="ipc-image") \
-            .get("src")
-        movie.imdb_image = src
-    else:
-        raise HTTPException(status_code=400, detail="Invalid IMDB URL")
+dictConfig(LogConfig().model_dump())
+logger = logging.getLogger(__name__)
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     Base.metadata.create_all(bind=engine)
     # Fill the database with some movies
-    fill_movies()
+    fill_db()
     yield
     Base.metadata.drop_all(bind=engine)
 
 
+limiter = Limiter(key_func=get_remote_address)
 app = FastAPI(lifespan=lifespan)
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, rate_limit_exceeded_handler)
+origins = ["*"]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
-app.include_router(site.router)
+# app.include_router(site.router)
+app.include_router(auth.router)
+
+
+@app.middleware("http")
+async def logging_middleware(request: Request, call_next):
+    start_time = time.time()
+    logger.info({
+        "event": "request_received",
+        "method": request.method,
+        "url": str(request.url),
+        "headers": dict(request.headers),
+        "client": request.client.host,
+    })
+    try:
+        response = await call_next(request)
+        end_time = time.time()
+        logger.info({
+            "event": "request_processed",
+            "method": request.method,
+            "url": str(request.url),
+            "status_code": response.status_code,
+            "time_taken": end_time - start_time,
+        })
+        return response
+    except Exception as e:
+        end_time = time.time()
+        logger.error({
+            "event": "request_error",
+            "method": request.method,
+            "url": str(request.url),
+            "error": str(e),
+            "time_taken": end_time - start_time,
+        })
+        raise e
 
 
 @app.get("/movies", response_model=list[Movie])
-async def get_movies(db: Session = Depends(get_db)) -> list[Movie]:
+@limiter.limit("5/second")
+async def get_movies(request: Request, db: Session = Depends(get_db)) -> list[Movie]:
     movies = db.query(DBMovie).all()
     movies = [Movie(**movie.__dict__) for movie in movies]
     return movies
@@ -129,7 +110,6 @@ async def update_movie(movie_id: int, movie: MovieUpdate, db: Session = Depends(
         raise HTTPException(status_code=404, detail="Movie not found")
     for key, value in movie.model_dump().items():
         setattr(db_movie, key, value)
-    get_imdb_image(db_movie)
     db.commit()
     db.refresh(db_movie)
     return Movie(**db_movie.__dict__)
@@ -138,7 +118,6 @@ async def update_movie(movie_id: int, movie: MovieUpdate, db: Session = Depends(
 @app.post("/movies", response_model=Movie)
 async def create_movie(movie: MovieCreate, db: Session = Depends(get_db)) -> Movie:
     db_movie = DBMovie(**movie.model_dump())
-    get_imdb_image(db_movie)
     db.add(db_movie)
     db.commit()
     db.refresh(db_movie)
@@ -208,7 +187,11 @@ async def get_genres(db: Session = Depends(get_db)) -> list[str]:
 
 
 @app.get("/languages", response_model=list[str])
-async def get_languages(db: Session = Depends(get_db)) -> list[str]:
-    languages = db.query(DBMovie.language).distinct().all()
-    languages = [language[0] for language in languages]
-    return languages
+async def get_languages(user: user_dependency, db: Session = Depends(get_db)):
+    print(user)
+    if user["is_superuser"]:
+        languages = db.query(DBMovie.language).distinct().all()
+        languages = [language[0] for language in languages]
+        return languages
+    else:
+        raise HTTPException(status_code=403, detail="You are not allowed to view this resource")

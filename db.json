@@ -1,0 +1,140 @@
+{
+  "movies": [
+    {
+      "title": "Le Ali della Libertà",
+      "release_year": 1994,
+      "movie_length": 142,
+      "genre": "Drama",
+      "language": "Italiano",
+      "imdb_url": "https://www.imdb.com/title/tt0111161/"
+    },
+    {
+      "title": "Il Padrino",
+      "release_year": 1972,
+      "movie_length": 175,
+      "genre": "Crime",
+      "language": "Italiano",
+      "imdb_url": "https://www.imdb.com/title/tt0068646/"
+    },
+    {
+      "title": "Il Cavaliere Oscuro",
+      "release_year": 2008,
+      "movie_length": 152,
+      "genre": "Azione",
+      "language": "Italiano",
+      "imdb_url": "https://www.imdb.com/title/tt0468569/"
+    },
+    {
+      "title": "Il Padrino - Parte II",
+      "release_year": 1974,
+      "movie_length": 202,
+      "genre": "Crime",
+      "language": "Italiano",
+      "imdb_url": "https://www.imdb.com/title/tt0071562/"
+    },
+    {
+      "title": "Il Signore degli Anelli - Il Ritorno del Re",
+      "release_year": 2003,
+      "movie_length": 201,
+      "genre": "Avventura",
+      "language": "Italiano",
+      "imdb_url": "https://www.imdb.com/title/tt0167260/"
+    },
+    {
+      "title": "Pulp Fiction",
+      "release_year": 1994,
+      "movie_length": 154,
+      "genre": "Crime",
+      "language": "Italiano",
+      "imdb_url": "https://www.imdb.com/title/tt0110912/"
+    },
+    {
+      "title": "Schindler's List",
+      "release_year": 1993,
+      "movie_length": 195,
+      "genre": "Biografico",
+      "language": "Italiano",
+      "imdb_url": "https://www.imdb.com/title/tt0108052/"
+    },
+    {
+      "title": "Il Signore degli Anelli - La Compagnia dell'Anello",
+      "release_year": 2001,
+      "movie_length": 178,
+      "genre": "Avventura",
+      "language": "Italiano",
+      "imdb_url": "https://www.imdb.com/title/tt0120737/"
+    },
+    {
+      "title": "Fight Club",
+      "release_year": 1999,
+      "movie_length": 139,
+      "genre": "Drama",
+      "language": "Italiano",
+      "imdb_url": "https://www.imdb.com/title/tt0137523/"
+    },
+    {
+      "title": "Il Signore degli Anelli - Le Due Torri",
+      "release_year": 2002,
+      "movie_length": 179,
+      "genre": "Avventura",
+      "language": "Italiano",
+      "imdb_url": "https://www.imdb.com/title/tt0167261/"
+    },
+    {
+      "title": "Forrest Gump",
+      "release_year": 1994,
+      "movie_length": 142,
+      "genre": "Drama",
+      "language": "Italiano",
+      "imdb_url": "https://www.imdb.com/title/tt0109830/"
+    },
+    {
+      "title": "Il Gladiatore",
+      "release_year": 2000,
+      "movie_length": 155,
+      "genre": "Azione",
+      "language": "Italiano",
+      "imdb_url": "https://www.imdb.com/title/tt0172495/"
+    },
+    {
+      "title": "Inception",
+      "release_year": 2010,
+      "movie_length": 148,
+      "genre": "Azione",
+      "language": "Italiano",
+      "imdb_url": "https://www.imdb.com/title/tt1375666/"
+    },
+    {
+      "title": "Lo Hobbit - Un Viaggio Inaspettato",
+      "release_year": 2012,
+      "movie_length": 169,
+      "genre": "Avventura",
+      "language": "Italiano",
+      "imdb_url": "https://www.imdb.com/title/tt0903624/"
+    },
+    {
+      "title": "Il Buono, il Brutto, il Cattivo",
+      "release_year": 1966,
+      "movie_length": 178,
+      "genre": "Western",
+      "language": "Italiano",
+      "imdb_url": "https://www.imdb.com/title/tt0060196/"
+    }
+  ],
+  "users": [
+    {
+      "hashed_password": "$2b$12$MP9tPWjjk10cmkoBU6ZM6.lmL809oL614sEIkiqi8GHwsBPdh.Ara",
+      "email": "admin@react.org",
+      "is_superuser": true,
+      "is_active": true,
+      "profile_image": "https://thispersondoesnotexist.com/"
+    },
+    {
+      "hashed_password": "$2b$12$XYNJCumK7yZ0JJVjeXb/5eNFZOmvVsaTXXxSorQQ1/DsyJ.6tMcpm",
+      "email": "pippo@react.org",
+      "is_superuser": false,
+      "is_active": true,
+      "profile_image": "https://thispersondoesnotexist.com/"
+    }
+  ]
+}
