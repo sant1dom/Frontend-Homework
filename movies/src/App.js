@@ -18,7 +18,6 @@ function App() {
     // Check if the user is already logged in
     useEffect(() => {
         const token = Cookies.get("access-token");
-        console.log(token)
         if (token) {
             api.get("/auth/current_user",
                 {
@@ -32,7 +31,7 @@ function App() {
                     token: token,
                     userId: data.userId,
                     email: data.email,
-                    profile_image: data.profile_image,
+                    photo: data.profile_image,
                     isAuth: true
                 }));
             }).catch((error) => {
