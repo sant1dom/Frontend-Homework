@@ -53,7 +53,7 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_bearer)]):
 
 @router.post("/register", status_code=201, response_model=UserReturn)
 async def create_user(user: UserCreate, db: db_dependency):
-    db_user = DBUser(email=user.email, hashed_password=user.password, is_active=True, is_superuser=False, profile_image="https://www.deviantart.com/not-a-hazard/art/Avatar-Base-for-Download-537682183")
+    db_user = DBUser(email=user.email, hashed_password=user.password, is_active=True, is_superuser=False, profile_image="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/i/43563f53-c409-4769-a2a9-f5893b6df553/d8w4e87-08c2b115-7eef-47e6-87d3-1f14e5753bad.png/v1/fit/w_800,h_800,q_70,strp/avatar_base_for_download_by_not_a_hazard_d8w4e87-414w-2x.jpg")
     db_user.hashed_password = bcrypt_context.hash(db_user.hashed_password)
     db.add(db_user)
     db.commit()

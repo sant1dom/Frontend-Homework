@@ -4,6 +4,7 @@ import {Link, useNavigate} from "react-router-dom";
 import axios from "axios";
 import {login} from "../store/store";
 import Button from "../components/Button";
+import api from "../utils/api";
 
 const Registration = () => {
     const [email, setEmail] = useState('');
@@ -17,7 +18,6 @@ const Registration = () => {
     const EMAIL_REQUIRED = 'Please enter your email';
     const INVALID_EMAIL = 'Please enter a valid email address';
     const PASSWORD_REQUIRED = 'Please enter your password';
-    const INVALID_USER = 'User already exists';
     const PASSWORD_CONFIRM_REQUIRED = 'Please confirm your password';
     const PASSWORDS_DO_NOT_MATCH = 'Passwords do not match';
 
@@ -81,16 +81,10 @@ const Registration = () => {
         if (!validateForm()) {
             return;
         }
-        axios.post('http://localhost:8000/auth/register', JSON.stringify({
+        api.post('http://localhost:8000/auth/register', JSON.stringify({
                 email: email,
                 password: password
-            }),
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                }
-            }).then((response) => {
+            })).then((response) => {
             console.log(response);
             const data = response.data;
             dispatch(login({

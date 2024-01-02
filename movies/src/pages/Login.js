@@ -6,6 +6,7 @@ import axios from "axios";
 import {login} from "../store/store";
 import {useDispatch} from "react-redux";
 import {Link, useNavigate} from "react-router-dom";
+import api from "../utils/api";
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -42,13 +43,12 @@ const Login = () => {
         if (!validateForm()) {
             return;
         }
-        axios.post('http://localhost:8000/auth/login', {
+        api.post('/auth/login', {
             username: email,
             password: password
         }, {
             headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'Accept': 'application/json'
+                'Content-Type': 'application/x-www-form-urlencoded'
             }
         }).then((response) => {
             console.log(response);

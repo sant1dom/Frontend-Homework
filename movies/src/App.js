@@ -10,6 +10,7 @@ import axios from "axios";
 import {login} from "./store/store";
 import Cookies from 'js-cookie';
 import Registration from "./pages/Registration";
+import api from "./utils/api";
 
 function App() {
     const dispatch = useDispatch();
@@ -18,11 +19,10 @@ function App() {
     useEffect(() => {
         const token = Cookies.get("access-token");
         if (token) {
-            axios.get("http://localhost:8000/auth/current_user",
+            api.get(
                 {
                     headers: {
                         'Authorization': `Bearer ${token}`,
-                        'Accept': 'application/json'
                     }
                 }
             ).then((response) => {
