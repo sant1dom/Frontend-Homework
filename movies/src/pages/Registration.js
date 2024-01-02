@@ -5,6 +5,7 @@ import axios from "axios";
 import {login} from "../store/store";
 import Button from "../components/Button";
 import api from "../utils/api";
+import Cookies from "js-cookie";
 
 const Registration = () => {
     const [email, setEmail] = useState('');
@@ -94,6 +95,7 @@ const Registration = () => {
                 photo: data.profile_image,
                 is_superuser: data.is_superuser,
             }));
+            Cookies.set('access-token', data.access_token);
             navigate('/');
         }).catch((error) => {
             console.log(error);
