@@ -7,6 +7,7 @@ import {login} from "../store/store";
 import {useDispatch} from "react-redux";
 import {Link, useNavigate} from "react-router-dom";
 import api from "../utils/api";
+import Cookies from 'js-cookie';
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -60,6 +61,7 @@ const Login = () => {
                 photo: data.profile_image,
                 is_superuser: data.is_superuser,
             }));
+            Cookies.set('access-token', data.access_token);
             navigate('/');
         }).catch((error) => {
             console.log(error);
