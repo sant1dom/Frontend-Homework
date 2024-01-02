@@ -18,8 +18,9 @@ function App() {
     // Check if the user is already logged in
     useEffect(() => {
         const token = Cookies.get("access-token");
+        console.log(token)
         if (token) {
-            api.get(
+            api.get("/auth/current_user",
                 {
                     headers: {
                         'Authorization': `Bearer ${token}`,
