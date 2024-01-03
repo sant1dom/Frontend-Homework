@@ -7,13 +7,24 @@ const popup = createSlice({
         text_question: null,
         text_yes: null,
         text_no: null,
-        click_yes: null,
-        click_no: null,
+        click_yes: {
+            url: null,
+            method: null,
+            hide: null,
+            hide_table: null,
+            hide_id: null,
+        },
+        click_no: {
+            url: null,
+            method: null,
+            hide: null,
+            hide_table: null,
+            hide_id: null,
+        },
     },
     reducers: {
         overwrite(state, action) {
-            for (let i in action.payload)
-            {
+            for (let i in action.payload) {
                 state[i] = action.payload[i];
             }
         },

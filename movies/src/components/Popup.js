@@ -19,10 +19,21 @@ const Popup = () => {
     const handleYes = () => {
         const url = popupState.click_yes.url;
         const method = popupState.click_yes.method;
+        const hide_table = popupState.click_yes.hide_table;
+        const hide_id = popupState.click_yes.hide_id;
 
         if (url != null) {
             api[method](url)
                 .then(response => {
+
+                    dispatch({
+                        type: "hide/add",
+                        payload:
+                            {
+                                table: hide_table,
+                                id: hide_id,
+                            }
+                    });
 
                 })
                 .catch(error => {
@@ -36,6 +47,7 @@ const Popup = () => {
     const handleNo = () => {
         const url = popupState.click_no.url;
         const method = popupState.click_no.method;
+        const hide = popupState.click_no.hide;
 
         if (url != null) {
             api[method](url)

@@ -36,7 +36,7 @@ logger = logging.getLogger(__name__)
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     Base.metadata.create_all(bind=engine)
-    # Fill the database with some movies
+    # Fill the database with some hide
     fill_db()
     yield
     Base.metadata.drop_all(bind=engine)
@@ -165,7 +165,7 @@ async def search_movies(
     movies = db.query(DBMovie).filter(and_(*filters)).all()
 
     if not movies:
-        raise HTTPException(status_code=404, detail="No movies found with the given criteria")
+        raise HTTPException(status_code=404, detail="No hide found with the given criteria")
 
     return [Movie(**movie.__dict__) for movie in movies]
 

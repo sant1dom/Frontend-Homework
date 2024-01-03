@@ -27,7 +27,7 @@ async function advancedSearch(event) {
     event.preventDefault()
     results.innerHTML = ""
     resultsH1.removeAttribute("hidden")
-    let url = "/movies/search?";
+    let url = "/hide/search?";
     const formData = new FormData(event.target)
     formData.forEach((value, key) => {
         if (value !== '') url += `${key}=${value}&`

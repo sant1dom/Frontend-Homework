@@ -1,7 +1,8 @@
 import {Link} from "react-router-dom";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {store} from "../store/store";
 import api from "../utils/api";
+import hide from "../store/hide";
 
 const MovieRow = ({movie}) => {
 
@@ -20,19 +21,28 @@ const MovieRow = ({movie}) => {
                     click_yes: {
                         url: "/movies/" + movie.id,
                         method: "delete",
+                        hide_table: 'movie',
+                        hide_id: movie.id,
                     },
                     click_no: {
                         url: null,
                         method: null,
+                        hide: null,
+                        hide_table: null,
+                        hide_id: null,
                     },
                 }
         });
-
-        console.log('Final state: ', store.getState())
     };
 
+    const hidden = useSelector((state) => state.hide.movie);
+    console.log(hidden);
+    if (hidden.hasOwnProperty(movie.id)) {
+        return (<></>);
+    }
+
     return (
-        <tr id={movie.id}>
+        <tr id={`movie_row_${movie.id}`}>
             <td>
                 <p>
                     {title}

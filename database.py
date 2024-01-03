@@ -6,7 +6,7 @@ from sqlalchemy.orm import Mapped, mapped_column, DeclarativeBase, sessionmaker,
 
 import json
 
-DATABASE_URL = "sqlite:///./movies.db"
+DATABASE_URL = "sqlite:///./hide.db"
 
 
 class Base(DeclarativeBase):
@@ -14,7 +14,7 @@ class Base(DeclarativeBase):
 
 
 class DBMovie(Base):
-    __tablename__ = "movies"
+    __tablename__ = "hide"
 
     id: Mapped[int] = mapped_column(primary_key=True, index=True)
     title: Mapped[str] = mapped_column(nullable=False)
@@ -50,12 +50,12 @@ def get_db():
 
 def fill_db():
     db = SessionLocal()
-    # Load movies and users from json file
+    # Load hide and users from json file
     with open("db.json", "r") as f:
         data = json.load(f)
-        movies = data["movies"]
+        movies = data["hide"]
         users = data["users"]
-    # Add movies to database
+    # Add hide to database
     for movie in movies:
         db_movie = DBMovie(**movie)
         db.add(db_movie)
