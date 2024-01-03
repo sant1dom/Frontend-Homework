@@ -9,7 +9,16 @@ const AdminOperation = () => {
     const navigate = useNavigate();
     const authState = useSelector((state) => state.auth);
     const movieForm = useRef();
-    let pageTitle = useState("");
+    let pageTitle = "Create a new movie";
+
+    const path = window.location.pathname.split("/");
+    const method = path[1];
+    let movie_id = null;
+
+    if (method == "update") {
+        pageTitle = "Edit an existing movie";
+        movie_id = path[2];
+    }
 
     useEffect(() => {
         console.log("Faccio partire Operation");
@@ -19,16 +28,19 @@ const AdminOperation = () => {
             return;
         }
 
-        console.log(window.location.pathname);
-        return;
+        if (method == "update") {
 
-        api.get('/movies').then((response) => {
+            if (isNaN(movie_id)) {
+                navigate('/');
+                return;
+            }
 
-
-
-        }).catch((error) => {
-            console.log(error);
-        });
+            api.get('/movies/' + movie_id).then((response) => {
+                console.log(response.data);
+            }).catch((error) => {
+                console.log(error);
+            });
+        }
 
     }, []);
 
@@ -38,26 +50,105 @@ const AdminOperation = () => {
 
     const sendMovieForm = (event) => {
         event.preventDefault();
-    };
 
-    return (
-        <div className="container mx-auto">
-            <h1 className="text-2xl">AdminOperation</h1>
+        let count_error = 0;
+        let formData = {};
 
-            <form ref={movieForm}>
-                <Input key="title" field="title" label="Title" type="text"/>
-                <Input key="release_year" field="release_year" label="Release year" type="number" min={1800} max={2050}/>
-                <Input key="movie_length" field="movie_length" label="Length" type="number" min={0} max={999}/>
-                <Input key="genre" field="genre" label="Genre" type="text"/>
-                <Input key="language" field="language" label="Language" type="text"/>
-                <Input key="imdb_url" field="imdb_url" label="IMDB's URL" type="text"/>
+        const checks = ["title", "release_year", "movie_length", "genre", "language", "imdb_url"];
+        for (let i in checks) {
+            const field = checks[i];
+            const value = document.getElementById(field + "_input").value;
+            const error = document.getElementById(field + "_error");
 
-                <button onClick={sendMovieForm}>
-                    Confirm
-                </button>
-            </form>
-        </div>
-    );
-}
+            if (field == "movie_length" || field == "release_year") {
+                formData[field] = parseInt(value);
+            } else {
+                formData[field] = value;
+            }
 
-export default AdminOperation;
+            if (value == "") {
+                count_error++;
+                error.style.display = "block";
+            } else {
+                error.style.display = "none";
+            }
+        }
+
+        if (count_error > 0) {
+            return;
+        }
+
+        if (method == "update") {
+            const response = await fetch(`/movies/${movie_id}`, {
+                method: 'PUT',
+                body: JSON.stringify(formData),
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+            });
+
+            if (!response.ok) {
+                json = await response.json();
+
+                if (json.detail == "Invalid IMDB URL") {
+                    imdb_url_error.style.display = "block";
+                    return;
+                }
+
+                console.log(response);
+                openErrorPopup('There was a problem with the PUT method: ' + response.statusText);
+                return;
+            }
+
+            openSuccessPopup('Movie updated successfully');
+
+        } else if (method == "create") {
+            const response = await fetch(`/movies`, {
+                method: 'POST',
+                body: JSON.stringify(formData),
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+            });
+
+            if (!response.ok) {
+                json = await response.json();
+
+                if (json.detail == "Invalid IMDB URL") {
+                    imdb_url_error.style.display = "block";
+                    return;
+                }
+
+                console.log(response);
+                openErrorPopup('There was a problem with the POST method: ' + response.statusText);
+                return;
+            }
+
+            openSuccessPopup('Movie created successfully');
+        }
+        ;
+
+        return (
+            <div className="container mx-auto">
+                <h1 className="text-2xl">{pageTitle}</h1>
+                <br/>
+
+                <form ref={movieForm}>
+                    <Input key="title" field="title" label="Title" type="text"/>
+                    <Input key="release_year" field="release_year" label="Release year" type="number" min={1800}
+                           max={2050}/>
+                    <Input key="movie_length" field="movie_length" label="Length" type="number" min={0} max={999}/>
+                    <Input key="genre" field="genre" label="Genre" type="text"/>
+                    <Input key="language" field="language" label="Language" type="text"/>
+                    <Input key="imdb_url" field="imdb_url" label="IMDB's URL" type="text"/>
+
+                    <br/>
+                    <button onClick={sendMovieForm}>
+                        Save
+                    </button>
+                </form>
+            </div>
+        );
+    }
+
+    export default AdminOperation;

@@ -15,9 +15,9 @@ const MovieRow = ({movie}) => {
             payload:
                 {
                     show: true,
-                    text_question: "Vuoi cancellare " + title + "?",
-                    text_yes: "Cancella",
-                    text_no: "Annulla",
+                    text_question: "Do you want to delete " + title + "?",
+                    text_yes: "Delete",
+                    text_no: "Close Popup",
                     click_yes: {
                         url: "/movies/" + movie.id,
                         method: "delete",
