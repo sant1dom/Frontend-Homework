@@ -51,7 +51,7 @@ function App() {
                         <Route path="/register" element={<Registration/>}/>
                         <Route path="/admin/search" element={<AdminSearch/>}/>
                         <Route path="/admin/create" element={<AdminOperation/>}/>
-                        <Route path="/admin/update" element={<AdminOperation/>}/>
+                        <Route path="/admin/update/:id" element={<AdminOperation/>}/>
                     </Route>
                 </Routes>
             </div>
