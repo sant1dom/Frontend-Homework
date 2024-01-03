@@ -1,8 +1,35 @@
 import {Link} from "react-router-dom";
+import {useDispatch} from "react-redux";
+import {store} from "../store/store";
+import api from "../utils/api";
 
 const AdminMovie = ({movie}) => {
 
+    const dispatch = useDispatch();
     const title = movie.title.replace(new RegExp('"', 'g'), "&quot;").replace(new RegExp("'", 'g'), "’");
+
+    const handleDeletePopup = () => {
+        dispatch({
+            type: "popup/overwrite",
+            payload:
+                {
+                    show: true,
+                    text_question: "Vuoi cancellare " + title + "?",
+                    text_yes: "Cancella",
+                    text_no: "Annulla",
+                    click_yes: {
+                        url: "/movies/" + movie.id,
+                        method: "delete",
+                    },
+                    click_no: {
+                        url: null,
+                        method: null,
+                    },
+                }
+        });
+
+        console.log('Final state: ', store.getState())
+    };
 
     return (
         <tr id={movie.id}>
@@ -23,7 +50,7 @@ const AdminMovie = ({movie}) => {
             </td>
             <td>
                 <p>
-                    <button onClick="openConfirmationPopup({film.id}, '{title}')">
+                    <button onClick={handleDeletePopup}>
                         DELETE
                     </button>
                 </p>

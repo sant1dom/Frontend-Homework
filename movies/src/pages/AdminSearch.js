@@ -3,6 +3,7 @@ import React, {useEffect, useState} from "react";
 import {useSelector} from "react-redux";
 import {Link, useNavigate} from "react-router-dom";
 import AdminMovie from "../components/AdminMovie";
+import {store} from "../store/store";
 
 const AdminSearch = () => {
 
@@ -12,13 +13,16 @@ const AdminSearch = () => {
     const [phase, setPhase] = useState("Loading");
 
     useEffect(() => {
+        console.log("Faccio partire la ricerca");
+
+        console.log('Initial state: ', store.getState())
+
         if (!authState.is_superuser) {
             navigate('/');
             return;
         }
 
         api.get('/movies').then((response) => {
-            console.log(response.data);
             setPhase("Loaded " + response.data.length + " movies")
 
             const tempMovies = response.data.map((movie) => {
@@ -39,34 +43,30 @@ const AdminSearch = () => {
 
     return (
         <div className="container mx-auto">
-            <div class="container">
+            <div>
                 <Link
                     key='admin/create'
                     to='/admin/create'
                 >
-                        Add a new film
+                    Add a new film
                 </Link>
 
                 <h4>or</h4>
 
                 <h2>Edit/Delete existing films</h2>
 
-                <div class="order_details_table">
-                    <div class="table-responsive">
-                        <table class="table">
-                            <thead>
-                            <tr>
-                                <th scope="col">Film</th>
-                                <th scope="col">Edit</th>
-                                <th scope="col">Delete</th>
-                            </tr>
-                            </thead>
-                            <tbody id="lista">
-                                {movies}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Film</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        {movies}
+                    </tbody>
+                </table>
             </div>
         </div>
     );

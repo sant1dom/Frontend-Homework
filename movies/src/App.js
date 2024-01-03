@@ -13,6 +13,7 @@ import Registration from "./pages/Registration";
 import api from "./utils/api";
 import AdminSearch from "./pages/AdminSearch";
 import AdminOperation from "./pages/AdminOperation";
+import Popup from "./components/Popup";
 
 function App() {
     const dispatch = useDispatch();
@@ -55,6 +56,7 @@ function App() {
                     </Route>
                 </Routes>
             </div>
+            <Popup />
         </BrowserRouter>
     );
 }
