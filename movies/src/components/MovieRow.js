@@ -36,7 +36,6 @@ const MovieRow = ({movie}) => {
     };
 
     const hidden = useSelector((state) => state.hide.movie);
-    console.log(hidden);
     if (hidden.hasOwnProperty(movie.id)) {
         return (<></>);
     }

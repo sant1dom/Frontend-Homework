@@ -16,6 +16,10 @@ const hide = createSlice({
             const id = action.payload.id;
             delete state[table][id];
         },
+        clear(state, action) {
+            const table = action.payload.table;
+            state[table] = {};
+        }
     },
 });
 

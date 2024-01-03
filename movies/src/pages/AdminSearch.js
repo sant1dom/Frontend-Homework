@@ -10,6 +10,7 @@ const AdminSearch = () => {
     const navigate = useNavigate();
     const authState = useSelector((state) => state.auth);
     const [movies, setMovies] = useState([]);
+    const dispatch = useDispatch();
 
     useEffect(() => {
         console.log("Faccio partire la ricerca");
@@ -20,6 +21,14 @@ const AdminSearch = () => {
         }
 
         api.get('/movies').then((response) => {
+
+            dispatch({
+                        type: "hide/clear",
+                        payload:
+                            {
+                                table: "movie",
+                            }
+                    });
 
             const tempMovies = response.data.map((movie) => {
                 return <MovieRow movie={movie} key={movie.id}/>
