@@ -54,6 +54,8 @@ const AdminOperation = () => {
         let count_error = 0;
         let formData = {};
 
+        //TODO 0: input & errori
+
         const checks = ["title", "release_year", "movie_length", "genre", "language", "imdb_url"];
         for (let i in checks) {
             const field = checks[i];
@@ -79,54 +81,22 @@ const AdminOperation = () => {
         }
 
         if (method == "update") {
-            const response = await fetch(`/movies/${movie_id}`, {
-                method: 'PUT',
-                body: JSON.stringify(formData),
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+            api.put('/movies/' + movie_id).then((response) => {
+                console.log(response.data);
+
+                //TODO 1: check errori
+
+                //TODO 2: Popup
+                //openSuccessPopup('Movie updated successfully');
+            }).catch((error) => {
+                console.log(error);
             });
-
-            if (!response.ok) {
-                json = await response.json();
-
-                if (json.detail == "Invalid IMDB URL") {
-                    imdb_url_error.style.display = "block";
-                    return;
-                }
-
-                console.log(response);
-                openErrorPopup('There was a problem with the PUT method: ' + response.statusText);
-                return;
-            }
-
-            openSuccessPopup('Movie updated successfully');
 
         } else if (method == "create") {
-            const response = await fetch(`/movies`, {
-                method: 'POST',
-                body: JSON.stringify(formData),
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-            });
 
-            if (!response.ok) {
-                json = await response.json();
-
-                if (json.detail == "Invalid IMDB URL") {
-                    imdb_url_error.style.display = "block";
-                    return;
-                }
-
-                console.log(response);
-                openErrorPopup('There was a problem with the POST method: ' + response.statusText);
-                return;
-            }
-
-            openSuccessPopup('Movie created successfully');
+            //TODO 3: come sopra
+            //openSuccessPopup('Movie created successfully');
         }
-        ;
 
         return (
             <div className="container mx-auto">
@@ -150,5 +120,5 @@ const AdminOperation = () => {
             </div>
         );
     }
-
-    export default AdminOperation;
+}
+export default AdminOperation;
