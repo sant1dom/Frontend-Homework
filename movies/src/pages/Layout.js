@@ -13,7 +13,8 @@ const Layout = () => {
         links.push({text: "Advanced Search", url: "/advanced-search"});
     }
     if (authState.is_superuser) {
-        links.push({text: "Admin", url: "/admin"});
+        links.push({text: "Admin Search", url: "/admin/search"});
+        links.push({text: "Add a Movie", url: "/admin/create"});
     }
 
     return (
