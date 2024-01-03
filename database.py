@@ -53,7 +53,7 @@ def fill_db():
     # Load hide and users from json file
     with open("db.json", "r") as f:
         data = json.load(f)
-        movies = data["hide"]
+        movies = data["movies"]
         users = data["users"]
     # Add hide to database
     for movie in movies:
