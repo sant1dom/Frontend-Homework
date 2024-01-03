@@ -97,28 +97,29 @@ const AdminOperation = () => {
             //TODO 3: come sopra
             //openSuccessPopup('Movie created successfully');
         }
-
-        return (
-            <div className="container mx-auto">
-                <h1 className="text-2xl">{pageTitle}</h1>
-                <br/>
-
-                <form ref={movieForm}>
-                    <Input key="title" field="title" label="Title" type="text"/>
-                    <Input key="release_year" field="release_year" label="Release year" type="number" min={1800}
-                           max={2050}/>
-                    <Input key="movie_length" field="movie_length" label="Length" type="number" min={0} max={999}/>
-                    <Input key="genre" field="genre" label="Genre" type="text"/>
-                    <Input key="language" field="language" label="Language" type="text"/>
-                    <Input key="imdb_url" field="imdb_url" label="IMDB's URL" type="text"/>
-
-                    <br/>
-                    <button onClick={sendMovieForm}>
-                        Save
-                    </button>
-                </form>
-            </div>
-        );
     }
+
+    return (
+        <div className="container mx-auto">
+            <h1 className="text-2xl">{pageTitle}</h1>
+            <br/>
+
+            <form ref={movieForm}>
+                <Input key="title" field="title" label="Title" type="text"/>
+                <Input key="release_year" field="release_year" label="Release year" type="number" min={1800}
+                       max={2050}/>
+                <Input key="movie_length" field="movie_length" label="Length" type="number" min={0} max={999}/>
+                <Input key="genre" field="genre" label="Genre" type="text"/>
+                <Input key="language" field="language" label="Language" type="text"/>
+                <Input key="imdb_url" field="imdb_url" label="IMDB's URL" type="text"/>
+
+                <br/>
+                <button onClick={sendMovieForm}>
+                    Save
+                </button>
+            </form>
+        </div>
+    );
 }
+
 export default AdminOperation;
