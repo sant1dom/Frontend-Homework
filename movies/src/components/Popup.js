@@ -22,6 +22,9 @@ const Popup = () => {
 
         if (url != null) {
             api[method](url)
+                .then(response => {
+
+                })
                 .catch(error => {
                     console.error('There was a problem with the fetch operation: ', error);
                 });

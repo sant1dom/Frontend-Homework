@@ -2,7 +2,7 @@ import api from "../utils/api";
 import React, {useEffect, useState} from "react";
 import {useSelector} from "react-redux";
 import {Link, useNavigate} from "react-router-dom";
-import AdminMovie from "../components/AdminMovie";
+import MovieRow from "../components/MovieRow";
 import {store} from "../store/store";
 
 const AdminSearch = () => {
@@ -26,7 +26,7 @@ const AdminSearch = () => {
             setPhase("Loaded " + response.data.length + " movies")
 
             const tempMovies = response.data.map((movie) => {
-                return <AdminMovie movie={movie} key={movie.id}/>
+                return <MovieRow movie={movie} key={movie.id}/>
             });
             console.log(tempMovies);
             setMovies(tempMovies);

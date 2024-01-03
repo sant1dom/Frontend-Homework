@@ -3,7 +3,7 @@ import {useDispatch} from "react-redux";
 import {store} from "../store/store";
 import api from "../utils/api";
 
-const AdminMovie = ({movie}) => {
+const MovieRow = ({movie}) => {
 
     const dispatch = useDispatch();
     const title = movie.title.replace(new RegExp('"', 'g'), "&quot;").replace(new RegExp("'", 'g'), "’");
@@ -59,4 +59,4 @@ const AdminMovie = ({movie}) => {
     )
 }
 
-export default AdminMovie;
+export default MovieRow;
