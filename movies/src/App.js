@@ -36,7 +36,8 @@ function App() {
                     userId: data.userId,
                     email: data.email,
                     photo: data.profile_image,
-                    isAuth: true
+                    isAuth: true,
+                    is_superuser: data.is_superuser,
                 }));
             }).catch((error) => {
                 console.log(error);
