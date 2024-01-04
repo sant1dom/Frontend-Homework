@@ -53,13 +53,8 @@ const Popup = () => {
         dispatch(PopupMsg(""));
     };
 
-    useEffect(() => {
-        console.log(popupState.show);
-    });
-
-
     return (
-        <div style={{display: popupState.show ? 'block' : 'none'}}>
+        <div>
             <h1>{popupState.text_msg}</h1>
             <br/>
             <button className="popup_button_no" onClick={handleNo}>

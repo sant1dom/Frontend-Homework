@@ -24,9 +24,12 @@ const popupState = createSlice({
     initialState: initialState,
     reducers: {
         reset(state, action) {
-            state = {
-                ...initialState,
-                ...action.payload,
+            for (let i in initialState){
+                state[i] = initialState[i];
+            }
+
+            for (let i in action.payload){
+                state[i] = action.payload[i];
             }
         },
     },

@@ -26,8 +26,6 @@ const Input = ({field, label, type, value = null, min = null, max = null}) => {
                     value: v,
                 }
         });
-
-        console.log({field, v});
     };
 
     useEffect(() => {

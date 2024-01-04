@@ -37,13 +37,18 @@ const AdminOperation = () => {
             console.log("Creo i campi");
 
             setInputs([
-                <Input key="title" field="title" value={""} label="Title" type="text"/>,
-                <Input key="release_year" field="release_year" value={""} label="Release year" type="number" min={1800}
-                       max={2050}/>,
-                <Input key="movie_length" field="movie_length" value={""} label="Length" type="number" min={0} max={999}/>,
-                <Input key="genre" field="genre" value={""} label="Genre" type="text"/>,
-                <Input key="language" field="language" value={""} label="Language" type="text"/>,
-                <Input key="imdb_url" field="imdb_url" value={""} label="IMDB's URL" type="text"/>,
+                <Input key="title" field="title" value={""}
+                       label="Title" type="text"/>,
+                <Input key="release_year" field="release_year" value={""}
+                       label="Release year" type="number" min={1800} max={2050}/>,
+                <Input key="movie_length" field="movie_length" value={""}
+                       label="Length" type="number" min={0} max={999}/>,
+                <Input key="genre" field="genre" value={""}
+                       label="Genre" type="text"/>,
+                <Input key="language" field="language" value={""}
+                       label="Language" type="text"/>,
+                <Input key="imdb_url" field="imdb_url" value={""}
+                       label="IMDB's URL" type="text"/>,
             ]);
         } else if (method == "update") {
 
@@ -52,27 +57,26 @@ const AdminOperation = () => {
                 return;
             }
 
-            //Todo togliere + 1000
-            api.get('/movies/' + movie_id + 1000).then((response) => {
+            api.get('/movies/' + movie_id).then((response) => {
                 setInputs([
-                    <Input key="title" field="title" value={response.data.title} label="Title" type="text"/>,
+                    <Input key="title" field="title" value={response.data.title}
+                           label="Title" type="text"/>,
                     <Input key="release_year" field="release_year" value={response.data.release_year}
-                           label="Release year" type="number" min={1800}
-                           max={2050}/>,
-                    <Input key="movie_length" field="movie_length" value={response.data.movie_length} label="Length"
-                           type="number" min={0} max={999}/>,
-                    <Input key="genre" field="genre" value={response.data.genre} label="Genre" type="text"/>,
-                    <Input key="language" field="language" value={response.data.language} label="Language"
-                           type="text"/>,
-                    <Input key="imdb_url" field="imdb_url" value={response.data.imdb_url} label="IMDB's URL"
-                           type="text"/>,
+                           label="Release year" type="number" min={1800} max={2050}/>,
+                    <Input key="movie_length" field="movie_length" value={response.data.movie_length}
+                           label="Length" type="number" min={0} max={999}/>,
+                    <Input key="genre" field="genre" value={response.data.genre}
+                           label="Genre" type="text"/>,
+                    <Input key="language" field="language" value={response.data.language}
+                           label="Language" type="text"/>,
+                    <Input key="imdb_url" field="imdb_url" value={response.data.imdb_url}
+                           label="IMDB's URL" type="text"/>,
                 ]);
             }).catch((error) => {
                 console.log(error);
 
-                //TODO 1
-                //navigate("/admin/search");
-                dispatch(PopupMsg("Movie does not exist"));
+                navigate("/admin/search");
+                dispatch(PopupMsg("Movie does not exist. Redirected to Admin Search"));
             });
         }
 
@@ -109,20 +113,28 @@ const AdminOperation = () => {
         }
 
         console.log(formData);
-        console.log(count_error);
-        console.log(method);
+
+        const handleError = (error) => {
+            const details = error.response.data.detail;
+
+            let error_msg = "";
+            for (let i in details) {
+                const detail = details[i];
+                error_msg += detail.msg + ": " + detail.loc[1] + ". ";
+            }
+
+            dispatch(PopupMsg(error_msg));
+        };
 
         if (method == "update") {
             api.put('/movies/' + movie_id, JSON.stringify(formData))
                 .then((response) => {
 
-                    //TODO 2
                     navigate("/admin/search");
-                    dispatch(PopupMsg("Movie updated successfully"));
+                    dispatch(PopupMsg("Movie updated successfully. Redirected to Admin Search"));
 
                 }).catch((error) => {
-                //TODO 2 bis
-                console.log(error);
+                handleError(error);
             });
 
         } else if (method == "create") {
@@ -130,13 +142,11 @@ const AdminOperation = () => {
                 .then((response) => {
                     console.log(response.data.id);
 
-                    //TODO 3
                     navigate("/admin/search");
-                    dispatch(PopupMsg("Movie created successfully", dispatch));
+                    dispatch(PopupMsg("Movie created successfully. Redirected to Admin Search"));
 
                 }).catch((error) => {
-                //TODO 3 bis
-                console.log(error);
+                handleError(error);
             });
         }
     }
