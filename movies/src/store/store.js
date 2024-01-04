@@ -1,13 +1,15 @@
 import {configureStore} from "@reduxjs/toolkit";
 import auth from "./auth";
 import popupState from "./popupState";
-import genericState from "./genericState";
+import inputState from "./inputState";
+import hiddenState from "./hiddenState";
 
 const store = configureStore({
     reducer: {
         auth: auth.reducer,
         popupState: popupState.reducer,
-        genericState: genericState.reducer,
+        inputState: inputState.reducer,
+        hiddenState: hiddenState.reducer,
     },
 });
 

@@ -18,10 +18,10 @@ const Input = ({field, label, type, value = null, min = null, max = null}) => {
         error.current.style.display = d;
 
         dispatch({
-            type: "genericState/add",
+            type: "inputState/add",
             payload:
                 {
-                    table: "input",
+                    table: "movie",
                     key: field,
                     value: v,
                 }

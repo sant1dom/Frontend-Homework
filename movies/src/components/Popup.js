@@ -18,10 +18,10 @@ const Popup = () => {
             api[method](url)
                 .then(response => {
                     dispatch({
-                        type: "genericState/add",
+                        type: "hiddenState/add",
                         payload:
                             {
-                                table: "hidden_" + hide_table,
+                                table: hide_table,
                                 key: hide_id,
                                 value: hide_id,
                             }

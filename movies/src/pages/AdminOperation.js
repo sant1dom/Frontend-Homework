@@ -13,7 +13,7 @@ const AdminOperation = () => {
     const [inputs, setInputs] = useState([]);
 
     const authState = useSelector((state) => state.auth);
-    const values = useSelector((state) => state.genericState.input);
+    const values = useSelector((state) => state.inputState.movie);
 
     const path = window.location.pathname.split("/");
     const method = path[2];

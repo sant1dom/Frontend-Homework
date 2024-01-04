@@ -1,6 +1,5 @@
 import {Link} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
-import genericState from "../store/genericState";
 
 const MovieRow = ({movie}) => {
 
@@ -28,7 +27,7 @@ const MovieRow = ({movie}) => {
         });
     };
 
-    const hidden = useSelector((state) => state.genericState.hidden_movie);
+    const hidden = useSelector((state) => state.hiddenState.movie);
     if (typeof (hidden) != "undefined" && hidden.hasOwnProperty(movie.id)) {
         return (<></>);
     }

@@ -1,7 +1,7 @@
 import {createSlice} from "@reduxjs/toolkit";
 
-const genericState = createSlice({
-    name: 'genericState',
+const hiddenState = createSlice({
+    name: 'hiddenState',
     initialState: {},
     reducers: {
         add(state, action) {
@@ -34,4 +34,4 @@ const genericState = createSlice({
     },
 });
 
-export default genericState;
+export default hiddenState;
