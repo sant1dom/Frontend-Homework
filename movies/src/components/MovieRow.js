@@ -8,12 +8,14 @@ const MovieRow = ({movie}) => {
     const title = movie.title.replace(new RegExp('"', 'g'), "&quot;").replace(new RegExp("'", 'g'), "’");
 
     const handleDeletePopup = () => {
+        console.log("Do you want to delete " + title + "?");
+
         dispatch({
-            type: "popupState/add",
+            type: "popupState/reset",
             payload:
                 {
                     show: true,
-                    text_question: "Do you want to delete " + title + "?",
+                    text_msg: "Do you want to delete " + title + "?",
                     text_yes: "Delete",
                     text_no: "Close Popup",
                     click_yes: {
@@ -49,11 +51,9 @@ const MovieRow = ({movie}) => {
                 </h5>
             </td>
             <td>
-                <p>
-                    <button onClick={handleDeletePopup}>
-                        DELETE
-                    </button>
-                </p>
+                <button onClick={handleDeletePopup}>
+                    DELETE
+                </button>
             </td>
         </tr>
     )

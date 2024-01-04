@@ -3,13 +3,17 @@ import React, {useEffect, useRef, useState} from "react";
 import api from "../utils/api";
 import {useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
+import PopupMsg from "../components/PopupMsg";
 
 const AdminOperation = () => {
 
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+
+    const [inputs, setInputs] = useState([]);
+
     const authState = useSelector((state) => state.auth);
     const values = useSelector((state) => state.genericState.input);
-    const dispatch = useDispatch();
 
     const path = window.location.pathname.split("/");
     const method = path[2];
@@ -29,19 +33,46 @@ const AdminOperation = () => {
             return;
         }
 
-        if (method == "update") {
+        if (method == "create") {
+            console.log("Creo i campi");
+
+            setInputs([
+                <Input key="title" field="title" value={""} label="Title" type="text"/>,
+                <Input key="release_year" field="release_year" value={""} label="Release year" type="number" min={1800}
+                       max={2050}/>,
+                <Input key="movie_length" field="movie_length" value={""} label="Length" type="number" min={0} max={999}/>,
+                <Input key="genre" field="genre" value={""} label="Genre" type="text"/>,
+                <Input key="language" field="language" value={""} label="Language" type="text"/>,
+                <Input key="imdb_url" field="imdb_url" value={""} label="IMDB's URL" type="text"/>,
+            ]);
+        } else if (method == "update") {
 
             if (isNaN(movie_id)) {
                 navigate('/');
                 return;
             }
 
-            api.get('/movies/' + movie_id).then((response) => {
-                //TODO
-                console.log(response.data);
+            //Todo togliere + 1000
+            api.get('/movies/' + movie_id + 1000).then((response) => {
+                setInputs([
+                    <Input key="title" field="title" value={response.data.title} label="Title" type="text"/>,
+                    <Input key="release_year" field="release_year" value={response.data.release_year}
+                           label="Release year" type="number" min={1800}
+                           max={2050}/>,
+                    <Input key="movie_length" field="movie_length" value={response.data.movie_length} label="Length"
+                           type="number" min={0} max={999}/>,
+                    <Input key="genre" field="genre" value={response.data.genre} label="Genre" type="text"/>,
+                    <Input key="language" field="language" value={response.data.language} label="Language"
+                           type="text"/>,
+                    <Input key="imdb_url" field="imdb_url" value={response.data.imdb_url} label="IMDB's URL"
+                           type="text"/>,
+                ]);
             }).catch((error) => {
-                //TODO
                 console.log(error);
+
+                //TODO 1
+                //navigate("/admin/search");
+                dispatch(PopupMsg("Movie does not exist"));
             });
         }
 
@@ -50,7 +81,6 @@ const AdminOperation = () => {
     if (!authState.is_superuser) {
         return (<></>);
     }
-
 
     const sendMovieForm = (event) => {
         event.preventDefault();
@@ -86,20 +116,12 @@ const AdminOperation = () => {
             api.put('/movies/' + movie_id, JSON.stringify(formData))
                 .then((response) => {
 
-                    dispatch({
-                        type: "popupState/reset",
-                        payload:
-                            {
-                                show: true,
-                                text_question: "Movie updated successfully",
-                                text_no: "Ok",
-                            }
-                    });
-
+                    //TODO 2
                     navigate("/admin/search");
+                    dispatch(PopupMsg("Movie updated successfully"));
 
                 }).catch((error) => {
-                //TODO
+                //TODO 2 bis
                 console.log(error);
             });
 
@@ -108,34 +130,16 @@ const AdminOperation = () => {
                 .then((response) => {
                     console.log(response.data.id);
 
-                    dispatch({
-                        type: "popupState/reset",
-                        payload:
-                            {
-                                show: true,
-                                text_question: "Movie created successfully",
-                                text_no: "Ok",
-                            }
-                    });
-
+                    //TODO 3
                     navigate("/admin/search");
+                    dispatch(PopupMsg("Movie created successfully", dispatch));
 
                 }).catch((error) => {
-                //TODO
+                //TODO 3 bis
                 console.log(error);
             });
         }
     }
-
-    const inputs = [
-        <Input key="title" field="title" label="Title" type="text"/>,
-        <Input key="release_year" field="release_year" label="Release year" type="number" min={1800}
-               max={2050}/>,
-        <Input key="movie_length" field="movie_length" label="Length" type="number" min={0} max={999}/>,
-        <Input key="genre" field="genre" label="Genre" type="text"/>,
-        <Input key="language" field="language" label="Language" type="text"/>,
-        <Input key="imdb_url" field="imdb_url" label="IMDB's URL" type="text"/>,
-    ];
 
     return (
         <div className="container mx-auto">

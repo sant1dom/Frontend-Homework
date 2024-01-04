@@ -2,7 +2,7 @@ import {createSlice} from "@reduxjs/toolkit";
 
 const initialState = {
     show: false,
-    text_question: null,
+    text_msg: null,
     text_yes: null,
     text_no: null,
     click_yes: {
@@ -28,8 +28,6 @@ const popupState = createSlice({
                 ...initialState,
                 ...action.payload,
             }
-
-                console.log(state);
         },
     },
 });

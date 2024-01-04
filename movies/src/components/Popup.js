@@ -1,17 +1,12 @@
 import {useDispatch, useSelector} from "react-redux";
 import api from "../utils/api";
+import PopupMsg from "./PopupMsg";
+import {useEffect} from "react";
 
 const Popup = () => {
 
     const dispatch = useDispatch();
     const popupState = useSelector((state) => state.popupState);
-
-    const closePopup = () => {
-        dispatch({
-            type: "popupState/reset",
-            payload: {},
-        });
-    };
 
     const handleYes = () => {
         const url = popupState.click_yes.url;
@@ -37,7 +32,7 @@ const Popup = () => {
                 });
         }
 
-        closePopup();
+        dispatch(PopupMsg(""));
     };
 
     const handleNo = () => {
@@ -55,13 +50,17 @@ const Popup = () => {
                 });
         }
 
-        closePopup();
+        dispatch(PopupMsg(""));
     };
+
+    useEffect(() => {
+        console.log(popupState.show);
+    });
 
 
     return (
         <div style={{display: popupState.show ? 'block' : 'none'}}>
-            <h1>{popupState.text_question}</h1>
+            <h1>{popupState.text_msg}</h1>
             <br/>
             <button className="popup_button_no" onClick={handleNo}>
                 {popupState.text_no}

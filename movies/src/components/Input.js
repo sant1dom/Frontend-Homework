@@ -1,7 +1,7 @@
 import {useEffect, useRef} from "react";
 import {useDispatch} from "react-redux";
 
-const Input = ({field, label, type, min = null, max = null}) => {
+const Input = ({field, label, type, value = null, min = null, max = null}) => {
     const input = useRef();
     const error = useRef();
 
@@ -26,9 +26,12 @@ const Input = ({field, label, type, min = null, max = null}) => {
                     value: v,
                 }
         });
+
+        console.log({field, v});
     };
 
     useEffect(() => {
+        input.current.value = value;
         handleChange();
     });
 
