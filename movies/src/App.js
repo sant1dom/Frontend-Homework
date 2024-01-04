@@ -2,6 +2,7 @@ import './App.css';
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Layout from "./pages/Layout";
+import Watchlist from "./pages/Watchlist";
 
 import {BrowserRouter, Route, Routes,} from "react-router-dom";
 import {useEffect} from "react";
@@ -53,6 +54,7 @@ function App() {
                         <Route path="/admin/search" element={<AdminSearch/>}/>
                         <Route path="/admin/create" element={<AdminOperation/>}/>
                         <Route path="/admin/update/:id" element={<AdminOperation/>}/>
+                        <Route path="/watchlist" element={<Watchlist/>}/>
                     </Route>
                 </Routes>
             </div>
