@@ -23,10 +23,10 @@ const AdminSearch = () => {
         api.get('/movies').then((response) => {
 
             dispatch({
-                        type: "hide/clear",
+                        type: "genericState/clear",
                         payload:
                             {
-                                table: "movie",
+                                table: "hidden_movie",
                             }
                     });
 

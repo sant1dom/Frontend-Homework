@@ -4,11 +4,11 @@ import api from "../utils/api";
 const Popup = () => {
 
     const dispatch = useDispatch();
-    const popupState = useSelector((state) => state.popup);
+    const popupState = useSelector((state) => state.popupState);
 
     const closePopup = () => {
         dispatch({
-            type: "popup/overwrite",
+            type: "popupState/add",
             payload:
                 {
                     show: false,
@@ -25,16 +25,15 @@ const Popup = () => {
         if (url != null) {
             api[method](url)
                 .then(response => {
-
                     dispatch({
-                        type: "hide/add",
+                        type: "genericState/add",
                         payload:
                             {
-                                table: hide_table,
-                                id: hide_id,
+                                table: "hidden_" + hide_table,
+                                key: hide_id,
+                                value: hide_id,
                             }
                     });
-
                 })
                 .catch(error => {
                     console.error('There was a problem with the fetch operation: ', error);

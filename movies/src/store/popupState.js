@@ -1,7 +1,7 @@
 import {createSlice} from "@reduxjs/toolkit";
 
-const popup = createSlice({
-    name: 'popup',
+const popupState = createSlice({
+    name: 'popupState',
     initialState: {
         show: false,
         text_question: null,
@@ -10,20 +10,18 @@ const popup = createSlice({
         click_yes: {
             url: null,
             method: null,
-            hide: null,
             hide_table: null,
             hide_id: null,
         },
         click_no: {
             url: null,
             method: null,
-            hide: null,
             hide_table: null,
             hide_id: null,
         },
     },
     reducers: {
-        overwrite(state, action) {
+        add(state, action) {
             for (let i in action.payload) {
                 state[i] = action.payload[i];
             }
@@ -31,4 +29,4 @@ const popup = createSlice({
     },
 });
 
-export default popup;
+export default popupState;

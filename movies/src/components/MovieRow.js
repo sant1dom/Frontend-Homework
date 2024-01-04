@@ -1,8 +1,6 @@
 import {Link} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
-import {store} from "../store/store";
-import api from "../utils/api";
-import hide from "../store/hide";
+import genericState from "../store/genericState";
 
 const MovieRow = ({movie}) => {
 
@@ -11,7 +9,7 @@ const MovieRow = ({movie}) => {
 
     const handleDeletePopup = () => {
         dispatch({
-            type: "popup/overwrite",
+            type: "popupState/add",
             payload:
                 {
                     show: true,
@@ -27,7 +25,6 @@ const MovieRow = ({movie}) => {
                     click_no: {
                         url: null,
                         method: null,
-                        hide: null,
                         hide_table: null,
                         hide_id: null,
                     },
@@ -35,8 +32,8 @@ const MovieRow = ({movie}) => {
         });
     };
 
-    const hidden = useSelector((state) => state.hide.movie);
-    if (hidden.hasOwnProperty(movie.id)) {
+    const hidden = useSelector((state) => state.genericState.hidden_movie);
+    if (typeof (hidden) != "undefined" && hidden.hasOwnProperty(movie.id)) {
         return (<></>);
     }
 
