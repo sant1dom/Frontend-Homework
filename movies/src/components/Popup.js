@@ -8,11 +8,8 @@ const Popup = () => {
 
     const closePopup = () => {
         dispatch({
-            type: "popupState/add",
-            payload:
-                {
-                    show: false,
-                }
+            type: "popupState/reset",
+            payload: {},
         });
     };
 
@@ -66,10 +63,10 @@ const Popup = () => {
         <div style={{display: popupState.show ? 'block' : 'none'}}>
             <h1>{popupState.text_question}</h1>
             <br/>
-            <button className="btn btn-warning" onClick={handleNo}>
+            <button className="popup_button_no" onClick={handleNo}>
                 {popupState.text_no}
             </button>
-            <button className="btn btn-danger" onClick={handleYes}>
+            <button className="popup_button_yes" onClick={handleYes}>
                 {popupState.text_yes}
             </button>
         </div>

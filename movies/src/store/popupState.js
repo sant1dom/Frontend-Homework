@@ -1,30 +1,35 @@
 import {createSlice} from "@reduxjs/toolkit";
 
+const initialState = {
+    show: false,
+    text_question: null,
+    text_yes: null,
+    text_no: null,
+    click_yes: {
+        url: null,
+        method: null,
+        hide_table: null,
+        hide_id: null,
+    },
+    click_no: {
+        url: null,
+        method: null,
+        hide_table: null,
+        hide_id: null,
+    },
+};
+
 const popupState = createSlice({
     name: 'popupState',
-    initialState: {
-        show: false,
-        text_question: null,
-        text_yes: null,
-        text_no: null,
-        click_yes: {
-            url: null,
-            method: null,
-            hide_table: null,
-            hide_id: null,
-        },
-        click_no: {
-            url: null,
-            method: null,
-            hide_table: null,
-            hide_id: null,
-        },
-    },
+    initialState: initialState,
     reducers: {
-        add(state, action) {
-            for (let i in action.payload) {
-                state[i] = action.payload[i];
+        reset(state, action) {
+            state = {
+                ...initialState,
+                ...action.payload,
             }
+
+                console.log(state);
         },
     },
 });

@@ -2,23 +2,23 @@ import Input from "../components/Input";
 import React, {useEffect, useRef, useState} from "react";
 import api from "../utils/api";
 import {useNavigate} from "react-router-dom";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 
 const AdminOperation = () => {
 
     const navigate = useNavigate();
     const authState = useSelector((state) => state.auth);
     const values = useSelector((state) => state.genericState.input);
-    const movieForm = useRef();
+    const dispatch = useDispatch();
 
     const path = window.location.pathname.split("/");
-    const method = path[1];
+    const method = path[2];
 
     let pageTitle = "Create a new movie";
     let movie_id = null;
     if (method == "update") {
         pageTitle = "Edit an existing movie";
-        movie_id = path[2];
+        movie_id = path[3];
     }
 
     useEffect(() => {
@@ -74,28 +74,56 @@ const AdminOperation = () => {
             }
         }
 
-        console.log(formData);
-
         if (count_error > 0) {
             return;
         }
 
+        console.log(formData);
+        console.log(count_error);
+        console.log(method);
+
         if (method == "update") {
-            api.put('/movies/' + movie_id, JSON.stringify(formData)).then((response) => {
-                console.log(response.data);
+            api.put('/movies/' + movie_id, JSON.stringify(formData))
+                .then((response) => {
 
-                //TODO 1: check errori
+                    dispatch({
+                        type: "popupState/reset",
+                        payload:
+                            {
+                                show: true,
+                                text_question: "Movie updated successfully",
+                                text_no: "Ok",
+                            }
+                    });
 
-                //TODO 2: Popup
-                //openSuccessPopup('Movie updated successfully');
-            }).catch((error) => {
+                    navigate("/admin/search");
+
+                }).catch((error) => {
+                //TODO
                 console.log(error);
             });
 
         } else if (method == "create") {
+            api.post('/movies/', JSON.stringify(formData))
+                .then((response) => {
+                    console.log(response.data.id);
 
-            //TODO 3: come sopra
-            //openSuccessPopup('Movie created successfully');
+                    dispatch({
+                        type: "popupState/reset",
+                        payload:
+                            {
+                                show: true,
+                                text_question: "Movie created successfully",
+                                text_no: "Ok",
+                            }
+                    });
+
+                    navigate("/admin/search");
+
+                }).catch((error) => {
+                //TODO
+                console.log(error);
+            });
         }
     }
 
@@ -114,9 +142,8 @@ const AdminOperation = () => {
             <h1 className="text-2xl">{pageTitle}</h1>
             <br/>
 
-            <form ref={movieForm}>
+            <form>
                 {inputs}
-                <br/>
                 <button onClick={sendMovieForm}>
                     Save
                 </button>

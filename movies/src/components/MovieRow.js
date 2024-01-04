@@ -22,12 +22,6 @@ const MovieRow = ({movie}) => {
                         hide_table: 'movie',
                         hide_id: movie.id,
                     },
-                    click_no: {
-                        url: null,
-                        method: null,
-                        hide_table: null,
-                        hide_id: null,
-                    },
                 }
         });
     };
