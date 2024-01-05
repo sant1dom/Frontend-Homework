@@ -1,4 +1,7 @@
 import { useEffect, useState } from 'react';
+import { IoMdHeartEmpty, IoMdHeart } from "react-icons/io";
+import { FiClock } from "react-icons/fi";
+import { GoClockFill } from "react-icons/go";
 import api from "../utils/api";
 import Button from '../components/Button';
 import axios from 'axios';
@@ -7,6 +10,9 @@ const OMDB_API_KEY = process.env.REACT_APP_OMDB_API_KEY;
 
 const Home = () => {
     const [movies, setMovies] = useState([]);
+    const [hoveredMovie, setHoveredMovie] = useState(null);
+    const favourites = JSON.parse(localStorage.getItem("favourites"));
+    const watchlist = JSON.parse(localStorage.getItem("watchlist"));
 
     const fetchMoviePoster = async (IMDBId) => {
         const response = await axios.get(`http://omdbapi.com/?apikey=${OMDB_API_KEY}&i=${IMDBId}`);
@@ -31,18 +37,57 @@ const Home = () => {
         fetchData();
     }, []);
 
+    useEffect(() => {
+        if (localStorage.getItem("favourites") === null) {
+            localStorage.setItem("favourites", JSON.stringify([]));
+        }
+
+        if (localStorage.getItem("watchlist") === null) {
+            localStorage.setItem("watchlist", JSON.stringify([]));
+        }
+    }, []);
+
+    const handleFavourites = (id) => {
+
+        const index = favourites.indexOf(id);
+        if (index === -1) {
+            favourites.push(id);
+        } else {
+            favourites.splice(index, 1);
+        }
+
+        localStorage.setItem("favourites", JSON.stringify(favourites));
+        setHoveredMovie(null);
+    };
+    
+    const handleWatchlist = (id) => {
+
+        const index = watchlist.indexOf(id);
+        if (index === -1) {
+            watchlist.push(id);
+        } else {
+            watchlist.splice(index, 1);
+        }
+
+        localStorage.setItem("watchlist", JSON.stringify(watchlist));
+        setHoveredMovie(null);
+    };
+
     return (
         <div className="mx-auto">
             <h1 className="mt-5 mb-5 text-4xl">Trending Films</h1>
             <div className="mx-8 grid grid-cols-6 gap-8">
                 {movies.map((movie) => (
-                    <div key={movie.id} className="rounded-lg bg-sky-100 shadow-2xl">
-                        <img className="rounded-t-lg w-60 h-80" src={movie.poster} alt="Film"/>
+                    <div key={movie.id} className="rounded-lg bg-sky-100 shadow-2xl" onMouseEnter={() => setHoveredMovie(movie.id)}>
+                        <div className="relative rounded-t-lg pb-80">
+                            <img className="absolute inset-0 w-full h-full object-cover rounded-t-lg" src={movie.poster} alt="Film" />
+                        </div>
                         <div className="p-4">
                             <h2 className="text-xl mb-2 overflow-hidden whitespace-nowrap overflow-ellipsis">{movie.title}</h2>
                             <p className="text-base">{movie.release_year}</p>
-                            <div className="mt-2">
-                                <Button label="IMDB Page" rounded={true} onClick={() => window.location.href = movie.imdb_url}/>
+                            <div className={`grid grid-cols-2 gap-2 mt-2 transition duration-500 ease-in-out ${hoveredMovie === movie.id ? 'opacity-100' : 'opacity-0'}`}>
+                                <Button label={favourites.includes(movie.id) ? <IoMdHeart /> : <IoMdHeartEmpty />} rounded={true} onClick={() => handleFavourites(movie.id)}/>
+                                <Button label={watchlist.includes(movie.id) ? <GoClockFill /> : <FiClock />} rounded={true} onClick={() => handleWatchlist(movie.id)}/>
                             </div>
                         </div>
                     </div>
