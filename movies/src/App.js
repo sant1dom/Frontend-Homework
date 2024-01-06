@@ -3,7 +3,7 @@ import Home from "./pages/Home";
 import Movie from "./pages/Movie";
 import Login from "./pages/Login";
 import Layout from "./pages/Layout";
-import Watchlist from "./pages/Watchlist";
+import MyLists from "./pages/MyLists";
 
 import {BrowserRouter, Route, Routes,} from "react-router-dom";
 import {useEffect} from "react";
@@ -56,7 +56,7 @@ function App() {
                         <Route path="/admin/search" element={<AdminSearch/>}/>
                         <Route path="/admin/create" element={<AdminOperation/>}/>
                         <Route path="/admin/update/:id" element={<AdminOperation/>}/>
-                        <Route path="/watchlist" element={<Watchlist/>}/>
+                        <Route path="/mylists" element={<MyLists/>}/>
                         <Route path="/movie/:id" element={<Movie/>}/>
                     </Route>
                 </Routes>

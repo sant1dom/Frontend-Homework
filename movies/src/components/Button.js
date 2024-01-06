@@ -9,6 +9,7 @@ const Button = React.memo(({onClick, label, variant, size, disabled, rounded}) =
             {
                 'bg-blue-500 text-white': variant === 'primary',
                 'bg-gray-300 text-gray-700': variant === 'secondary',
+                'text-blue-900 shadow-none': variant === 'nobg',
                 'text-sm px-2 py-1': size === 'small',
                 'text-lg px-4 py-2': size === 'large',
                 'text-base px-3 py-2': size !== 'small' && size !== 'large',
@@ -38,7 +39,7 @@ const Button = React.memo(({onClick, label, variant, size, disabled, rounded}) =
 Button.propTypes = {
     onClick: PropTypes.func.isRequired,
     label: PropTypes.string.isRequired,
-    variant: PropTypes.oneOf(['primary', 'secondary']),
+    variant: PropTypes.oneOf(['primary', 'secondary', 'nobg']),
     size: PropTypes.oneOf(['small', 'medium', 'large']),
     disabled: PropTypes.bool,
     rounded: PropTypes.bool,

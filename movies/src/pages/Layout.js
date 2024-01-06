@@ -8,8 +8,9 @@ const Layout = () => {
         {text: "Home", url: "/"},
     ];
     if (authState.isAuth) {
-        links.push({text: "Watchlist", url: "/watchlist"});
-        links.push({text: "Favorites", url: "/favorites"});
+        // links.push({text: "Watchlist", url: "/watchlist"});
+        // links.push({text: "Favorites", url: "/favorites"});
+        links.push({text: "MyLists", url: "/mylists"});
         links.push({text: "Advanced Search", url: "/advanced-search"});
     }
     if (authState.is_superuser) {

@@ -41,7 +41,7 @@ const Movie = () => {
         <div className="mx-auto">
             <h1 className="mt-5 mb-5 text-4xl">{movie.title}</h1>
             <div className="mx-8 flex flex-col lg:flex-row justify-center items-center lg:items-start">
-                <div className="rounded-lg bg-sky-100 shadow-2xl" style={{ maxWidth: "18rem" }}>
+                <div className="rounded-lg bg-sky-100 shadow-2xl max-w-72">
                     <img className="rounded-t-lg w-70 h-90" src={imdbData.Poster} alt="Film"/>
                     <div className="p-4">
                         <div className="mt-2 flex flex-col items-center">
