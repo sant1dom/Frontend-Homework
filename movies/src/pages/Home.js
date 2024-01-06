@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { IoMdHeartEmpty, IoMdHeart } from "react-icons/io";
 import { FiClock } from "react-icons/fi";
 import { GoClockFill } from "react-icons/go";
+import { Link } from 'react-router-dom';
 import api from "../utils/api";
 import Button from '../components/Button';
 import axios from 'axios';
@@ -79,11 +80,15 @@ const Home = () => {
             <div className="mx-8 grid grid-cols-6 gap-8">
                 {movies.map((movie) => (
                     <div key={movie.id} className="rounded-lg bg-sky-100 shadow-2xl" onMouseEnter={() => setHoveredMovie(movie.id)}>
+                        <Link to={`/movie/${movie.id}`} className="block">
                         <div className="relative rounded-t-lg pb-80">
                             <img className="absolute inset-0 w-full h-full object-cover rounded-t-lg" src={movie.poster} alt="Film" />
                         </div>
+                        </Link>
                         <div className="p-4">
+                            <Link to={`/movie/${movie.id}`} className="block">
                             <h2 className="text-xl mb-2 overflow-hidden whitespace-nowrap overflow-ellipsis">{movie.title}</h2>
+                            </Link>
                             <p className="text-base">{movie.release_year}</p>
                             <div className={`grid grid-cols-2 gap-2 mt-2 transition duration-500 ease-in-out ${hoveredMovie === movie.id ? 'opacity-100' : 'opacity-0'}`}>
                                 <Button label={favourites.includes(movie.id) ? <IoMdHeart /> : <IoMdHeartEmpty />} rounded={true} onClick={() => handleFavourites(movie.id)}/>

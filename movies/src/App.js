@@ -1,5 +1,6 @@
 import './App.css';
 import Home from "./pages/Home";
+import Movie from "./pages/Movie";
 import Login from "./pages/Login";
 import Layout from "./pages/Layout";
 import Watchlist from "./pages/Watchlist";
@@ -56,6 +57,7 @@ function App() {
                         <Route path="/admin/create" element={<AdminOperation/>}/>
                         <Route path="/admin/update/:id" element={<AdminOperation/>}/>
                         <Route path="/watchlist" element={<Watchlist/>}/>
+                        <Route path="/movie/:id" element={<Movie/>}/>
                     </Route>
                 </Routes>
             </div>
