@@ -1,8 +1,12 @@
+import os
+import random
 from datetime import timedelta, datetime
 from typing import Annotated
 
+import aiofiles
+from fastapi.params import File
 from jose import JWTError, jwt
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter, HTTPException, Depends, UploadFile
 from passlib.context import CryptContext
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from starlette.responses import Response
@@ -53,7 +57,7 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_bearer)]):
 
 @router.post("/register", status_code=201, response_model=UserReturn)
 async def create_user(user: UserCreate, db: db_dependency):
-    db_user = DBUser(email=user.email, hashed_password=user.password, is_active=True, is_superuser=False, profile_image="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/i/43563f53-c409-4769-a2a9-f5893b6df553/d8w4e87-08c2b115-7eef-47e6-87d3-1f14e5753bad.png/v1/fit/w_800,h_800,q_70,strp/avatar_base_for_download_by_not_a_hazard_d8w4e87-414w-2x.jpg")
+    db_user = DBUser(email=user.email, hashed_password=user.password, is_active=True, is_superuser=False, profile_image="/static/profile_images/base_avatar.jpg")
     db_user.hashed_password = bcrypt_context.hash(db_user.hashed_password)
     db.add(db_user)
     db.commit()
@@ -76,5 +80,28 @@ async def login_user(response: Response, formData: Annotated[OAuth2PasswordReque
 async def get_user(user: Annotated[dict, Depends(get_current_user)]):
     return user
 
+
+@router.post("/update_profile_image")
+async def update_profile_image(user: Annotated[dict, Depends(get_current_user)], db: db_dependency, file: UploadFile = File(...)):
+    if file.content_type not in ["image/jpeg", "image/png", "image/jpg"]:
+        raise HTTPException(status_code=400, detail="File must be an image")
+    if len(file.file.read()) > 5242880:
+        raise HTTPException(status_code=400, detail="File size must be less than 5 MB")
+    file.file.seek(0)
+    content = file.file.read()
+    user_id = user["id"]
+    user = db.query(DBUser).filter(DBUser.id == user_id).first()
+    file_name = f"static/profile_images/{user_id}_{random.randint(0, 1000)}.{file.content_type.split('/')[1]}"
+    async with aiofiles.open(file_name, 'wb') as out_file:
+        await out_file.write(content)
+    try:
+        if user.profile_image != "static/profile_images/base_avatar.jpg":
+            os.remove(user.profile_image)
+    except OSError:
+        pass
+    user.profile_image = file_name
+    db.commit()
+    db.refresh(user)
+    return user.profile_image
 
 user_dependency = Annotated[dict, Depends(get_current_user)]

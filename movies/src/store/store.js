@@ -14,4 +14,4 @@ const store = configureStore({
 });
 
 export {store};
-export const {login, logout} = auth.actions;
+export const {login, logout, update_profile_image} = auth.actions;

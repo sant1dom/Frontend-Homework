@@ -5,7 +5,6 @@ import {Link} from 'react-router-dom';
 import {GoSearch} from "react-icons/go";
 import api from "../utils/api";
 
-// Store API keys in .env file
 const OMDB_API_KEY = process.env.REACT_APP_OMDB_API_KEY;
 
 const SearchResult = ({result}) => (
@@ -60,7 +59,7 @@ const SearchBar = ({placeholder = 'Search...'}) => {
             }
             try {
                 const response = await api.get(`/movies/search?title=${term}`);
-                const moviesWithPosters = await Promise.all(response.data.map(async (movie) => {
+                await Promise.all(response.data.map(async (movie) => {
                     movie.poster = await fetchMovieData(movie.imdb_url.split('/')[4]);
                     return movie;
                 }));

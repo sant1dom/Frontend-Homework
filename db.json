@@ -127,14 +127,14 @@
       "email": "admin@react.org",
       "is_superuser": true,
       "is_active": true,
-      "profile_image": "https://thispersondoesnotexist.com/"
+      "profile_image": "static/profile_images/base_avatar.jpg"
     },
     {
       "hashed_password": "$2b$12$XYNJCumK7yZ0JJVjeXb/5eNFZOmvVsaTXXxSorQQ1/DsyJ.6tMcpm",
       "email": "pippo@react.org",
       "is_superuser": false,
       "is_active": true,
-      "profile_image": "https://thispersondoesnotexist.com/"
+      "profile_image": "static/profile_images/base_avatar.jpg"
     }
   ]
 }

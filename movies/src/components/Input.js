@@ -11,7 +11,7 @@ const Input = ({field, label, type, value = null, min = null, max = null}) => {
         const v = input.current.value;
         let d = "none";
 
-        if (v.length == 0) {
+        if (v.length === 0) {
             d = "inline";
         }
 

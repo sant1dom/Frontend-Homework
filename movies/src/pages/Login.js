@@ -1,8 +1,5 @@
-// LoginPage.js
-
 import React, {useState} from 'react';
 import Button from "../components/Button";
-import axios from "axios";
 import {login} from "../store/store";
 import {useDispatch} from "react-redux";
 import {Link, useNavigate} from "react-router-dom";

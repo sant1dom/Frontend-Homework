@@ -11,3 +11,5 @@ logs.log.3
 logs.log.4
 logs.log.5
 movies/.env
+static/profile_images
+!static/profile_images/base_avatar.jpg

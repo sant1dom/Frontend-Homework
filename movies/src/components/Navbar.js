@@ -77,7 +77,7 @@ const Navbar = ({title, links, backgroundColor}) => {
                                     <Link to={`/profile`} >
                                         <img
                                             className="inline-block h-10 w-10 rounded-full"
-                                            src={authState.photo}
+                                            src={process.env.REACT_APP_BASE_URL+"/"+authState.photo}
                                             alt="Profile"
                                         />
                                     </Link>
@@ -113,7 +113,7 @@ const Navbar = ({title, links, backgroundColor}) => {
                                       onMouseLeave={() => setIsHovered(false)}>
                                     <img
                                         className="block h-20 w-20 rounded-full"
-                                        src={authState.photo}
+                                        src={process.env.REACT_APP_BASE_URL+"/"+authState.photo}
                                         alt="Profile"
                                     />
                                 </Link>

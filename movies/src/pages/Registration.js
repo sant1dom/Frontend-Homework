@@ -1,7 +1,6 @@
 import React, {useState} from "react";
 import {useDispatch} from "react-redux";
 import {Link, useNavigate} from "react-router-dom";
-import axios from "axios";
 import {login} from "../store/store";
 import Button from "../components/Button";
 import api from "../utils/api";

@@ -29,6 +29,9 @@ const auth = createSlice({
             state.photo = null;
             state.is_superuser = null;
         },
+        update_profile_image(state, action) {
+            state.photo = action.payload.photo;
+        }
     },
 });
 
