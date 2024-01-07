@@ -12,8 +12,8 @@ const OMDB_API_KEY = process.env.REACT_APP_OMDB_API_KEY;
 const Home = () => {
     const [movies, setMovies] = useState([]);
     const [hoveredMovie, setHoveredMovie] = useState(null);
-    const favourites = JSON.parse(localStorage.getItem("favourites"));
-    const watchlist = JSON.parse(localStorage.getItem("watchlist"));
+    const favourites = JSON.parse(localStorage.getItem("Favourites"));
+    const watchlist = JSON.parse(localStorage.getItem("Watchlist"));
 
     const fetchMoviePoster = async (IMDBId) => {
         const response = await axios.get(`http://omdbapi.com/?apikey=${OMDB_API_KEY}&i=${IMDBId}`);
@@ -39,12 +39,12 @@ const Home = () => {
     }, []);
 
     useEffect(() => {
-        if (localStorage.getItem("favourites") === null) {
-            localStorage.setItem("favourites", JSON.stringify([]));
+        if (localStorage.getItem("Favourites") === null) {
+            localStorage.setItem("Favourites", JSON.stringify([]));
         }
 
-        if (localStorage.getItem("watchlist") === null) {
-            localStorage.setItem("watchlist", JSON.stringify([]));
+        if (localStorage.getItem("Watchlist") === null) {
+            localStorage.setItem("Watchlist", JSON.stringify([]));
         }
     }, []);
 
@@ -57,7 +57,7 @@ const Home = () => {
             favourites.splice(index, 1);
         }
 
-        localStorage.setItem("favourites", JSON.stringify(favourites));
+        localStorage.setItem("Favourites", JSON.stringify(favourites));
         setHoveredMovie(null);
     };
     
@@ -70,7 +70,7 @@ const Home = () => {
             watchlist.splice(index, 1);
         }
 
-        localStorage.setItem("watchlist", JSON.stringify(watchlist));
+        localStorage.setItem("Watchlist", JSON.stringify(watchlist));
         setHoveredMovie(null);
     };
 
