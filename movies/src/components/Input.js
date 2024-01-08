@@ -1,4 +1,4 @@
-import {useEffect, useRef} from "react";
+import React, {useEffect, useRef} from "react";
 import {useDispatch} from "react-redux";
 
 const Input = ({field, label, type, value = null, min = null, max = null}) => {
@@ -35,20 +35,25 @@ const Input = ({field, label, type, value = null, min = null, max = null}) => {
 
     return (
         <div>
-            {label}
-            <br/>
-
-            <input ref={input} name={field} type={type} min={min} max={max} onChange={handleChange}
-                   style={{border: "1px solid black"}}/>
-
-            <div style={{padding: "0 0 10px 0"}}>
-                <span ref={error} style={{display: "none", color: "red"}}>
-                    Write {label}
-                </span>
-                <br/>
+            <div className="text-body">
+                {label}
             </div>
+
+            <div>
+                <input ref={input} name={field} type={type} min={min} max={max} onChange={handleChange}
+                       className="border-2 border-gray-300 rounded-md w-64 p-2"
+                />
+            </div>
+
+            <div className="text-red-500 text-body h-8">
+                <span ref={error} style={{display: "none"}}>
+                    Write {label}
+                    </span>
+            </div>
+
         </div>
-    );
+    )
+        ;
 }
 
 export default Input;

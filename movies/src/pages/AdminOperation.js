@@ -4,6 +4,11 @@ import api from "../utils/api";
 import {useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import PopupMsg from "../components/PopupMsg";
+import Button from "../components/Button";
+import {GoPencil} from "react-icons/go";
+import {createPortal} from "react-dom";
+import Modal from "../components/Modal";
+import FadeContainer from "../components/FadeContainer";
 
 const AdminOperation = () => {
 
@@ -151,19 +156,35 @@ const AdminOperation = () => {
         }
     }
 
+    const goBack = (event) => {
+        navigate(-1);
+    }
+
     return (
         <div className="container mx-auto">
-            <h1 className="text-2xl">{pageTitle}</h1>
-            <br/>
+            <div className="h-4">
+                <div className="flex flex-col items-center justify-center">
+                    <div className="flex flex-col items-center justify-center relative">
 
-            <form>
-                {inputs}
-                <button onClick={sendMovieForm}>
-                    Save
-                </button>
-            </form>
+                        <div className="h-4"/>
+                        <h1 className="text-4xl font-bold">{pageTitle}</h1>
+                        <div className="h-4"/>
+
+                        <div className="flex flex-col items-center">
+                            {inputs}
+
+                            <Button onClick={sendMovieForm} rounded={true} label="Save"/>
+                            <div className="h-4"/>
+                            <Button onClick={goBack} rounded={true} label="Cancel"
+                                    classes={"bg-red-500 hover:bg-red-600"}/>
+                            <div className="h-4"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-    );
+    )
+        ;
 }
 
 export default AdminOperation;
