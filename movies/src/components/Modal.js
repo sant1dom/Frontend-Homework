@@ -15,14 +15,18 @@ const Modal = ({title, body, footer, onClose}) => {
         };
     }, [handleEscape])
 
-    function handleCloseButtonClick() {
+    function handleCloseButtonClick(event) {
         onClose();
+        event.stopPropagation();
     }
 
     return (
         <div
-            className="fixed inset-0 z-50 flex items-center justify-center overflow-x-hidden overflow-y-auto outline-none focus:outline-none bg-white bg-opacity-25">
-            <div className="relative w-auto my-6 mx-auto max-w-3xl">
+            className="fixed inset-0 z-50 flex items-center justify-center overflow-x-hidden overflow-y-auto outline-none focus:outline-none bg-white bg-opacity-25"
+            onClick={(event)=>handleCloseButtonClick(event)}
+        >
+            <div className="relative w-auto my-6 mx-auto max-w-3xl"
+                    onClick={(event)=>event.stopPropagation()}> 
                 {/*content*/}
                 <div
                     className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
@@ -33,7 +37,7 @@ const Modal = ({title, body, footer, onClose}) => {
                             {title}
                         </h3>
                         <div className="w-4"/>
-                        <div className="ml-auto flex items-center cursor-pointer" onClick={handleCloseButtonClick}>
+                        <div className="ml-auto flex items-center cursor-pointer" onClick={(event)=>handleCloseButtonClick(event)}>
                             <GoX className="w-6 h-6"/>
                         </div>
                     </div>

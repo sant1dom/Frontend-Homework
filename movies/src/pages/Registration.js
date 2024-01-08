@@ -5,6 +5,7 @@ import {login} from "../store/store";
 import Button from "../components/Button";
 import api from "../utils/api";
 import Cookies from "js-cookie";
+import {validateForm} from "../utils/validationUtils";
 
 const Registration = () => {
     const [email, setEmail] = useState('');
@@ -14,58 +15,6 @@ const Registration = () => {
     const navigate = useNavigate();
     const [validationErrors, setValidationErrors] = useState({});
     const [registrationError, setRegistrationError] = useState(false);
-
-    const EMAIL_REQUIRED = 'Please enter your email';
-    const INVALID_EMAIL = 'Please enter a valid email address';
-    const PASSWORD_REQUIRED = 'Please enter your password';
-    const PASSWORD_CONFIRM_REQUIRED = 'Please confirm your password';
-    const PASSWORDS_DO_NOT_MATCH = 'Passwords do not match';
-
-    const validateForm = (currentEmail, currentPassword, confirmPassword) => {
-        const errors = {};
-
-        if (!currentEmail) {
-            errors.email = EMAIL_REQUIRED;
-        } else {
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(currentEmail)) {
-                errors.email = INVALID_EMAIL;
-            }
-        }
-
-        if (!currentPassword) {
-            errors.password = PASSWORD_REQUIRED;
-        } else {
-            let passwordFeedback = '';
-            if (currentPassword.length < 8) {
-                passwordFeedback += 'Must be at least 8 characters. ';
-            }
-            if (!/\d/.test(currentPassword)) {
-                passwordFeedback += 'Must contain at least one number. ';
-            }
-            if (!/[a-zA-Z]/.test(currentPassword)) {
-                passwordFeedback += 'Must contain at least one letter. ';
-            }
-            if (!/[^a-zA-Z0-9]/.test(currentPassword)) {
-                passwordFeedback += 'Must contain at least one special character. ';
-            }
-            if (/\s/.test(currentPassword)) {
-                passwordFeedback += 'Your password cannot contain spaces. ';
-            }
-            if (passwordFeedback !== '') {
-                passwordFeedback = 'Your password must meet the following requirements: ' + passwordFeedback;
-                errors.password = passwordFeedback;
-            }
-        }
-
-        if (!confirmPassword) {
-            errors.passwordConfirm = PASSWORD_CONFIRM_REQUIRED;
-        } else if (currentPassword !== confirmPassword) {
-            errors.passwordConfirm = PASSWORDS_DO_NOT_MATCH;
-        }
-
-        return errors;
-    };
 
     function handleInputChange(e, setState) {
         const {value, id} = e.target;
@@ -82,9 +31,9 @@ const Registration = () => {
             return;
         }
         api.post('http://localhost:8000/auth/register', JSON.stringify({
-                email: email,
-                password: password
-            })).then((response) => {
+            email: email,
+            password: password
+        })).then((response) => {
             console.log(response);
             const data = response.data;
             dispatch(login({
@@ -139,7 +88,9 @@ const Registration = () => {
                         }}
                     />
                     {validationErrors.password &&
-                        <p className="text-red-500 text-xs mt-1">{validationErrors.password}</p>}
+                        validationErrors.password.split("$").map((error) => {
+                            return <p className="text-red-500 text-xs mt-1">{error}</p>
+                        })}
                 </div>
 
                 <div className="mb-6">

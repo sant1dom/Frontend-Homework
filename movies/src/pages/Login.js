@@ -67,8 +67,8 @@ const Login = () => {
     }
 
     function handleInputChange(e, setState) {
-        const {type, value} = e.target;
-        const errors = validateForm(type === "email" ? value : email, type === "password" ? value : password)
+        const {id, value} = e.target;
+        const errors = validateForm(id === "email" ? value : email, id === "password" ? value : password)
         setState(value)
         setValidationErrors(errors)
         setLoginError(false)

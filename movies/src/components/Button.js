@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
-const Button = React.memo(({onClick, label, variant, size, disabled, rounded}) => {
+const Button = React.memo(({onClick, label, variant, size, disabled, rounded, classes}) => {
     const getButtonClasses = () => {
         return classNames(
             'inline-flex items-center justify-center transition-all duration-300',
@@ -20,7 +20,8 @@ const Button = React.memo(({onClick, label, variant, size, disabled, rounded}) =
                 'shadow': !disabled,
                 'focus:outline-none': !disabled,
                 'rounded-md': rounded,
-            }
+            },
+            classes
         );
     };
 
@@ -43,6 +44,7 @@ Button.propTypes = {
     size: PropTypes.oneOf(['small', 'medium', 'large']),
     disabled: PropTypes.bool,
     rounded: PropTypes.bool,
+    classes: PropTypes.string,
 };
 
 Button.defaultProps = {
@@ -50,6 +52,7 @@ Button.defaultProps = {
     size: 'medium',
     disabled: false,
     rounded: false,
+    classes: '',
 };
 
 export default Button;
