@@ -39,8 +39,11 @@ const MovieRow = ({movie}) => {
         <div id={`movie_row_${movie.id}`}
              className="mb-3 w-screen-sm mx-auto border-2 border-solid border-blue-700 rounded-xl p-2 max-w-fit">
 
-            <div className="inline-flex text-left text-lg font-normal w-64">
-                {title}
+            <div className="inline-flex text-left text-lg font-normal w-64 h-16 text-ellipsis"
+                 style={{overflow: "hidden"}}>
+                <div style={{display: "block"}}>
+                    {title}
+                </div>
             </div>
 
             <div className="inline-flex">
@@ -49,13 +52,14 @@ const MovieRow = ({movie}) => {
                     key={`/admin/update/${movie.id}`}
                     to={`/admin/update/${movie.id}`}
                     label="Edit"
+                    classes={""}
                 />
 
                 <Button
                     onClick={handleDeletePopup}
                     rounded={true}
                     label="Delete"
-                    classes={"bg-red-500 hover:bg-red-600 mr-2 ml-2"}
+                    classes={"bg-red-500 hover:bg-red-600 ml-2"}
                 />
             </div>
         </div>
