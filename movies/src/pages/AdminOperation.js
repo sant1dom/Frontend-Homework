@@ -171,12 +171,11 @@ const AdminOperation = () => {
                 {inputs}
             </div>
 
-            <Button onClick={sendMovieForm} rounded={true} label="Save"/>
-            <div className="h-4"/>
-
             <Button onClick={goBack} rounded={true} label="Cancel"
-                    classes={"bg-red-500 hover:bg-red-600"}/>
-            <div className="h-4"/>
+                    classes={"mr-2 ml-2 bg-gray-500 hover:bg-gray-600"}/>
+
+            <Button onClick={sendMovieForm} rounded={true} label="Save"
+            />
         </div>
     )
         ;
