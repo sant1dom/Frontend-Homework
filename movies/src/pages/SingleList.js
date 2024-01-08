@@ -2,12 +2,30 @@ import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import api from "../utils/api";
 import axios from 'axios';
+import Filter from '../components/Filter';
 
 const OMDB_API_KEY = process.env.REACT_APP_OMDB_API_KEY;
 
 const SingleList = () => {
     const { listname } = useParams();
     const [movies, setMovies] = useState([]);
+    const [selectedGenre, setSelectedGenre] = useState('');
+    const [selectedLanguage, setSelectedLanguage] = useState('');
+    const [startYear, setStartYear] = useState('');
+    const [endYear, setEndYear] = useState('');
+
+    // Array of unique genres and languages based on fetched movies
+    const genres = [...new Set(movies.map((movie) => movie.data.genre))];
+    const languages = [...new Set(movies.map((movie) => movie.data.language))];
+
+    const filteredMovies = movies.filter((movie) => {
+        const genreCondition = !selectedGenre || movie.data.genre === selectedGenre;
+        const languageCondition = !selectedLanguage || movie.data.language === selectedLanguage;
+        const startYearCondition = !startYear || parseInt(movie.data.release_year) >= parseInt(startYear);
+        const endYearCondition = !endYear || parseInt(movie.data.release_year) <= parseInt(endYear);
+    
+    return genreCondition && languageCondition && startYearCondition && endYearCondition;
+      });
 
     const fetchMoviePoster = async (IMDBId) => {
         const response = await axios.get(`http://omdbapi.com/?apikey=${OMDB_API_KEY}&i=${IMDBId}`);
@@ -67,8 +85,16 @@ const SingleList = () => {
     return(
         <div className="mx-auto">
             <h1 className="mt-5 mb-5 text-4xl">{listname}</h1>
+            <Filter
+            genres={genres}
+            languages={languages}
+            onGenreChange={setSelectedGenre}
+            onLanguageChange={setSelectedLanguage}
+            onStartYearChange={setStartYear}
+            onEndYearChange={setEndYear}
+        />
             <div className="mx-8 grid grid-cols-6 gap-8">
-                {movies.map((movie) => (
+                {filteredMovies.map((movie) => (
                     <div key={movie.data.id} className="rounded-lg bg-sky-100 shadow-2xl">
                         <Link to={`/movie/${movie.data.id}`} className="block">
                             <div className="relative rounded-t-lg pb-80">
