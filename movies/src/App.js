@@ -25,10 +25,38 @@ function App() {
     const authState = useSelector((state) => state.auth);
     const [loading, setLoading] = useState(true);
 
+    const refresh = (token) => {
+        api.post('/auth/refresh_token', {}, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            }
+        }).then((response) => {
+            const data = response.data;
+            dispatch(login({
+                token: data.access_token,
+                userId: data.id,
+                email: data.email,
+                photo: data.profile_image,
+                is_superuser: data.is_superuser,
+            }));
+            const expiration = new Date(new Date().getTime() + data.expiration * 60 * 1000)
+            Cookies.set('access-token',
+                data.access_token,
+                {
+                    expires: expiration,
+                    sameSite: 'strict'
+                });
+            Cookies.set('expiration', expiration, {sameSite: 'strict'});
+        }).catch((error) => {
+            console.log(error);
+        });
+    }
+
     // Check if the user is already logged in
     useEffect(() => {
         const token = Cookies.get("access-token");
         if (token && !authState.isAuth) {
+            console.log("Token found, logging in")
             api.get("/auth/current_user",
                 {
                     headers: {
@@ -49,8 +77,14 @@ function App() {
                 console.log(error);
             });
         }
+        const expiration = Cookies.get("expiration");
+        const refreshTime = 5 * 60 * 1000;
+        if (expiration && new Date(expiration) < (new Date().getTime() + refreshTime)) {
+            console.log("Refreshing token");
+            refresh(token);
+        }
         setLoading(false);
-    });
+    }, [authState.isAuth, dispatch]);
 
     return (
         <BrowserRouter>

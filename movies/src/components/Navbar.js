@@ -30,6 +30,7 @@ const Navbar = ({title, links, backgroundColor}) => {
         if (authState.isAuth) {
             dispatch(logout());
             Cookies.remove('access-token');
+            Cookies.remove('expiration');
             navigate('/');
         } else {
             navigate('/login');

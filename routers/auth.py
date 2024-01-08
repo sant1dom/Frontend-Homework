@@ -50,19 +50,24 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_bearer)]):
         user_id: int = payload.get("id")
         if email is None or user_id is None:
             raise HTTPException(status_code=401, detail="Invalid credentials")
-        return {"email": email, "id": user_id, "is_superuser": payload.get("is_superuser"), "profile_image": payload.get("profile_image")}
+        return {"email": email, "id": user_id, "is_superuser": payload.get("is_superuser"),
+                "profile_image": payload.get("profile_image")}
     except JWTError:
         raise HTTPException(status_code=401, detail="Invalid credentials")
 
 
 @router.post("/register", status_code=201, response_model=UserReturn)
 async def create_user(user: UserCreate, db: db_dependency):
-    db_user = DBUser(email=user.email, hashed_password=user.password, is_active=True, is_superuser=False, profile_image="/static/profile_images/base_avatar.jpg")
+    db_user = DBUser(email=user.email, hashed_password=user.password, is_active=True, is_superuser=False,
+                     profile_image="/static/profile_images/base_avatar.jpg")
     db_user.hashed_password = bcrypt_context.hash(db_user.hashed_password)
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
-    return UserReturn(**db_user.__dict__)
+    token = create_access_token(db_user.id, db_user.email, db_user.is_superuser, db_user.profile_image,
+                                timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES))
+    return {"id": db_user.id, "email": db_user.email, "is_superuser": db_user.is_superuser, "access_token": token,
+            "profile_image": db_user.profile_image, "expiration": ACCESS_TOKEN_EXPIRE_MINUTES}
 
 
 @router.post("/login")
@@ -70,10 +75,10 @@ async def login_user(response: Response, formData: Annotated[OAuth2PasswordReque
     user: [bool | DBUser] = authenticate_user(formData.username, formData.password, db)
     if not user:
         raise HTTPException(status_code=401, detail="Invalid credentials")
-    token = create_access_token(user.id, user.email, user.is_superuser, user.profile_image, timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES))
-    response.set_cookie(key="access_token", value=f"{token}", httponly=True)
+    token = create_access_token(user.id, user.email, user.is_superuser, user.profile_image,
+                                timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES))
     return {"id": user.id, "email": user.email, "is_superuser": user.is_superuser, "access_token": token,
-            "profile_image": user.profile_image}
+            "profile_image": user.profile_image, "expiration": ACCESS_TOKEN_EXPIRE_MINUTES}
 
 
 @router.get("/current_user")
@@ -82,7 +87,8 @@ async def get_user(user: Annotated[dict, Depends(get_current_user)]):
 
 
 @router.post("/update_profile_image")
-async def update_profile_image(user: Annotated[dict, Depends(get_current_user)], db: db_dependency, file: UploadFile = File(...)):
+async def update_profile_image(user: Annotated[dict, Depends(get_current_user)], db: db_dependency,
+                               file: UploadFile = File(...)):
     if file.content_type not in ["image/jpeg", "image/png", "image/jpg"]:
         raise HTTPException(status_code=400, detail="File must be an image")
     if len(file.file.read()) > 5242880:
@@ -103,5 +109,14 @@ async def update_profile_image(user: Annotated[dict, Depends(get_current_user)],
     db.commit()
     db.refresh(user)
     return user.profile_image
+
+
+@router.post("/refresh_token")
+async def refresh_token(user: Annotated[dict, Depends(get_current_user)], response: Response, db: db_dependency):
+    user = db.query(DBUser).filter(DBUser.id == user["id"]).first()
+    token = create_access_token(user.id, user.email, user.is_superuser, user.profile_image, timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES))
+    response.set_cookie(key="access_token", value=f"{token}", httponly=True)
+    return {"access_token": token, "expiration": ACCESS_TOKEN_EXPIRE_MINUTES}
+
 
 user_dependency = Annotated[dict, Depends(get_current_user)]

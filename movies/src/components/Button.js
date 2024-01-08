@@ -39,7 +39,7 @@ const Button = React.memo(({onClick, label, variant, size, disabled, rounded, cl
 
 Button.propTypes = {
     onClick: PropTypes.func.isRequired,
-    label: PropTypes.string.isRequired,
+    label: PropTypes.string.isRequired || PropTypes.element.isRequired,
     variant: PropTypes.oneOf(['primary', 'secondary', 'nobg']),
     size: PropTypes.oneOf(['small', 'medium', 'large']),
     disabled: PropTypes.bool,

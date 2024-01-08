@@ -34,7 +34,6 @@ const Registration = () => {
             email: email,
             password: password
         })).then((response) => {
-            console.log(response);
             const data = response.data;
             dispatch(login({
                 token: data.access_token,
@@ -43,7 +42,14 @@ const Registration = () => {
                 photo: data.profile_image,
                 is_superuser: data.is_superuser,
             }));
-            Cookies.set('access-token', data.access_token);
+            const expiration = new Date(new Date().getTime() + data.expiration * 60 * 1000)
+            Cookies.set('access-token',
+                data.access_token,
+                {
+                    expires: expiration,
+                    sameSite: 'strict'
+                });
+            Cookies.set('expiration', expiration, {sameSite: 'strict'});
             navigate('/');
         }).catch((error) => {
             console.log(error);
