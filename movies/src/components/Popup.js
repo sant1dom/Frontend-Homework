@@ -2,6 +2,7 @@ import {useDispatch, useSelector} from "react-redux";
 import api from "../utils/api";
 import PopupMsg from "./PopupMsg";
 import {useEffect} from "react";
+import Button from "./Button";
 
 const Popup = () => {
 
@@ -54,15 +55,33 @@ const Popup = () => {
     };
 
     return (
-        <div>
-            <h1>{popupState.text_msg}</h1>
-            <br/>
-            <button className="popup_button_no" onClick={handleNo}>
-                {popupState.text_no}
-            </button>
-            <button className="popup_button_yes" onClick={handleYes}>
-                {popupState.text_yes}
-            </button>
+        <div
+            className="fixed inset-0 z-50 flex items-center justify-center overflow-x-hidden overflow-y-auto outline-none focus:outline-none bg-white bg-opacity-25">
+            <div
+                className="border-2 border-solid border-blue-700 rounded-xl p-2 max-w-fit rounded-lg shadow-lg relative flex flex-col w-max bg-white outline-none focus:outline-none">
+                <h1 className="text-4xl font-bold">
+                    {popupState.text_msg}
+                </h1>
+                <br/>
+                {
+                    popupState.text_no &&
+                    <Button
+                        onClick={handleNo}
+                        rounded={true}
+                        label={popupState.text_no}
+                        classes={"mr-2 ml-2"}
+                    />
+                }
+                {
+                    popupState.text_yes &&
+                    <Button
+                        onClick={handleYes}
+                        rounded={true}
+                        label={popupState.text_yes}
+                        classes={"mr-2 ml-2 bg-red-500 hover:bg-red-600"}
+                    />
+                }
+            </div>
         </div>
     )
 }
