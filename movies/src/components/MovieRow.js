@@ -1,5 +1,8 @@
 import {Link} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
+import Button from "./Button";
+import ButtonLink from "./ButtonLink";
+import React from "react";
 
 const MovieRow = ({movie}) => {
 
@@ -33,28 +36,30 @@ const MovieRow = ({movie}) => {
     }
 
     return (
-        <tr id={`movie_row_${movie.id}`}>
-            <td>
-                <p>
-                    {title}
-                </p>
-            </td>
-            <td>
-                <h5>
-                    <Link
-                        key={`/admin/update/${movie.id}`}
-                        to={`/admin/update/${movie.id}`}
-                    >
-                        EDIT
-                    </Link>
-                </h5>
-            </td>
-            <td>
-                <button onClick={handleDeletePopup}>
-                    DELETE
-                </button>
-            </td>
-        </tr>
+        <div id={`movie_row_${movie.id}`} className="mb-3 w-screen-sm mx-auto border-2 border-solid border-blue-700 rounded-xl p-2 max-w-fit">
+
+            <div className="inline-flex">
+                <ButtonLink
+                    rounded={true}
+                    key={`/admin/update/${movie.id}`}
+                    to={`/admin/update/${movie.id}`}
+                    label="Edit"
+                />
+
+                <Button
+                    onClick={handleDeletePopup}
+                    rounded={true}
+                    label="Delete"
+                    classes={"bg-red-500 hover:bg-red-600 mr-2 ml-2"}
+                />
+
+            </div>
+
+            <div className="inline-flex text-left text-lg font-normal w-64" >
+                {title}
+            </div>
+
+        </div>
     )
 }
 

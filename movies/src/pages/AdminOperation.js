@@ -161,27 +161,22 @@ const AdminOperation = () => {
     }
 
     return (
-        <div className="container mx-auto">
-            <div className="h-4">
-                <div className="flex flex-col items-center justify-center">
-                    <div className="flex flex-col items-center justify-center relative">
+        <div className="container mx-auto items-center justify-center">
 
-                        <div className="h-4"/>
-                        <h1 className="text-4xl font-bold">{pageTitle}</h1>
-                        <div className="h-4"/>
+            <div className="h-4"/>
+            <h1 className="text-4xl font-bold">{pageTitle}</h1>
+            <div className="h-4"/>
 
-                        <div className="flex flex-col items-center">
-                            {inputs}
-
-                            <Button onClick={sendMovieForm} rounded={true} label="Save"/>
-                            <div className="h-4"/>
-                            <Button onClick={goBack} rounded={true} label="Cancel"
-                                    classes={"bg-red-500 hover:bg-red-600"}/>
-                            <div className="h-4"/>
-                        </div>
-                    </div>
-                </div>
+            <div>
+                {inputs}
             </div>
+
+            <Button onClick={sendMovieForm} rounded={true} label="Save"/>
+            <div className="h-4"/>
+
+            <Button onClick={goBack} rounded={true} label="Cancel"
+                    classes={"bg-red-500 hover:bg-red-600"}/>
+            <div className="h-4"/>
         </div>
     )
         ;

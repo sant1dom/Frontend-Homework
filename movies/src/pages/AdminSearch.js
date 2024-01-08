@@ -3,6 +3,7 @@ import React, {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {Link, useNavigate} from "react-router-dom";
 import MovieRow from "../components/MovieRow";
+import ButtonLink from "../components/ButtonLink";
 
 const AdminSearch = () => {
 
@@ -22,12 +23,12 @@ const AdminSearch = () => {
         api.get('/movies').then((response) => {
 
             dispatch({
-                        type: "hiddenState/clear",
-                        payload:
-                            {
-                                table: "movie",
-                            }
-                    });
+                type: "hiddenState/clear",
+                payload:
+                    {
+                        table: "movie",
+                    }
+            });
 
             const tempMovies = response.data.map((movie) => {
                 return <MovieRow movie={movie} key={movie.id}/>
@@ -45,33 +46,24 @@ const AdminSearch = () => {
     }
 
     return (
-        <div className="container mx-auto">
-            <h1>
-                Films found: {movies.length}
-            </h1>
-            <Link
+        <div className="container mx-auto items-center justify-center">
+
+            <div className="h-4"/>
+            <h1 className="text-4xl font-bold">Films found: {movies.length}</h1>
+            <div className="h-4"/>
+
+            <ButtonLink
+                rounded={true}
                 key='admin/create'
                 to='/admin/create'
-            >
-                Add a new film
-            </Link>
+                label="Add a new film"
+            />
+            <div className="h-4"/>
 
-            <h4>or</h4>
+            <div>
+                {movies}
+            </div>
 
-            <h2>Edit/Delete existing films</h2>
-
-            <table>
-                <thead>
-                <tr>
-                    <th>Film</th>
-                    <th>Edit</th>
-                    <th>Delete</th>
-                </tr>
-                </thead>
-                <tbody>
-                    {movies}
-                </tbody>
-            </table>
         </div>
     );
 }

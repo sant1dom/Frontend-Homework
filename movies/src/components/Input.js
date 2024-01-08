@@ -35,25 +35,30 @@ const Input = ({field, label, type, value = null, min = null, max = null}) => {
 
     return (
         <div>
-            <div className="text-body">
+            <div className="text-lg font-medium">
                 {label}
             </div>
 
             <div>
-                <input ref={input} name={field} type={type} min={min} max={max} onChange={handleChange}
-                       className="border-2 border-gray-300 rounded-md w-64 p-2"
+                <input
+                    ref={input}
+                    name={field} type={type} min={min} max={max}
+                    onChange={handleChange}
+                    className="border-2 border-gray-300 rounded-md w-64 p-2"
                 />
             </div>
 
-            <div className="text-red-500 text-body h-8">
-                <span ref={error} style={{display: "none"}}>
+            <div className="text-lg font-normal text-red-500 h-10">
+                <span
+                    ref={error}
+                    style={{display: "none"}}
+                >
                     Write {label}
-                    </span>
+                </span>
             </div>
 
         </div>
-    )
-        ;
+    );
 }
 
 export default Input;
