@@ -1,3 +1,6 @@
+from datetime import datetime
+from typing import List, Optional
+
 from pydantic import BaseModel
 
 
@@ -28,6 +31,7 @@ class MovieUpdate(BaseModel):
     language: str
     imdb_url: str
 
+
 class User(BaseModel):
     id: int
     hashed_password: str
@@ -36,6 +40,7 @@ class User(BaseModel):
     is_superuser: bool = False
     profile_image: str = None
 
+
 class UserReturn(BaseModel):
     id: int
     email: str
@@ -43,9 +48,11 @@ class UserReturn(BaseModel):
     is_superuser: bool = False
     profile_image: str = None
 
+
 class UserCreate(BaseModel):
     email: str
     password: str
+
 
 class UserUpdate(BaseModel):
     email: str
@@ -54,10 +61,36 @@ class UserUpdate(BaseModel):
     is_superuser: bool = None
     profile_image: str = None
 
+
 class UserLogin(BaseModel):
     email: str
     password: str
 
+
 class Token(BaseModel):
     access_token: str
     token_type: str
+
+
+class Comment(BaseModel):
+    id: int
+    user_id: int
+    movie_list_id: int
+    comment: str
+    created_at: datetime
+    updated_at: datetime
+
+
+class Like(BaseModel):
+    id: int
+    user_id: int
+    movie_list_id: int
+
+
+class MovieList(BaseModel):
+    id: int
+    user_id: int
+    name: str
+    movies: List[Movie] = []
+    comments: List[Comment] = []
+    likes: List[Like] = []

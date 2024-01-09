@@ -90,7 +90,7 @@ function App() {
         <BrowserRouter>
             <div className="App">
                 <Routes>
-                    <Route path="/" element={<Layout/>}>
+                    <Route path="/" element={<Layout loading={loading}/>}>
                         {!loading && <><Route index element={<Home/>}/>
                             <Route path="/login" element={<Login/>}/>
                             <Route path="/register" element={<Registration/>}/>
@@ -105,7 +105,6 @@ function App() {
                             <Route path="*" element={<NotFound/>}/></>}
                     </Route>
                 </Routes>
-                {loading && <Spinner/>}
             </div>
             <Popup/>
         </BrowserRouter>

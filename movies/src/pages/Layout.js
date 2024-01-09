@@ -2,7 +2,7 @@ import Navbar from "../components/Navbar";
 import { Outlet } from "react-router-dom";
 import {useSelector} from "react-redux";
 
-const Layout = () => {
+const Layout = ({loading}) => {
     const authState = useSelector((state) => state.auth);
     const links = [
         {text: "Home", url: "/"},
@@ -20,7 +20,7 @@ const Layout = () => {
 
     return (
         <>
-            <Navbar title="Movies" links={links} backgroundColor="bg-gray-800" />
+            <Navbar title="Movies" links={links} backgroundColor="bg-gray-800" loading={loading}/>
             <Outlet />
         </>
     );
