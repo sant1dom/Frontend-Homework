@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router-dom';
 import api from "../utils/api";
 import axios from 'axios';
 import Filter from '../components/Filter';
+import LoadingCardSkeleton from '../components/LoadingCardSkeleton';
 
 const OMDB_API_KEY = process.env.REACT_APP_OMDB_API_KEY;
 
@@ -13,6 +14,7 @@ const SingleList = () => {
     const [selectedLanguage, setSelectedLanguage] = useState('');
     const [startYear, setStartYear] = useState('');
     const [endYear, setEndYear] = useState('');
+    const [loading, setLoading] = useState(true);
 
     // Array of unique genres and languages based on fetched movies
     const genres = [...new Set(movies.map((movie) => movie.data.genre))];
@@ -73,8 +75,8 @@ const SingleList = () => {
                     movie.poster = await fetchMoviePoster(movie.data.imdb_url.split('/')[4]);
                     return movie;
                 }));
-                setMovies(moviesWithPosters);      
-
+                setMovies(moviesWithPosters);  
+                setLoading(false);    
             } catch (error) {
                 console.error(error);
             }
@@ -94,7 +96,11 @@ const SingleList = () => {
             onEndYearChange={setEndYear}
         />
             <div className="mx-8 grid grid-cols-6 gap-8">
-                {filteredMovies.map((movie) => (
+                {loading ? (
+                    Array.from({ length: 1 }).map((_) => (
+                        <LoadingCardSkeleton />
+                    ))
+                    ) : (filteredMovies.map((movie) => (
                     <div key={movie.data.id} className="rounded-lg bg-sky-100 shadow-2xl">
                         <Link to={`/movie/${movie.data.id}`} className="block">
                             <div className="relative rounded-t-lg pb-80">
@@ -109,6 +115,7 @@ const SingleList = () => {
                         </div>
                     </div>
                  ))
+                    )
                 }
             </div>
         </div>
