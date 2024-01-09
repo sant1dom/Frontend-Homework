@@ -87,7 +87,7 @@ const Home = () => {
                     ))
                     ) : (
                         movies.map((movie) => (
-                            <div key={movie.id} className="rounded-lg bg-sky-100 shadow-2xl" onMouseEnter={() => setHoveredMovie(movie.id)}>
+                            <div key={movie.id} className="rounded-lg bg-sky-100 shadow-2xl -z-20" onMouseEnter={() => setHoveredMovie(movie.id)}>
                                 <Link to={`/movie/${movie.id}`} className="block">
                                 <div className="relative rounded-t-lg pb-80">
                                     <img className="absolute inset-0 w-full h-full object-cover rounded-t-lg" src={movie.poster} alt="Film" />
