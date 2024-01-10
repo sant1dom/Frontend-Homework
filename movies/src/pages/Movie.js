@@ -10,6 +10,8 @@ import {GoClockFill} from "react-icons/go";
 import {FiClock} from "react-icons/fi";
 import Modal from "../components/Modal";
 import FileUploader from "../components/FileUploader";
+import Cookies from "js-cookie";
+import {login} from "../store/store";
 
 const OMDB_API_KEY = process.env.REACT_APP_OMDB_API_KEY;
 
@@ -25,6 +27,7 @@ const Movie = () => {
     const [newListName, setNewListName] = useState('');
     const [selectedList, setSelectedList] = useState(null);
     const [popupVisible, setPopupVisible] = useState(false);
+    const [userLists, setUserLists] = useState([]);
     const [popupTitle, setPopupTitle] = useState('');
     const [popupDescription, setPopupDescription] = useState('');
     //const watchlist = JSON.parse(localStorage.getItem("watchlist"));
@@ -47,14 +50,33 @@ const Movie = () => {
         return response.data;
     };
 
+    const fetchUserLists = async () => {
+        const token = Cookies.get("access-token");
+        if (token) {
+            try {
+                const response = await api.get("/mylists", {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                    }
+                });
+                return response.data;
+            } catch (error) {
+                console.log(error);
+                return [];
+            }
+        }
+        return [];
+    }
+
     useEffect(() => {
         fetchMovieData();
+        console.log(authState)
         const storedFavourites = JSON.parse(localStorage.getItem("favourites")) || [];
         setFavourites(storedFavourites);
         const storedWatchlist = JSON.parse(localStorage.getItem("watchlist")) || [];
         setWatchlist(storedWatchlist);
         if (selectedList) {
-            // Esegui l'azione di salvataggio del film nella lista selezionata
+            //TODO: Esegui l'azione di salvataggio del film nella lista selezionata
             console.log(`Salva il film nella lista: ${selectedList.name}`);
         }
     }, [id], [selectedList]);
@@ -102,7 +124,11 @@ const Movie = () => {
         localStorage.setItem("favourites", JSON.stringify(favourites));
     };
 
-    const toggleDropdown = () => {
+    const toggleDropdown = async () => {
+
+        const userLists = await fetchUserLists();
+        setUserLists(userLists);
+
         setShowDropdown(!showDropdown);
     };
 
@@ -139,7 +165,7 @@ const Movie = () => {
     };
 
     const handleSaveToExistingList = (list) => {
-        // Implementa l'azione di salvataggio del film nella lista esistente
+        //TODO: Implementa l'azione di salvataggio del film nella lista esistente
         console.log(`Salva il film nella lista: ${list.name}`);
         setSelectedList(list);
     };
@@ -173,6 +199,7 @@ const Movie = () => {
             <div className="mx-8 flex flex-col lg:flex-row justify-center items-center lg:items-start">
                 <div className="rounded-lg bg-sky-100 shadow-2xl max-w-72">
                     <img className="rounded-t-lg w-70 h-90" src={imdbData.Poster} alt="Film"/>
+                    {authState.isAuth && (
                     <div className="p-4">
                         <div className="mt-2 flex flex-col items-center">
                             <div className="flex space-x-2">
@@ -183,7 +210,7 @@ const Movie = () => {
                                     {showDropdown && (
                                         <div className="absolute left-0 bottom-[112%] w-36 bg-white border rounded-lg shadow-lg">
                                             <ul className="p-2">
-                                                {favourites.map((list) => (
+                                                {userLists.map((list) => (
                                                     <li
                                                         key={list.id}
                                                         className="cursor-pointer py-1 px-2 hover:bg-gray-100"
@@ -205,8 +232,9 @@ const Movie = () => {
                             </div>
                         </div>
                     </div>
+                        )}
                 </div>
-                <div className="lg:w-3/5 lg:pl-10">
+                <div className="lg:w-3/5 lg:pl-10 mt-2">
                     <ul className="list-spacing">
                         <li className="text-left"><strong>Year:</strong> {movie.release_year}</li>
                         <li className="text-left"><strong>Genre:</strong> {movie.genre}</li>
@@ -238,34 +266,6 @@ const Movie = () => {
                         closeCreateListPopup();
                     }}
                 />
-                // <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-4 rounded-lg shadow-lg">
-                //     <h2 className="text-2xl font-semibold mb-2">Crea Nuova Lista</h2>
-                //     <input
-                //         type="text"
-                //         placeholder="Titolo"
-                //         value={popupTitle}
-                //         onChange={(e) => setPopupTitle(e.target.value)}
-                //         className="w-full p-2 mb-2 border rounded"
-                //     />
-                //     <textarea
-                //         placeholder="Descrizione"
-                //         value={popupDescription}
-                //         onChange={(e) => setPopupDescription(e.target.value)}
-                //         className="w-full p-2 mb-2 border rounded"
-                //     />
-                //     <button
-                //         className="bg-blue-500 text-white rounded-full py-1 px-2 hover:bg-blue-600"
-                //         onClick={createNewList}
-                //     >
-                //         Crea
-                //     </button>
-                //     <button
-                //         className="bg-gray-200 text-gray-700 rounded-full py-1 px-2 ml-2 hover:bg-gray-300"
-                //         onClick={closeCreateListPopup}
-                //     >
-                //         Annulla
-                //     </button>
-                // </div>
             )}
         </div>
 
