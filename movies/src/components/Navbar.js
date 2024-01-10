@@ -104,11 +104,11 @@ const Navbar = ({title, links, backgroundColor, loading}) => {
     )), [links]);
 
     return (
-        <div>
+        <div className={`sticky ${backgroundColor} top-0`}>
             <nav
                 className={`sticky flex items-center justify-between ${backgroundColor} p-2 flex-no-wrap relative top-0`}>
                 <div className="flex items-center flex-shrink-0 text-white mr-6">
-                    <span className="font-semibold text-xl tracking-tight">{title}</span>
+                    <img src={process.env.PUBLIC_URL + '/Screenshot_2024-01-10_195526.png'} alt="Logo" className="h-10"/>
                 </div>
 
                 <div className="block lg:hidden">
