@@ -8,12 +8,12 @@ import api from "../utils/api";
 const OMDB_API_KEY = process.env.REACT_APP_OMDB_API_KEY;
 
 
-const SearchBar = ({placeholder = 'Search...'}) => {
+const SearchBar = ({placeholder = 'Search...', setShowMobileMenu}) => {
     const SearchResult = ({result}) => (
         <Link to={`/movie/${result.id}`} key={result.id}>
             <div
                 className="flex items-center p-2 hover:bg-gray-200 cursor-pointer transition ease-in-out duration-150 border z-50"
-                onClick={() => {results.length = 0;}}
+                onClick={() => {results.length = 0; setShowMobileMenu(false);}}
             >
                 <img
                     src={result.poster || 'https://via.placeholder.com/50'}

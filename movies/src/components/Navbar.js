@@ -46,7 +46,7 @@ const Navbar = ({title, links, backgroundColor, loading}) => {
             className={`absolute w-full z-10 flex flex-col ${backgroundColor} p-8 justify-evenly items-center gap-2 lg:hidden`}
         >
             <div className="text-sm" onClick={() => setShowMobileMenu(false)}>{linkElements}</div>
-            <SearchBar/>
+            <SearchBar setShowMobileMenu={setShowMobileMenu}/>
             <div className="h-4"/>
             {authState.isAuth ? (
                 <>
@@ -124,7 +124,7 @@ const Navbar = ({title, links, backgroundColor, loading}) => {
                     <div className="text-sm lg:flex-grow">{linkElements}</div>
 
                     <div className="flex justify-end items-center">
-                        <SearchBar/>
+                        <SearchBar setShowMobileMenu={setShowMobileMenu}/>
 
                         {authState.isAuth && (
                             <>

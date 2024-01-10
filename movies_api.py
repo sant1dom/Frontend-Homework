@@ -16,7 +16,7 @@ from starlette.staticfiles import StaticFiles
 import re
 
 from LogConfig import LogConfig
-from database import Base, engine, fill_db, get_db, DBMovie
+from database import Base, engine, fill_db, get_db, DBMovie, DBMovieList, DBLike, DBComment
 from exceptions_handlers import rate_limit_exceeded_handler
 from models import Movie, MovieUpdate, MovieCreate, MovieList
 from routers import site, auth
@@ -58,7 +58,7 @@ app.add_middleware(
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
-#app.include_router(site.router)
+app.include_router(site.router)
 app.include_router(auth.router)
 
 
@@ -199,6 +199,130 @@ async def get_languages(user: user_dependency, db: Session = Depends(get_db)):
 
 @app.get("/mylists")
 async def get_my_lists(user: user_dependency, db: Session = Depends(get_db)):
-    movie_lists = db.query(MovieList).filter(MovieList.user_id == user["id"]).all()
-    print(movie_lists)
+    movie_lists = db.query(DBMovieList).filter(DBMovieList.user_id == user["id"]).all()
     return movie_lists
+
+
+@app.post("/mylists")
+async def create_list(movie_list: MovieList, user: user_dependency, db: Session = Depends(get_db)):
+    db_movie_list = DBMovieList(**movie_list.model_dump(), user_id=user["id"])
+    db.add(db_movie_list)
+    db.commit()
+    db.refresh(db_movie_list)
+    return MovieList(**db_movie_list.__dict__)
+
+
+@app.delete("/mylists/{movie_list_id}")
+async def delete_list(movie_list_id: int, user: user_dependency, db: Session = Depends(get_db)):
+    db_movie_list = db.query(DBMovieList).filter(
+        and_(DBMovieList.id == movie_list_id, DBMovieList.user_id == user["id"])).first()
+    if db_movie_list is None:
+        raise HTTPException(status_code=404, detail="Movie list not found")
+    db.delete(db_movie_list)
+    db.commit()
+    return {"message": "Movie list deleted successfully"}
+
+
+@app.get("/mylists/{movie_list_id}")
+async def get_list_by_id(movie_list_id: int, user: user_dependency, db: Session = Depends(get_db)):
+    db_movie_list = db.query(DBMovieList).filter(
+        and_(DBMovieList.id == movie_list_id, DBMovieList.user_id == user["id"])).first()
+    if db_movie_list is None:
+        raise HTTPException(status_code=404, detail="Movie list not found")
+    movie_list = MovieList(**db_movie_list.__dict__)
+    return movie_list
+
+
+@app.put("/mylists/{movie_list_id}")
+async def update_list(movie_list_id: int, movie_list: MovieList, user: user_dependency, db: Session = Depends(get_db)):
+    db_movie_list = db.query(DBMovieList).filter(
+        and_(DBMovieList.id == movie_list_id, DBMovieList.user_id == user["id"])).first()
+    if db_movie_list is None:
+        raise HTTPException(status_code=404, detail="Movie list not found")
+    for key, value in movie_list.model_dump().items():
+        setattr(db_movie_list, key, value)
+    db.commit()
+    db.refresh(db_movie_list)
+    return MovieList(**db_movie_list.__dict__)
+
+
+@app.post("/mylists/{movie_list_id}")
+async def add_movie_to_list(movie_list_id: int, movie_id: int, user: user_dependency, db: Session = Depends(get_db)):
+    db_movie_list = db.query(DBMovieList).filter(
+        and_(DBMovieList.id == movie_list_id, DBMovieList.user_id == user["id"])).first()
+    if db_movie_list is None:
+        raise HTTPException(status_code=404, detail="Movie list not found")
+    db_movie_list.movies.append(db.query(DBMovie).filter(DBMovie.id == movie_id).first())
+    db.commit()
+    db.refresh(db_movie_list)
+    return MovieList(**db_movie_list.__dict__)
+
+
+@app.delete("/mylists/{movie_list_id}/{movie_id}")
+async def delete_movie_from_list(movie_list_id: int, movie_id: int, user: user_dependency,
+                                 db: Session = Depends(get_db)):
+    db_movie_list = db.query(DBMovieList).filter(
+        and_(DBMovieList.id == movie_list_id, DBMovieList.user_id == user["id"])).first()
+    if db_movie_list is None:
+        raise HTTPException(status_code=404, detail="Movie list not found")
+    db_movie_list.movies.remove(db.query(DBMovie).filter(DBMovie.id == movie_id).first())
+    db.commit()
+    db.refresh(db_movie_list)
+    return MovieList(**db_movie_list.__dict__)
+
+
+@app.get("/most_liked_lists")
+async def get_most_liked_lists(db: Session = Depends(get_db)):
+    most_liked_lists = db.query(DBLike.movie_list_id, func.count(DBLike.movie_list_id)).group_by( DBLike.movie_list_id).order_by(func.count(DBLike.movie_list_id).desc()).all()
+    most_liked_lists = [movie_list[0] for movie_list in most_liked_lists]
+    most_liked_lists = db.query(DBMovieList).filter(DBMovieList.id.in_(most_liked_lists)).all()
+    most_liked_lists = [MovieList(**movie_list.__dict__) for movie_list in most_liked_lists]
+    return most_liked_lists
+
+@app.post("/like/{movie_list_id}")
+async def like_movie_list(movie_list_id: int, user: user_dependency, db: Session = Depends(get_db)):
+    db_like = DBLike(movie_list_id=movie_list_id, user_id=user["id"])
+    db.add(db_like)
+    db.commit()
+    db.refresh(db_like)
+    return {"message": "Movie list liked successfully"}
+
+@app.delete("/like/{movie_list_id}")
+async def unlike_movie_list(movie_list_id: int, user: user_dependency, db: Session = Depends(get_db)):
+    db_like = db.query(DBLike).filter(and_(DBLike.movie_list_id == movie_list_id, DBLike.user_id == user["id"])).first()
+    if db_like is None:
+        raise HTTPException(status_code=404, detail="Movie list not found")
+    db.delete(db_like)
+    db.commit()
+    return {"message": "Movie list unliked successfully"}
+
+@app.post("/comment/{movie_list_id}")
+async def comment_movie_list(movie_list_id: int, comment: str, user: user_dependency, db: Session = Depends(get_db)):
+    db_comment = DBComment(movie_list_id=movie_list_id, user_id=user["id"], comment=comment)
+    db.add(db_comment)
+    db.commit()
+    db.refresh(db_comment)
+    return {"message": "Movie list commented successfully"}
+
+@app.get("/comments/{movie_list_id}")
+async def get_comments(movie_list_id: int, db: Session = Depends(get_db)):
+    comments = db.query(DBComment).filter(DBComment.movie_list_id == movie_list_id).all()
+    return comments
+
+@app.delete("/comment/{comment_id}")
+async def delete_comment(comment_id: int, user: user_dependency, db: Session = Depends(get_db)):
+    db_comment = db.query(DBComment).filter(and_(DBComment.id == comment_id, DBComment.user_id == user["id"])).first()
+    if db_comment is None:
+        raise HTTPException(status_code=404, detail="Comment not found")
+    db.delete(db_comment)
+    db.commit()
+    return {"message": "Comment deleted successfully"}
+
+@app.get("/most_commented_lists")
+async def get_most_commented_lists(db: Session = Depends(get_db)):
+    most_commented_lists = db.query(DBComment.movie_list_id, func.count(DBComment.movie_list_id)).group_by( DBComment.movie_list_id).order_by(func.count(DBComment.movie_list_id).desc()).all()
+    most_commented_lists = [movie_list[0] for movie_list in most_commented_lists]
+    most_commented_lists = db.query(DBMovieList).filter(DBMovieList.id.in_(most_commented_lists)).all()
+    most_commented_lists = [MovieList(**movie_list.__dict__) for movie_list in most_commented_lists]
+    return most_commented_lists
+

@@ -25,6 +25,7 @@ class DBComment(Base):
     created_at: Mapped[str] = mapped_column(String, nullable=False)
     updated_at: Mapped[str] = mapped_column(String, nullable=False)
 
+
 class DBUser(Base):
     __tablename__ = "users"
 
@@ -35,6 +36,7 @@ class DBUser(Base):
     is_superuser: Mapped[bool] = mapped_column(Boolean, nullable=False)
     profile_image: Mapped[str] = mapped_column(String, nullable=True)
     movie_lists: Mapped[List[DBMovieList]] = relationship(back_populates="user")
+
 
 class DBLike(Base):
     __tablename__ = "likes"
@@ -75,9 +77,6 @@ movie_movie_list = Table('movie_movie_list', Base.metadata,
                          Column('movie_id', Integer, ForeignKey('movies.id')),
                          Column('movie_list_id', Integer, ForeignKey('movie_lists.id'))
                          )
-
-
-
 
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
