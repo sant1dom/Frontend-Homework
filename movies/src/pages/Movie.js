@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FaHeart, FaClock, FaPlus } from 'react-icons/fa';
 import api from "../utils/api";
 import Button from '../components/Button';
@@ -8,6 +8,8 @@ import {useSelector} from "react-redux";
 import {IoMdHeart, IoMdHeartEmpty} from "react-icons/io";
 import {GoClockFill} from "react-icons/go";
 import {FiClock} from "react-icons/fi";
+import Modal from "../components/Modal";
+import FileUploader from "../components/FileUploader";
 
 const OMDB_API_KEY = process.env.REACT_APP_OMDB_API_KEY;
 
@@ -146,6 +148,25 @@ const Movie = () => {
         setSelectedList(null);
     };
 
+    const popupBody = <div><input
+        type="text"
+        placeholder="Titolo"
+        value={popupTitle}
+        onChange={(e) => setPopupTitle(e.target.value)}
+        className="w-full p-2 mb-2 border rounded"
+    />
+    <textarea
+        placeholder="Descrizione"
+        value={popupDescription}
+        onChange={(e) => setPopupDescription(e.target.value)}
+        className="w-full p-2 mb-2 border rounded"
+    />
+        <Button onClick={createNewList} classes={"bg-blue-500 text-white rounded-full py-1 px-2 hover:bg-blue-600"} label={"Create"}/>
+        <Button onClick={closeCreateListPopup} classes={"bg-gray-200 text-black rounded-full py-1 px-2 ml-2 hover:bg-gray-300"} label={"Cancel"}/>
+    </div>
+
+
+
     return (
         <div className="mx-auto">
             <h1 className="mt-5 mb-5 text-4xl">{movie.title}</h1>
@@ -210,34 +231,41 @@ const Movie = () => {
 
             </div>
             {popupVisible && (
-                <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-4 rounded-lg shadow-lg">
-                    <h2 className="text-2xl font-semibold mb-2">Crea Nuova Lista</h2>
-                    <input
-                        type="text"
-                        placeholder="Titolo"
-                        value={popupTitle}
-                        onChange={(e) => setPopupTitle(e.target.value)}
-                        className="w-full p-2 mb-2 border rounded"
-                    />
-                    <textarea
-                        placeholder="Descrizione"
-                        value={popupDescription}
-                        onChange={(e) => setPopupDescription(e.target.value)}
-                        className="w-full p-2 mb-2 border rounded"
-                    />
-                    <button
-                        className="bg-blue-500 text-white rounded-full py-1 px-2 hover:bg-blue-600"
-                        onClick={createNewList}
-                    >
-                        Crea
-                    </button>
-                    <button
-                        className="bg-gray-200 text-gray-700 rounded-full py-1 px-2 ml-2 hover:bg-gray-300"
-                        onClick={closeCreateListPopup}
-                    >
-                        Annulla
-                    </button>
-                </div>
+                <Modal
+                    title="Create new list"
+                    body={popupBody}
+                    onClose={() => {
+                        closeCreateListPopup();
+                    }}
+                />
+                // <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-4 rounded-lg shadow-lg">
+                //     <h2 className="text-2xl font-semibold mb-2">Crea Nuova Lista</h2>
+                //     <input
+                //         type="text"
+                //         placeholder="Titolo"
+                //         value={popupTitle}
+                //         onChange={(e) => setPopupTitle(e.target.value)}
+                //         className="w-full p-2 mb-2 border rounded"
+                //     />
+                //     <textarea
+                //         placeholder="Descrizione"
+                //         value={popupDescription}
+                //         onChange={(e) => setPopupDescription(e.target.value)}
+                //         className="w-full p-2 mb-2 border rounded"
+                //     />
+                //     <button
+                //         className="bg-blue-500 text-white rounded-full py-1 px-2 hover:bg-blue-600"
+                //         onClick={createNewList}
+                //     >
+                //         Crea
+                //     </button>
+                //     <button
+                //         className="bg-gray-200 text-gray-700 rounded-full py-1 px-2 ml-2 hover:bg-gray-300"
+                //         onClick={closeCreateListPopup}
+                //     >
+                //         Annulla
+                //     </button>
+                // </div>
             )}
         </div>
 
