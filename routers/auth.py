@@ -30,6 +30,7 @@ oauth2_bearer = OAuth2PasswordBearer(tokenUrl="/auth/login")
 
 def authenticate_user(email: str, password: str, db: db_dependency) -> bool | DBUser:
     user = db.query(DBUser).filter(DBUser.email == email).first()
+    print(db.query(DBUser).all())
     if user is None or not user.is_active or not bcrypt_context.verify(password, user.hashed_password):
         return False
     return user
@@ -77,6 +78,7 @@ async def login_user(response: Response, formData: Annotated[OAuth2PasswordReque
         raise HTTPException(status_code=401, detail="Invalid credentials")
     token = create_access_token(user.id, user.email, user.is_superuser, user.profile_image,
                                 timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES))
+    response.set_cookie("access_token", f"{token}", httponly=True)
     return {"id": user.id, "email": user.email, "is_superuser": user.is_superuser, "access_token": token,
             "profile_image": user.profile_image, "expiration": ACCESS_TOKEN_EXPIRE_MINUTES}
 

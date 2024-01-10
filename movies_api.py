@@ -18,7 +18,7 @@ import re
 from LogConfig import LogConfig
 from database import Base, engine, fill_db, get_db, DBMovie
 from exceptions_handlers import rate_limit_exceeded_handler
-from models import Movie, MovieUpdate, MovieCreate
+from models import Movie, MovieUpdate, MovieCreate, MovieList
 from routers import site, auth
 from routers.auth import user_dependency
 
@@ -195,3 +195,10 @@ async def get_languages(user: user_dependency, db: Session = Depends(get_db)):
         return languages
     else:
         raise HTTPException(status_code=403, detail="You are not allowed to view this resource")
+
+
+@app.get("/mylists")
+async def get_my_lists(user: user_dependency, db: Session = Depends(get_db)):
+    movie_lists = db.query(MovieList).filter(MovieList.user_id == user["id"]).all()
+    print(movie_lists)
+    return movie_lists

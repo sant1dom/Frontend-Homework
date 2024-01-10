@@ -7,44 +7,46 @@ import api from "../utils/api";
 
 const OMDB_API_KEY = process.env.REACT_APP_OMDB_API_KEY;
 
-const SearchResult = ({result}) => (
-    <Link to={`/films/${result.id}`} key={result.id}>
-        <div
-            className="flex items-center p-2 hover:bg-gray-200 cursor-pointer transition ease-in-out duration-150 border">
-            <img
-                src={result.poster || 'https://via.placeholder.com/50'}
-                alt=""
-                width="50"
-                height="50"
-                className="mr-2"
-            />
-            <span>{result.title}</span>
-        </div>
-    </Link>
-);
-
-const NoResults = () => (
-    <div className="flex items-center p-2 border">
-        <span>No results</span>
-    </div>
-);
-
-
-const SearchResults = ({results, noResults, error}) => (
-    <div className="absolute z-10 bg-white w-full mt-1">
-        {results.map((result) => (
-            <SearchResult key={result.id} result={result}/>
-        ))}
-        {noResults && <NoResults/>}
-    </div>
-);
-
-const fetchMovieData = async (movieId) => {
-    const response = await axios.get(`http://omdbapi.com/?apikey=${OMDB_API_KEY}&i=${movieId}`);
-    return response.data.Poster;
-};
 
 const SearchBar = ({placeholder = 'Search...'}) => {
+    const SearchResult = ({result}) => (
+        <Link to={`/movie/${result.id}`} key={result.id}>
+            <div
+                className="flex items-center p-2 hover:bg-gray-200 cursor-pointer transition ease-in-out duration-150 border z-50"
+                onClick={() => {results.length = 0;}}
+            >
+                <img
+                    src={result.poster || 'https://via.placeholder.com/50'}
+                    alt=""
+                    width="50"
+                    height="50"
+                    className="mr-2"
+                />
+                <span>{result.title}</span>
+            </div>
+        </Link>
+    );
+
+    const NoResults = () => (
+        <div className="flex items-center p-2 border">
+            <span>No results</span>
+        </div>
+    );
+
+
+    const SearchResults = ({results, noResults, error}) => (
+        <div className="absolute z-50 bg-white w-full mt-1">
+            {results.map((result) => (
+                <SearchResult key={result.id} result={result}/>
+            ))}
+            {noResults && <NoResults/>}
+        </div>
+    );
+
+    const fetchMovieData = async (movieId) => {
+        const response = await axios.get(`http://omdbapi.com/?apikey=${OMDB_API_KEY}&i=${movieId}`);
+        return response.data.Poster;
+    };
     const [results, setResults] = useState([]);
     const [noResults, setNoResults] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
