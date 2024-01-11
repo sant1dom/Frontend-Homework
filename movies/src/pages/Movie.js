@@ -28,8 +28,8 @@ const Movie = () => {
     const [selectedList, setSelectedList] = useState(null);
     const [popupVisible, setPopupVisible] = useState(false);
     const [userLists, setUserLists] = useState([]);
-    const [popupTitle, setPopupTitle] = useState('');
-    const [popupDescription, setPopupDescription] = useState('');
+    const [listTitle, setListTitle] = useState('');
+    const [listDescription, setListDescription] = useState('');
     //const watchlist = JSON.parse(localStorage.getItem("watchlist"));
     const authState = useSelector((state) => state.auth);
 
@@ -139,30 +139,45 @@ const Movie = () => {
 
     const closeCreateListPopup = () => {
         setPopupVisible(false);
-        setPopupTitle('');
-        setPopupDescription('');
+        setListTitle('');
+        setListDescription('');
     };
 
-    const createNewList = () => {
-        if (popupTitle.trim() === '') {
-            return;
-        }
-        if (newListName.trim() === '') {
+    const createNewList = async () => {
+        if (listTitle.trim() === '' || listDescription.trim() === '') {
             return;
         }
 
-        // Crea una nuova lista
         const newList = {
-            name: popupTitle,
-            description: popupDescription,
-            id: Date.now(), // Puoi utilizzare un ID univoco
+            id: 1,
+            user_id: authState.userId,
+            name: listTitle,
+            movies: [movie],
+            comments: [],
+            likes: []
         };
+        const token = Cookies.get("access-token");
+        if (token) {
+            try {
+                const response = await api.post('/mylists', newList, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Access-Control-Allow-Origin': 'http://localhost:3000'
+                    }
+                });
 
-        //TODO: Creare lista sul DB
+                // Gestisci la risposta, ad esempio aggiornando lo stato o mostrando un messaggio
+                console.log('Lista creata con successo:', response.data);
 
-        // Imposta la lista appena creata come lista selezionata
-        closeCreateListPopup();
+                closeCreateListPopup();
+
+            } catch (error) {
+                // Gestisci gli errori qui
+                console.error('Errore nella creazione della lista:', error);
+            }
+        }
     };
+
 
     const handleSaveToExistingList = (list) => {
         //TODO: Implementa l'azione di salvataggio del film nella lista esistente
@@ -177,14 +192,14 @@ const Movie = () => {
     const popupBody = <div><input
         type="text"
         placeholder="Titolo"
-        value={popupTitle}
-        onChange={(e) => setPopupTitle(e.target.value)}
+        value={listTitle}
+        onChange={(e) => setListTitle(e.target.value)}
         className="w-full p-2 mb-2 border rounded"
     />
     <textarea
         placeholder="Descrizione"
-        value={popupDescription}
-        onChange={(e) => setPopupDescription(e.target.value)}
+        value={listDescription}
+        onChange={(e) => setListDescription(e.target.value)}
         className="w-full p-2 mb-2 border rounded"
     />
         <Button onClick={createNewList} classes={"bg-blue-500 text-white rounded-full py-1 px-2 hover:bg-blue-600"} label={"Create"}/>
