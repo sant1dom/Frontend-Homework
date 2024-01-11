@@ -144,7 +144,7 @@ const Movie = () => {
     };
 
     const createNewList = async () => {
-        if (listTitle.trim() === '' || listDescription.trim() === '') {
+        if (listTitle.trim() === '') {
             return;
         }
 
@@ -162,7 +162,6 @@ const Movie = () => {
                 const response = await api.post('/mylists', newList, {
                     headers: {
                         'Authorization': `Bearer ${token}`,
-                        'Access-Control-Allow-Origin': 'http://localhost:3000'
                     }
                 });
 
@@ -194,12 +193,6 @@ const Movie = () => {
         placeholder="Titolo"
         value={listTitle}
         onChange={(e) => setListTitle(e.target.value)}
-        className="w-full p-2 mb-2 border rounded"
-    />
-    <textarea
-        placeholder="Descrizione"
-        value={listDescription}
-        onChange={(e) => setListDescription(e.target.value)}
         className="w-full p-2 mb-2 border rounded"
     />
         <Button onClick={createNewList} classes={"bg-blue-500 text-white rounded-full py-1 px-2 hover:bg-blue-600"} label={"Create"}/>
