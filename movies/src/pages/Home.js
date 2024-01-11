@@ -80,7 +80,7 @@ const Home = () => {
     return (
         <div className="mx-auto">
             <h1 className="mt-5 mb-5 text-4xl">Trending Films</h1>
-            <div className="mx-8 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-8">
+            <div className="mx-8 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-8 mb-5">
                 {loading ? (
                     Array.from({ length: 6 }).map((_) => (
                         <LoadingCardSkeleton />

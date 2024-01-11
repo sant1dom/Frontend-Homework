@@ -49,13 +49,9 @@ const SingleList = () => {
        
         return lists;
     }
-    
-    function getListByName(name) {
-        return localStorageLists().find(list => list.name.toLowerCase() === name.toLowerCase());
-       }
        
-    function fetchMovies(listName) {
-        const list = getListByName(listName);
+    function fetchMovies(name) {
+        const list = localStorageLists().find(list => list.name.toLowerCase() === name.toLowerCase());
         
         if (!list) {
             console.error('Collection not found');
@@ -95,7 +91,7 @@ const SingleList = () => {
             onStartYearChange={setStartYear}
             onEndYearChange={setEndYear}
         />
-            <div className="mx-8 grid grid-cols-6 gap-8">
+            <div className="mx-8 grid grid-cols-6 gap-8 mb-5">
                 {loading ? (
                     Array.from({ length: 1 }).map((_) => (
                         <LoadingCardSkeleton />

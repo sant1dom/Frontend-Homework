@@ -1,7 +1,11 @@
+import MultiRangeSlider from "./multiRangeSlider/MultiRangeSlider";
+
 const Filter = ({ genres, languages, onGenreChange, onLanguageChange, onStartYearChange, onEndYearChange }) => {
+
   return (
     <div className="ml-8 mb-8">
       <div className="flex space-x-4">
+
         <div>
           <label htmlFor="genre" className="block text-sm font-medium text-gray-700">
             Genre
@@ -20,6 +24,7 @@ const Filter = ({ genres, languages, onGenreChange, onLanguageChange, onStartYea
             ))}
           </select>
         </div>
+        
         <div>
           <label htmlFor="language" className="block text-sm font-medium text-gray-700">
             Language
@@ -38,30 +43,9 @@ const Filter = ({ genres, languages, onGenreChange, onLanguageChange, onStartYea
             ))}
           </select>
         </div>
-        <div>
-          <label htmlFor="startYear" className="block text-sm font-medium text-gray-700">
-            Start Year
-          </label>
-          <input
-            type="number"
-            id="startYear"
-            name="startYear"
-            onChange={(e) => onStartYearChange(e.target.value)}
-            className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:border-blue-300 sm:text-sm"
-          />
-        </div>
-        <div>
-          <label htmlFor="endYear" className="block text-sm font-medium text-gray-700">
-            End Year
-          </label>
-          <input
-            type="number"
-            id="endYear"
-            name="endYear"
-            onChange={(e) => onEndYearChange(e.target.value)}
-            className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:border-blue-300 sm:text-sm"
-          />
-        </div>
+
+        <MultiRangeSlider min={1900} max={2024} onMinYearChange={onStartYearChange} onMaxYearChange={onEndYearChange}/>
+
       </div>
     </div>
   );
