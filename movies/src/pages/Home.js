@@ -78,6 +78,7 @@ const Home = () => {
         setHoveredMovie(null);
     };
 
+
     return (
         <div className="mx-auto">
             <h1 className="mt-5 mb-5 text-4xl">Trending Films</h1>
@@ -88,7 +89,8 @@ const Home = () => {
                     ))
                     ) : (
                         movies.map((movie) => (
-                            <Card img={<Link to={`/movie/${movie.id}`} className="block">
+                            <Card type={'movie'}
+                                img={<Link to={`/movie/${movie.id}`} className="block">
                                         <img className="w-full h-80 object-cover rounded-t-lg -z-20" src={movie.poster} alt="Film" />
                                         </Link>}
                                   text={<div>
@@ -96,7 +98,7 @@ const Home = () => {
                                         <h2 className="px-4 py-2 text-xl mb-2 overflow-hidden whitespace-nowrap overflow-ellipsis">{movie.title}</h2>
                                      </Link>
                                 <p className="text-base">{movie.release_year}</p></div>}
-                                  movie={`${movie}`} />
+                                  element={`${movie}`} />
                         ))
                     )
                 }

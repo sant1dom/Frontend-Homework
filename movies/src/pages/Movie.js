@@ -185,7 +185,7 @@ const Movie = () => {
         <div className="mx-auto">
             <h1 className="mt-5 mb-5 text-4xl">{movie.title}</h1>
             <div className="mx-8 flex flex-col lg:flex-row justify-center items-center lg:items-start">
-                <Card img={img} movie={movie}/>
+                <Card type={'movie'} img={img} element={movie}/>
                 <div className="lg:w-3/5 lg:pl-10 mt-2">
                     <ul className="list-spacing">
                         <li className="text-left"><strong>Year:</strong> {movie.release_year}</li>
