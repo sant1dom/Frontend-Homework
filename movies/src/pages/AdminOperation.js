@@ -20,7 +20,7 @@ const AdminOperation = () => {
     const authState = useSelector((state) => state.auth);
     const values = useSelector((state) => state.inputState.movie);
     const [clickedSave, setClickedSave] = useState(false);
-    const [pageTitle, setPageTitle] = useState("Create a new movie");
+    const [pageTitle, setPageTitle] = useState("");
 
     const path = window.location.pathname.split("/");
     const method = path[2];
@@ -33,7 +33,9 @@ const AdminOperation = () => {
     useEffect(() => {
         console.log("Faccio partire Operation");
 
-        if (method == "update") {
+        if (method == "create") {
+            setPageTitle("Create a new movie");
+        } else if (method == "update") {
             setPageTitle("Edit an existing movie");
         }
 
@@ -46,41 +48,41 @@ const AdminOperation = () => {
             console.log("Creo i campi");
 
             setInputs([
-                <Input key="title" field="title" showError={clickedSave} value=""
+                <Input key="title_0" field="title" showError={clickedSave} value=""
                        label="Title" type="text"/>,
-                <Input key="release_year" field="release_year" showError={clickedSave} value=""
+                <Input key="release_year_0" field="release_year" showError={clickedSave} value=""
                        label="Release year" type="number" min={1800} max={2050}/>,
-                <Input key="movie_length" field="movie_length" showError={clickedSave} value=""
+                <Input key="movie_length_0" field="movie_length" showError={clickedSave} value=""
                        label="Length" type="number" min={0} max={999}/>,
-                <Input key="genre" field="genre" showError={clickedSave} value=""
+                <Input key="genre_0" field="genre" showError={clickedSave} value=""
                        label="Genre" type="text"/>,
-                <Input key="language" field="language" showError={clickedSave} value=""
+                <Input key="language_0" field="language" showError={clickedSave} value=""
                        label="Language" type="text"/>,
-                <Input key="imdb_url" field="imdb_url" showError={clickedSave} value=""
+                <Input key="imdb_url_0" field="imdb_url" showError={clickedSave} value=""
                        label="IMDB's URL" type="text"/>,
             ]);
         } else if (method == "update") {
 
             if (movieId == null) {
-                navigate('/');
+                navigate('/admin/search');
                 return;
             }
 
             api.get('/movies/' + movieId).then((response) => {
                 setInputs([
-                    <Input key="title" field="title" showError={clickedSave} value={response.data.title}
+                    <Input key={"title_" + movieId} field="title" showError={clickedSave} value={response.data.title}
                            label="Title" type="text"/>,
-                    <Input key="release_year" field="release_year" showError={clickedSave}
+                    <Input key={"release_year_" + movieId} field="release_year" showError={clickedSave}
                            value={response.data.release_year}
                            label="Release year" type="number" min={1800} max={2050}/>,
-                    <Input key="movie_length" field="movie_length" showError={clickedSave}
+                    <Input key={"movie_length_" + movieId} field="movie_length" showError={clickedSave}
                            value={response.data.movie_length}
-                           label="Length" type="number" min={0} max={999}/>,
-                    <Input key="genre" field="genre" showError={clickedSave} value={response.data.genre}
+                           label="Length_" type="number" min={0} max={999}/>,
+                    <Input key={"genre" + movieId} field="genre" showError={clickedSave} value={response.data.genre}
                            label="Genre" type="text"/>,
-                    <Input key="language" field="language" showError={clickedSave} value={response.data.language}
+                    <Input key={"language_" + movieId} field="language" showError={clickedSave} value={response.data.language}
                            label="Language" type="text"/>,
-                    <Input key="imdb_url" field="imdb_url" showError={clickedSave} value={response.data.imdb_url}
+                    <Input key={"imdb_url_" + movieId} field="imdb_url" showError={clickedSave} value={response.data.imdb_url}
                            label="IMDB's URL" type="text"/>,
                 ]);
             }).catch((error) => {
@@ -91,7 +93,7 @@ const AdminOperation = () => {
             });
         }
 
-    }, [pageTitle]);
+    }, [method, movieId]);
 
     if (!authState.is_superuser) {
         return (<></>);
