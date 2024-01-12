@@ -157,7 +157,7 @@ const Card = ({img, text, movie}) => {
                     <div className="mt-2 flex flex-col items-center">
                         <div className="flex space-x-2">
                             <Button label={isFavourite ? <IoMdHeart /> : <IoMdHeartEmpty />} rounded={true} onClick={() => handleFavourites(movie.id)}/>
-                            <Button label={isWatchlist ? <FiClock /> : <GoClockFill />} rounded={true} onClick={() => handleWatchlist(movie.id)}/>
+                            <Button label={isWatchlist ?  <GoClockFill /> : <FiClock />} rounded={true} onClick={() => handleWatchlist(movie.id)}/>
                             <div className="group inline-block relative">
                                 <Button label={<FaPlus />} rounded={true} onClick={toggleDropdown} />
                                 {showDropdown && (
