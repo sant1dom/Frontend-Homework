@@ -1,7 +1,8 @@
-import React, {useEffect, useRef} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {useDispatch} from "react-redux";
 
-const Input = ({field, label, type, value = null, min = null, max = null}) => {
+const Input = ({field, label, type, showError = false, value = "", min = null, max = null}) => {
+
     const input = useRef();
     const error = useRef();
 
@@ -9,12 +10,11 @@ const Input = ({field, label, type, value = null, min = null, max = null}) => {
 
     const handleChange = () => {
         const v = input.current.value;
-        let d = "none";
 
-        if (v.length === 0) {
+        let d = "none";
+        if (v.length === 0 && showError) {
             d = "inline";
         }
-
         error.current.style.display = d;
 
         dispatch({
@@ -28,8 +28,14 @@ const Input = ({field, label, type, value = null, min = null, max = null}) => {
         });
     };
 
+    const [putDefault, setPutDefault] = useState(false);
+
     useEffect(() => {
-        input.current.value = value;
+        if(!putDefault){
+            input.current.value = value;
+            setPutDefault(true);
+        }
+
         handleChange();
     });
 
