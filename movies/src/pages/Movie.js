@@ -8,10 +8,10 @@ import {useSelector} from "react-redux";
 import {IoMdHeart, IoMdHeartEmpty} from "react-icons/io";
 import {GoClockFill} from "react-icons/go";
 import {FiClock} from "react-icons/fi";
-import Modal from "../components/Modal";
 import FileUploader from "../components/FileUploader";
 import Cookies from "js-cookie";
 import {login} from "../store/store";
+import Card from "../components/Card";
 
 const OMDB_API_KEY = process.env.REACT_APP_OMDB_API_KEY;
 
@@ -23,7 +23,6 @@ const Movie = () => {
     const [isFavourite, setIsFavourite] = useState(false);
     const [watchlist, setWatchlist] = useState([]);
     const [isWatchlist, setIsWatchlist] = useState(false);
-    const [showDropdown, setShowDropdown] = useState(false);
     const [newListName, setNewListName] = useState('');
     const [selectedList, setSelectedList] = useState(null);
     const [popupVisible, setPopupVisible] = useState(false);
@@ -124,18 +123,6 @@ const Movie = () => {
         localStorage.setItem("favourites", JSON.stringify(favourites));
     };
 
-    const toggleDropdown = async () => {
-
-        const userLists = await fetchUserLists();
-        setUserLists(userLists);
-
-        setShowDropdown(!showDropdown);
-    };
-
-    const openCreateListPopup = () => {
-        setPopupVisible(true);
-        setShowDropdown(!showDropdown);
-    };
 
     const closeCreateListPopup = () => {
         setPopupVisible(false);
@@ -188,16 +175,9 @@ const Movie = () => {
         setSelectedList(null);
     };
 
-    const popupBody = <div><input
-        type="text"
-        placeholder="Titolo"
-        value={listTitle}
-        onChange={(e) => setListTitle(e.target.value)}
-        className="w-full p-2 mb-2 border rounded"
-    />
-        <Button onClick={createNewList} classes={"bg-blue-500 text-white rounded-full py-1 px-2 hover:bg-blue-600"} label={"Create"}/>
-        <Button onClick={closeCreateListPopup} classes={"bg-gray-200 text-black rounded-full py-1 px-2 ml-2 hover:bg-gray-300"} label={"Cancel"}/>
-    </div>
+
+    const img = <img className="rounded-t-lg w-70 h-90" src={imdbData.Poster} alt="Film"/>
+
 
 
 
@@ -205,43 +185,7 @@ const Movie = () => {
         <div className="mx-auto">
             <h1 className="mt-5 mb-5 text-4xl">{movie.title}</h1>
             <div className="mx-8 flex flex-col lg:flex-row justify-center items-center lg:items-start">
-                <div className="rounded-lg bg-sky-100 shadow-2xl max-w-72">
-                    <img className="rounded-t-lg w-70 h-90" src={imdbData.Poster} alt="Film"/>
-                    {authState.isAuth && (
-                    <div className="p-4">
-                        <div className="mt-2 flex flex-col items-center">
-                            <div className="flex space-x-2">
-                                <Button label={isFavourite ? <IoMdHeart /> : <IoMdHeartEmpty />} rounded={true} onClick={() => handleFavourites(movie.id)}/>
-                                <Button label={isWatchlist ? <FiClock /> : <GoClockFill />} rounded={true} onClick={() => handleWatchlist(movie.id)}/>
-                                <div className="relative group inline-block">
-                                    <Button label={<FaPlus />} rounded={true} onClick={toggleDropdown} />
-                                    {showDropdown && (
-                                        <div className="absolute left-0 bottom-[112%] w-36 bg-white border rounded-lg shadow-lg">
-                                            <ul className="p-2">
-                                                {userLists.map((list) => (
-                                                    <li
-                                                        key={list.id}
-                                                        className="cursor-pointer py-1 px-2 hover:bg-gray-100"
-                                                        onClick={() => handleSaveToExistingList(list)}
-                                                    >
-                                                        {list.name}
-                                                    </li>
-                                                ))}
-                                                <li
-                                                    className="cursor-pointer py-1 px-2 hover:bg-gray-100"
-                                                    onClick={openCreateListPopup}
-                                                >
-                                                    <FaPlus className="mr-2 inline" />New List
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                        )}
-                </div>
+                <Card img={img} movie={movie}/>
                 <div className="lg:w-3/5 lg:pl-10 mt-2">
                     <ul className="list-spacing">
                         <li className="text-left"><strong>Year:</strong> {movie.release_year}</li>
@@ -266,15 +210,6 @@ const Movie = () => {
 
 
             </div>
-            {popupVisible && (
-                <Modal
-                    title="Create new list"
-                    body={popupBody}
-                    onClose={() => {
-                        closeCreateListPopup();
-                    }}
-                />
-            )}
         </div>
 
     );

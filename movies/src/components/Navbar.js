@@ -104,7 +104,7 @@ const Navbar = ({title, links, backgroundColor, loading}) => {
     )), [links]);
 
     return (
-        <div className={`sticky ${backgroundColor} top-0`}>
+        <div className={`sticky ${backgroundColor} top-0 z-50`}>
             <nav
                 className={`sticky flex items-center justify-between ${backgroundColor} p-2 flex-no-wrap relative top-0`}>
                 <div className="flex items-center flex-shrink-0 text-white mr-6">

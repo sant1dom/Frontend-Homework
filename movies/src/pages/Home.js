@@ -7,6 +7,7 @@ import api from "../utils/api";
 import Button from '../components/Button';
 import LoadingCardSkeleton from '../components/LoadingCardSkeleton';
 import axios from 'axios';
+import Card from "../components/Card";
 
 const OMDB_API_KEY = process.env.REACT_APP_OMDB_API_KEY;
 
@@ -87,21 +88,15 @@ const Home = () => {
                     ))
                     ) : (
                         movies.map((movie) => (
-                            <div key={movie.id} className="rounded-lg bg-sky-100 shadow-2xl" onMouseEnter={() => setHoveredMovie(movie.id)}>
-                                <Link to={`/movie/${movie.id}`} className="block">
-                                    <img className="w-full h-80 object-cover rounded-t-lg -z-20" src={movie.poster} alt="Film" />
-                                </Link>
-                                <div className="p-4">
-                                    <Link to={`/movie/${movie.id}`} className="block">
-                                        <h2 className="text-xl mb-2 overflow-hidden whitespace-nowrap overflow-ellipsis">{movie.title}</h2>
-                                    </Link>
-                                    <p className="text-base">{movie.release_year}</p>
-                                    <div className={`grid grid-cols-2 gap-2 mt-2 transition duration-500 ease-in-out ${hoveredMovie === movie.id ? 'opacity-100' : 'opacity-0'}`}>
-                                        <Button label={favourites.includes(movie.id) ? <IoMdHeart /> : <IoMdHeartEmpty />} rounded={true} onClick={() => handleFavourites(movie.id)}/>
-                                        <Button label={watchlist.includes(movie.id) ? <GoClockFill /> : <FiClock />} rounded={true} onClick={() => handleWatchlist(movie.id)}/>
-                                    </div>
-                                </div>
-                            </div>
+                            <Card img={<Link to={`/movie/${movie.id}`} className="block">
+                                        <img className="w-full h-80 object-cover rounded-t-lg -z-20" src={movie.poster} alt="Film" />
+                                        </Link>}
+                                  text={<div>
+                                      <Link to={`/movie/${movie.id}`} className="block">
+                                        <h2 className="px-4 py-2 text-xl mb-2 overflow-hidden whitespace-nowrap overflow-ellipsis">{movie.title}</h2>
+                                     </Link>
+                                <p className="text-base">{movie.release_year}</p></div>}
+                                  movie={`${movie}`} />
                         ))
                     )
                 }
