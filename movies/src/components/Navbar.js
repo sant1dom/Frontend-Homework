@@ -104,12 +104,14 @@ const Navbar = ({title, links, backgroundColor, loading}) => {
     )), [links]);
 
     return (
-        <div className={`sticky ${backgroundColor} top-0`}>
+        <div className={`sticky ${backgroundColor} top-0 z-50`}>
             <nav
                 className={`sticky flex items-center justify-between ${backgroundColor} p-2 flex-no-wrap relative top-0`}>
-                <div className="flex items-center flex-shrink-0 text-white mr-6">
-                    <img src={process.env.PUBLIC_URL + '/Screenshot_2024-01-10_195526.png'} alt="Logo" className="h-10"/>
-                </div>
+                <Link to={`/`}>
+                    <div className="flex items-center flex-shrink-0 text-white mr-6">
+                        <img src={process.env.PUBLIC_URL + '/Screenshot_2024-01-10_195526.png'} alt="Logo" className="h-10"/>
+                    </div>
+                </Link>
 
                 <div className="block lg:hidden">
                     <button
