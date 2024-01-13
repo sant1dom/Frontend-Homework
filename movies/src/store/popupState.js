@@ -2,6 +2,7 @@ import {createSlice} from "@reduxjs/toolkit";
 
 const initialState = {
     show: false,
+    text_title: null,
     text_msg: null,
     text_yes: null,
     text_no: null,

@@ -1,8 +1,8 @@
-import {Link} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import Button from "./Button";
 import ButtonLink from "./ButtonLink";
 import React from "react";
+import popupStateMovieDelete from "../store/popupStateMovieDelete";
 
 const MovieRow = ({movie}) => {
 
@@ -10,24 +10,7 @@ const MovieRow = ({movie}) => {
     const title = movie.title.replace(new RegExp('"', 'g'), "&quot;").replace(new RegExp("'", 'g'), "’");
 
     const handleDeletePopup = () => {
-        console.log("Do you want to delete '" + title + "'?");
-
-        dispatch({
-            type: "popupState/reset",
-            payload:
-                {
-                    show: true,
-                    text_msg: "Do you want to delete '" + title + "'?",
-                    text_yes: "Delete",
-                    text_no: "Close Popup",
-                    click_yes: {
-                        url: "/movies/" + movie.id,
-                        method: "delete",
-                        hide_table: 'movie',
-                        hide_id: movie.id,
-                    },
-                }
-        });
+        dispatch(popupStateMovieDelete(movie.id, title));
     };
 
     const hidden = useSelector((state) => state.hiddenState.movie);

@@ -3,12 +3,8 @@ import React, {useEffect, useRef, useState} from "react";
 import api from "../utils/api";
 import {useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
-import PopupMsg from "../components/PopupMsg";
 import Button from "../components/Button";
-import {GoPencil} from "react-icons/go";
-import {createPortal} from "react-dom";
-import Modal from "../components/Modal";
-import FadeContainer from "../components/FadeContainer";
+import popupStateMsg from "../store/popupStateMsg";
 
 const AdminOperation = () => {
 
@@ -89,7 +85,7 @@ const AdminOperation = () => {
                 console.log(error);
 
                 navigate("/admin/search");
-                dispatch(PopupMsg("Movie does not exist. Redirected to Admin Search"));
+                dispatch(popupStateMsg("Movie does not exist", "Redirected to Admin Search"));
             });
         }
 
@@ -138,7 +134,7 @@ const AdminOperation = () => {
                 error_msg += detail.msg + ": " + detail.loc[1] + ". ";
             }
 
-            dispatch(PopupMsg(error_msg));
+            dispatch(popupStateMsg("Errors occurred", error_msg));
         };
 
         if (method == "update") {
@@ -146,7 +142,7 @@ const AdminOperation = () => {
                 .then((response) => {
 
                     navigate("/admin/search");
-                    dispatch(PopupMsg("Movie updated successfully. Redirected to Admin Search"));
+                    dispatch(popupStateMsg("Movie updated", "Redirected to Admin Search"));
 
                 }).catch((error) => {
                 handleError(error);
@@ -158,7 +154,7 @@ const AdminOperation = () => {
                     console.log(response.data.id);
 
                     navigate("/admin/search");
-                    dispatch(PopupMsg("Movie created successfully. Redirected to Admin Search"));
+                    dispatch(popupStateMsg("Movie created", "Redirected to Admin Search"));
 
                 }).catch((error) => {
                 handleError(error);

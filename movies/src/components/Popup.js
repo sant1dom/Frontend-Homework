@@ -1,6 +1,6 @@
 import {useDispatch, useSelector} from "react-redux";
 import api from "../utils/api";
-import PopupMsg from "./PopupMsg";
+import popupStateMsg from "../store/popupStateMsg";
 import React, {useEffect} from "react";
 import Button from "./Button";
 import Modal from "./Modal";
@@ -34,7 +34,7 @@ const Popup = () => {
                 });
         }
 
-        dispatch(PopupMsg(""));
+        dispatch(popupStateMsg());
     };
 
     const handleNo = () => {
@@ -52,17 +52,21 @@ const Popup = () => {
                 });
         }
 
-        dispatch(PopupMsg(""));
+        dispatch(popupStateMsg());
     };
 
     return (
         <div>
             {popupState.show && (
                 <Modal
-                    title={popupState.text_msg}
+                    title={popupState.text_title}
                     onClose={handleNo}
                     body={
                         <div>
+                            <p className="text-2xl">
+                                {popupState.text_msg}
+                            </p>
+                            <br />
                             {
                                 popupState.text_no &&
                                 <Button
