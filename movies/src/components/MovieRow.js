@@ -32,8 +32,8 @@ const MovieRow = ({movie}) => {
             <div className="inline-flex">
                 <ButtonLink
                     rounded={true}
-                    key={`/admin/update/${movie.id}`}
-                    to={`/admin/update/${movie.id}`}
+                    key={`/admin/movie/update/${movie.id}`}
+                    to={`/admin/movie/update/${movie.id}`}
                     label="Edit"
                     classes={""}
                 />

@@ -56,13 +56,13 @@ const Popup = () => {
     };
 
     return (
-        <div>
+        <>
             {popupState.show && (
                 <Modal
                     title={popupState.text_title}
                     onClose={handleNo}
                     body={
-                        <div>
+                        <>
                             <p className="text-2xl">
                                 {popupState.text_msg}
                             </p>
@@ -85,12 +85,12 @@ const Popup = () => {
                                     classes={"mr-2 ml-2 bg-red-500 hover:bg-red-600"}
                                 />
                             }
-                        </div>
+                        </>
                     }
                 />
             )
             }
-        </div>
+        </>
     )
 }
 

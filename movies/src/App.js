@@ -12,8 +12,8 @@ import {login} from "./store/store";
 import Cookies from 'js-cookie';
 import Registration from "./pages/Registration";
 import api from "./utils/api";
-import AdminSearch from "./pages/AdminSearch";
-import AdminOperation from "./pages/AdminOperation";
+import AdminMovieSearch from "./pages/AdminMovieSearch";
+import AdminMovieUpdate from "./pages/AdminMovieUpdate";
 import Popup from "./components/Popup";
 import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
@@ -96,13 +96,15 @@ function App() {
                             <Route path="/register" element={<Registration/>}/>
                             <Route path="/movie/:id" element={<Movie/>}/>
                             {authState.isAuth && <>
-                                <Route path="/admin/search" element={<AdminSearch/>}/>
-                                <Route path="/admin/create" element={<AdminOperation/>}/>
-                                <Route path="/admin/update/:id" element={<AdminOperation/>}/>
                                 <Route path="/mylists" element={<MyLists/>}/>
                                 <Route path="/profile" element={<Profile/>}/>
-                                <Route path="/mylists/:listname" element={<SingleList/>}/></>
-                            }
+                                <Route path="/mylists/:listname" element={<SingleList/>}/>
+                                {authState.is_superuser && <>
+                                    <Route path="/admin/movies" element={<AdminMovieSearch/>}/>
+                                    <Route path="/admin/movie/create" element={<AdminMovieUpdate/>}/>
+                                    <Route path="/admin/movie/update/:id" element={<AdminMovieUpdate/>}/>
+                                </>}
+                            </>}
                             <Route path="*" element={<NotFound/>}/></>}
                     </Route>
                 </Routes>

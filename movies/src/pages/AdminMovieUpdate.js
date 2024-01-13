@@ -6,7 +6,7 @@ import {useDispatch, useSelector} from "react-redux";
 import Button from "../components/Button";
 import popupStateMsg from "../store/popupStateMsg";
 
-const AdminOperation = () => {
+const AdminMovieUpdate = () => {
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -19,11 +19,11 @@ const AdminOperation = () => {
     const [pageTitle, setPageTitle] = useState("");
 
     const path = window.location.pathname.split("/");
-    const method = path[2];
+    const method = path[3];
 
     let movieId = null;
     if (method == "update") {
-        movieId = path[3];
+        movieId = path[4];
     }
 
     useEffect(() => {
@@ -33,11 +33,6 @@ const AdminOperation = () => {
             setPageTitle("Create a new movie");
         } else if (method == "update") {
             setPageTitle("Edit an existing movie");
-        }
-
-        if (!authState.is_superuser) {
-            navigate('/');
-            return;
         }
 
         if (method == "create") {
@@ -187,4 +182,4 @@ const AdminOperation = () => {
         ;
 }
 
-export default AdminOperation;
+export default AdminMovieUpdate;

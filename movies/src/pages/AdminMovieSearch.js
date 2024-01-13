@@ -5,7 +5,7 @@ import {Link, useNavigate} from "react-router-dom";
 import MovieRow from "../components/MovieRow";
 import ButtonLink from "../components/ButtonLink";
 
-const AdminSearch = () => {
+const AdminMovieSearch = () => {
 
     const navigate = useNavigate();
     const authState = useSelector((state) => state.auth);
@@ -14,11 +14,6 @@ const AdminSearch = () => {
 
     useEffect(() => {
         console.log("Faccio partire la ricerca");
-
-        if (!authState.is_superuser) {
-            navigate('/');
-            return;
-        }
 
         api.get('/movies').then((response) => {
 
@@ -40,10 +35,6 @@ const AdminSearch = () => {
         });
 
     }, []);
-
-    if (!authState.is_superuser) {
-        return (<></>);
-    }
 
     return (
         <div className="container mx-auto items-center justify-center">
@@ -68,4 +59,4 @@ const AdminSearch = () => {
     );
 }
 
-export default AdminSearch;
+export default AdminMovieSearch;
