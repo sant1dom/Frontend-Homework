@@ -95,7 +95,8 @@ function App() {
                             <Route path="/login" element={<Login/>}/>
                             <Route path="/register" element={<Registration/>}/>
                             <Route path="/movie/:id" element={<Movie/>}/>
-                            {authState.isAuth && <><Route path="/admin/search" element={<AdminSearch/>}/>
+                            {authState.isAuth && <>
+                                <Route path="/admin/search" element={<AdminSearch/>}/>
                                 <Route path="/admin/create" element={<AdminOperation/>}/>
                                 <Route path="/admin/update/:id" element={<AdminOperation/>}/>
                                 <Route path="/mylists" element={<MyLists/>}/>
