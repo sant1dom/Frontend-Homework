@@ -4,12 +4,14 @@ import api from "../utils/api";
 import axios from 'axios';
 import Filter from '../components/Filter';
 import LoadingCardSkeleton from '../components/LoadingCardSkeleton';
+import Comment from '../components/Comment';
 
 const OMDB_API_KEY = process.env.REACT_APP_OMDB_API_KEY;
 
 const SingleList = () => {
-    const { listname } = useParams();
+    const { id } = useParams();
     const [movies, setMovies] = useState([]);
+    const [comments, setComments] = useState([]);
     const [selectedGenre, setSelectedGenre] = useState('');
     const [selectedLanguage, setSelectedLanguage] = useState('');
     const [startYear, setStartYear] = useState('');
@@ -65,7 +67,7 @@ const SingleList = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const movies = fetchMovies(listname);
+                // const movies = fetchMovies(listname);
                 const items = await Promise.all(movies);
                 const moviesWithPosters = await Promise.all(items.map(async (movie) => {
                     movie.poster = await fetchMoviePoster(movie.data.imdb_url.split('/')[4]);
@@ -80,9 +82,20 @@ const SingleList = () => {
         fetchData();
     }, []);
 
+    useEffect(() => {
+        const fetchComments = async () => {
+            console.log("ID: ", id)
+            api.get('/comments/' + id).then((response) => {
+                setComments(response.data);
+                console.log("response: ", response.data)
+            });
+        };
+        fetchComments();
+    }, []);
+
     return(
         <div className="mx-auto">
-            <h1 className="mt-5 mb-5 text-4xl">{listname}</h1>
+            <h1 className="mt-5 mb-5 text-4xl">{id}</h1>
             <Filter
             genres={genres}
             languages={languages}
@@ -91,7 +104,7 @@ const SingleList = () => {
             onStartYearChange={setStartYear}
             onEndYearChange={setEndYear}
         />
-            <div className="mx-8 grid grid-cols-6 gap-8 mb-5">
+            <div className="mx-8 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-8 mb-5">
                 {loading ? (
                     Array.from({ length: 1 }).map((_) => (
                         <LoadingCardSkeleton />
@@ -114,6 +127,12 @@ const SingleList = () => {
                     )
                 }
             </div>
+
+            <h1 className="mt-5 mb-5 text-2xl">Comments section</h1>
+            {comments.map((element) => (
+                <Comment content={element}/>
+            ))}
+
         </div>
     );
 }

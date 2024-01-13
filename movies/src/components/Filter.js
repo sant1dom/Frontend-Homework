@@ -1,4 +1,4 @@
-import MultiRangeSlider from "./multiRangeSlider/MultiRangeSlider";
+import MultiRangeSlider from "./MultiRangeSlider";
 
 const Filter = ({ genres, languages, onGenreChange, onLanguageChange, onStartYearChange, onEndYearChange }) => {
 

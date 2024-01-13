@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useState, useRef } from "react";
 import PropTypes from "prop-types";
-import "./multiRangeSlider.css";
 
 const MultiRangeSlider = ({ min, max, onMinYearChange, onMaxYearChange }) => {
   const [minVal, setMinVal] = useState(min);
@@ -38,10 +37,10 @@ const MultiRangeSlider = ({ min, max, onMinYearChange, onMaxYearChange }) => {
 
   return (
     <div>
-      <label htmlFor="yearRange" className="block text-sm font-medium text-gray-700">
+      <label htmlFor="yearRange" className="block text-sm font-medium text-gray-700 mr-8">
               Year Range
       </label>
-      <div className="range_container">
+      <div className="YearRange-container mr-8">
         <input
           type="range"
           min={min}
@@ -53,8 +52,7 @@ const MultiRangeSlider = ({ min, max, onMinYearChange, onMaxYearChange }) => {
             setMinVal(value);
             minValRef.current = value;
           }}
-          className="thumb thumb--left"
-          style={{ zIndex: minVal > max - 100 && "5" }}
+          className="YearRange-thumb YearRange-thumb--left"
         />
         <input
           type="range"
@@ -67,14 +65,14 @@ const MultiRangeSlider = ({ min, max, onMinYearChange, onMaxYearChange }) => {
             setMaxVal(value);
             maxValRef.current = value;
           }}
-          className="thumb thumb--right"
+          className="YearRange-thumb YearRange-thumb--right"
         />
 
-        <div className="slider">
-          <div className="slider__track" />
-          <div ref={range} className="slider__range" />
-          <div className="slider__left-value">{minVal}</div>
-          <div className="slider__right-value">{maxVal}</div>
+        <div className="YearRange-slider">
+          <div className="YearRange-slider__track" />
+          <div ref={range} className="YearRange-slider__range" />
+          <div className="YearRange-slider__left-value">{minVal}</div>
+          <div className="YearRange-slider__right-value">{maxVal}</div>
         </div>
       </div>
     </div>

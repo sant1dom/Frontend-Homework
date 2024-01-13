@@ -342,3 +342,13 @@ async def get_most_commented_lists(db: Session = Depends(get_db)):
     return most_commented_lists
 
 
+@app.get("/users/{user_id}", response_model=dict)
+async def get_user_details_by_id(user_id: int, db: Session = Depends(get_db)):
+    db_user = db.query(DBUser).filter(DBUser.id == user_id).first()
+    if db_user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    user_details = {
+        "email": db_user.email,
+        "image": db_user.profile_image
+    }
+    return user_details

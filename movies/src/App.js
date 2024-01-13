@@ -22,6 +22,7 @@ import MyLists from "./pages/MyLists";
 import AdminSearchList from "./pages/AdminSearchList";
 import AdminSearchComment from "./pages/AdminSearchComment";
 import AdvancedSearch from "./pages/AdvancedSearch";
+import BestLists from "./pages/BestLists";
 
 function App() {
     const dispatch = useDispatch();
@@ -102,7 +103,8 @@ function App() {
                             {authState.isAuth && <>
                                 <Route path="/mylists" element={<MyLists/>}/>
                                 <Route path="/profile" element={<Profile/>}/>
-                                <Route path="/mylists/:listname" element={<SingleList/>}/>
+                                <Route path="/mylists/:id" element={<SingleList/>}/>
+                                <Route path="/bestlists" element={<BestLists/>}/>
                                 {authState.is_superuser && <>
                                     <Route path="/admin/movies" element={<AdminSearchMovie/>}/>
                                     <Route path="/admin/movie/create" element={<AdminUpdateMovie/>}/>

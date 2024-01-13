@@ -9,9 +9,8 @@ const Layout = ({loading}) => {
         {text: "Advanced Search", url: "/advanced-search"}
     ];
     if (authState.isAuth) {
-        // links.push({text: "Watchlist", url: "/watchlist"});
-        // links.push({text: "Favorites", url: "/favorites"});
         links.push({text: "MyLists", url: "/mylists"});
+        links.push({text: "Best Lists", url: "/bestlists"});
     }
     if (authState.is_superuser) {
         links.push({text: "Admin: Edit/Delete Movies", url: "/admin/movies"});

@@ -4,7 +4,8 @@ import Button from "./Button";
 import {IoMdHeart, IoMdHeartEmpty} from "react-icons/io";
 import {FiClock} from "react-icons/fi";
 import {GoClockFill} from "react-icons/go";
-import {FaEdit, FaPlus, FaTrash} from "react-icons/fa";
+import {FaEdit, FaPlus, FaTrash, FaRegComment} from "react-icons/fa";
+import { BiLike } from "react-icons/bi";
 import Cookies from "js-cookie";
 import api from "../utils/api";
 import Modal from "./Modal";
@@ -290,6 +291,21 @@ const Card = ({type, img, text, element}) => {
                             <div className="flex space-x-2">
                                 <Button label={<FaEdit />} rounded={true} onClick={() => editList(element)} size={'small'}/>
                                 <Button label={<FaTrash/>} rounded={true} onClick={() => showDeletePopup(element.id)} size={'small'} variant={'secondary'}/>
+                            </div>
+                        </div>
+                    </div>
+                ) : type === 'best-lists' ? (
+                    <div className="p-2">
+                        <div className="flex flex-col items-center">
+                            <div className="flex space-x-4">
+                                <div className="flex items-center space-x-1">
+                                    <BiLike size={21}/> 
+                                    <span className=''>18</span>
+                                </div>
+                                <div className="flex items-center space-x-1">
+                                    <FaRegComment size={21}/> 
+                                    <span>18</span>
+                                </div>
                             </div>
                         </div>
                     </div>

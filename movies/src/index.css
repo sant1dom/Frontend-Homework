@@ -1,3 +1,104 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.YearRange-container {
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.YearRange-slider {
+  position: relative;
+  width: 200px;
+}
+
+.YearRange-slider__track,
+.YearRange-slider__range,
+.YearRange-slider__left-value,
+.YearRange-slider__right-value {
+  position: absolute;
+}
+
+.YearRange-slider__track,
+.YearRange-slider__range {
+  border-radius: 3px;
+  height: 5px;
+}
+
+.YearRange-slider__track {
+  background-color: #ced4da;
+  width: 100%;
+  z-index: 1;
+}
+
+.YearRange-slider__range {
+  background-color: rgb(59, 130, 246);
+  z-index: 2;
+}
+
+.YearRange-slider__left-value,
+.YearRange-slider__right-value {
+  color: black;
+  font-size: 12px;
+  margin-top: 12px;
+}
+
+.YearRange-slider__left-value {
+  left: 6px;
+}
+
+.YearRange-slider__right-value {
+  right: -4px;
+}
+
+/* Removing the default appearance */
+.YearRange-thumb,
+.YearRange-thumb::-webkit-slider-thumb {
+  -webkit-appearance: none;
+}
+
+.YearRange-thumb {
+  pointer-events: none;
+  position: absolute;
+  height: 0;
+  width: 200px;
+  outline: none;
+}
+
+.YearRange-thumb--left {
+  z-index: 3;
+}
+
+.YearRange-thumb--right {
+  z-index: 4;
+}
+
+/* For Chrome browsers */
+.YearRange-thumb::-webkit-slider-thumb {
+  background-color: #f1f5f7;
+  border: none;
+  border-radius: 50%;
+  box-shadow: 0 0 1px 1px #ced4da;
+  cursor: pointer;
+  height: 18px;
+  width: 18px;
+  margin-top: 4px;
+  pointer-events: all;
+  position: relative;
+}
+
+/* For Firefox browsers */
+.YearRange-thumb::-moz-range-thumb {
+  background-color: #f1f5f7;
+  border: none;
+  border-radius: 50%;
+  box-shadow: 0 0 1px 1px #ced4da;
+  cursor: pointer;
+  height: 18px;
+  width: 18px;
+  margin-top: 4px;
+  pointer-events: all;
+  position: relative;
+}
