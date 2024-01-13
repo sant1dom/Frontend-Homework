@@ -94,3 +94,8 @@ class MovieList(BaseModel):
     movies: List[Movie] = []
     comments: List[Comment] = []
     likes: List[Like] = []
+
+
+class MovieListCreate(BaseModel):
+    name: str
+    movies: List[int] = []
