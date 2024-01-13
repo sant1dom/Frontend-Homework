@@ -3,6 +3,7 @@ import api from "../utils/api";
 import PopupMsg from "./PopupMsg";
 import React, {useEffect} from "react";
 import Button from "./Button";
+import Modal from "./Modal";
 
 const Popup = () => {
 
@@ -55,36 +56,36 @@ const Popup = () => {
     };
 
     return (
-        <div
-            className="fixed inset-0 z-50 flex items-center justify-center overflow-x-hidden overflow-y-auto outline-none focus:outline-none bg-white bg-opacity-25"
-            style={{ display: popupState.show ? 'flex' : 'none' }}>
-            <div
-                className="border-2 border-solid border-blue-700 rounded-xl p-2 bg-white">
-                <h1 className="text-4xl font-bold">
-                    {popupState.text_msg}
-                </h1>
-                <div className="h-4"/>
-                <div className="">
-                {
-                    popupState.text_no &&
-                    <Button
-                        onClick={handleNo}
-                        rounded={true}
-                        label={popupState.text_no}
-                        classes={"mr-2 ml-2 bg-gray-500 hover:bg-gray-600"}
-                    />
-                }
-                {
-                    popupState.text_yes &&
-                    <Button
-                        onClick={handleYes}
-                        rounded={true}
-                        label={popupState.text_yes}
-                        classes={"mr-2 ml-2 bg-red-500 hover:bg-red-600"}
-                    />
-                }
-                </div>
-            </div>
+        <div>
+            {popupState.show && (
+                <Modal
+                    title={popupState.text_msg}
+                    onClose={handleNo}
+                    body={
+                        <div>
+                            {
+                                popupState.text_no &&
+                                <Button
+                                    onClick={handleNo}
+                                    rounded={true}
+                                    label={popupState.text_no}
+                                    classes={"mr-2 ml-2 bg-gray-500 hover:bg-gray-600"}
+                                />
+                            }
+                            {
+                                popupState.text_yes &&
+                                <Button
+                                    onClick={handleYes}
+                                    rounded={true}
+                                    label={popupState.text_yes}
+                                    classes={"mr-2 ml-2 bg-red-500 hover:bg-red-600"}
+                                />
+                            }
+                        </div>
+                    }
+                />
+            )
+            }
         </div>
     )
 }

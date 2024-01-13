@@ -77,8 +77,8 @@ const AdminOperation = () => {
                            label="Release year" type="number" min={1800} max={2050}/>,
                     <Input key={"movie_length_" + movieId} field="movie_length" showError={clickedSave}
                            value={response.data.movie_length}
-                           label="Length_" type="number" min={0} max={999}/>,
-                    <Input key={"genre" + movieId} field="genre" showError={clickedSave} value={response.data.genre}
+                           label="Length" type="number" min={0} max={999}/>,
+                    <Input key={"genre_" + movieId} field="genre" showError={clickedSave} value={response.data.genre}
                            label="Genre" type="text"/>,
                     <Input key={"language_" + movieId} field="language" showError={clickedSave} value={response.data.language}
                            label="Language" type="text"/>,
