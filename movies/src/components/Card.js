@@ -21,9 +21,12 @@ const Card = ({type, img, text, element}) => {
     const [createPopupVisible, setCreatePopupVisible] = useState(false);
     const [deletePopupVisible, setDeletePopupVisible] = useState(false);
     const [listTitle, setListTitle] = useState('');
+    const [cardTitle, setCardTitle] = useState('');
+    const [initialState, setInitialState] = useState(true);
+    const [popupTitle, setPopupTitle] = useState('Create new list');
     const [selectedList, setSelectedList] = useState(null);
     const authState = useSelector((state) => state.auth);
-
+    const [isDeleted, setIsDeleted] = useState(false);
 
     // useEffect(() => {
     //     document.addEventListener("keydown", handleEscape, false);
@@ -32,7 +35,7 @@ const Card = ({type, img, text, element}) => {
     //     };
     // }, [handleEscape])
 
-    const fetchUserLists = async () => {
+    const fetchUserLists = async (movie) => {
         const token = Cookies.get("access-token");
         if (token) {
             try {
@@ -77,15 +80,16 @@ const Card = ({type, img, text, element}) => {
         setIsWatchlist(!isWatchlist);
     };
 
-    const toggleDropdown = async () => {
+    const toggleDropdown = async (movie) => {
 
-        const userLists = await fetchUserLists();
+        const userLists = await fetchUserLists(movie);
         setUserLists(userLists);
 
         setShowDropdown(!showDropdown);
     };
 
     const openCreateListPopup = () => {
+        setPopupTitle("Create new list")
         setCreatePopupVisible(true);
 
         setShowDropdown(!showDropdown);
@@ -96,54 +100,119 @@ const Card = ({type, img, text, element}) => {
         setListTitle('');
     };
 
-    const handleSaveToExistingList = (list) => {
-        //TODO: Implementa l'azione di salvataggio del film nella lista esistente
-        console.log(`Salva il film nella lista: ${list.name}`);
-        setSelectedList(list);
-    };
-
-    const createNewList = async () => {
-        if (listTitle.trim() === '') {
-            return;
-        }
-
-        const newList = {
-            id: 1,
-            user_id: authState.userId,
-            name: listTitle,
-            movies: [element],
-            comments: [],
-            likes: []
-        };
+    const handleSaveToExistingList = async (list, movie_id) => {
         const token = Cookies.get("access-token");
+
         if (token) {
             try {
-                const response = await api.post('/mylists', newList, {
+                const response = await api.post(`/mylists/${list.id}`, null,{
                     headers: {
                         'Authorization': `Bearer ${token}`,
-                    }
+                    },
+                    params: {
+                        movie_id: movie_id,
+                    },
                 });
 
                 // Gestisci la risposta, ad esempio aggiornando lo stato o mostrando un messaggio
-                console.log('Lista creata con successo:', response.data);
+                console.log('Film salvato nella lista con successo:', response.data);
 
-                closeCreateListPopup();
+                setSelectedList(list); // Aggiorna lo stato con la lista selezionata
 
             } catch (error) {
                 // Gestisci gli errori qui
-                console.error('Errore nella creazione della lista:', error);
+                console.error('Errore nel salvataggio del film nella lista:', error);
+            }
+        }
+        setSelectedList(list);
+    };
+
+    const createNewList = async (list) => {
+        const token = Cookies.get("access-token");
+        if (token) {
+            if (popupTitle === "Create new list") { //Create list
+                if (listTitle.trim() === '') {
+                    return;
+                }
+
+                const newList = {
+                    user_id: authState.userId,
+                    name: listTitle,
+                    movies: [element.id],
+                    comments: [],
+                    likes: []
+                };
+
+                try {
+                    const response = await api.post('/mylists', newList, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                        }
+                    });
+
+                    // Gestisci la risposta, ad esempio aggiornando lo stato o mostrando un messaggio
+                    console.log('Lista creata con successo:', response.data);
+
+                    closeCreateListPopup();
+
+                } catch (error) {
+                    // Gestisci gli errori qui
+                    console.error('Errore nella creazione della lista:', error);
+                }
+
+            } else if (popupTitle === "Edit list") { //Edit list
+                try {
+                    const updateList = {
+                        name: listTitle,
+                        movies: list.movies,
+                    };
+                    const response = await api.put(`/mylists/${list.id}`, updateList, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                        }
+                    });
+
+                    // Gestisci la risposta, ad esempio aggiornando lo stato o mostrando un messaggio
+                    console.log('Lista modificata con successo:', response.data);
+
+                    closeCreateListPopup();
+                    setCardTitle(updateList.name)
+                    setInitialState(false)
+
+                } catch (error) {
+                    // Gestisci gli errori qui
+                    console.error('Errore nella modifica della lista:', error);
+                }
             }
         }
     };
 
     const editList = (list) => {
+        setPopupTitle("Edit list")
         setCreatePopupVisible(true);
-        setListTitle(list)
+        setListTitle(list.name)
     };
 
-    const deleteList = (list) => {
-        setCreatePopupVisible(true);
-        setListTitle(list)
+    const deleteList = async (list) => {
+        const token = Cookies.get("access-token");
+        if (token) {
+            try {
+                const response = await api.delete(`/mylists/${list.id}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                    }
+                });
+                setDeletePopupVisible(false);
+                setIsDeleted(true);
+                return response.data;
+            } catch (error) {
+                console.log(error);
+                return [];
+            }
+        }
+        return [];
+
+
     };
 
     const showDeletePopup = (id) => {
@@ -161,12 +230,12 @@ const Card = ({type, img, text, element}) => {
         onChange={(e) => setListTitle(e.target.value)}
         className="w-full p-2 mb-2 border rounded"
     />
-        <Button onClick={createNewList} classes={"bg-blue-500 text-white rounded-full py-1 px-2 hover:bg-blue-600"} label={"Send"}/>
+        <Button onClick={() => createNewList(element)} classes={"bg-blue-500 text-white rounded-full py-1 px-2 hover:bg-blue-600"} label={"Send"}/>
         <Button onClick={closeCreateListPopup} variant={'cancel'} classes={" rounded-full py-1 px-2 ml-2 hover:bg-gray-300"} label={"Cancel"}/>
     </div>
 
     const deletePopupButtons = <div>
-                                            <Button onClick={deleteList} classes={"bg-red-500 text-white rounded-full py-1 px-2 hover:bg-blue-600"} label={"DELETE"}/>
+                                            <Button onClick={() => deleteList(element)} classes={"bg-red-500 text-white rounded-full py-1 px-2 hover:bg-blue-600"} label={"DELETE"}/>
                                             <Button onClick={closeDeletePopup} variant={'cancel'} classes={"bg-gray-200 text-black rounded-full py-1 px-2 ml-2 hover:bg-gray-300"} label={"Cancel"}/>
                                         </div>;
 
@@ -174,9 +243,13 @@ const Card = ({type, img, text, element}) => {
 
 
     return (
+        <div>
+            {!isDeleted && (
         <div key={element.id} className={color}>
             {img}
-            {text}
+            {initialState ? <div>{text}</div> : <h2
+                className="text-xl mb-2 overflow-hidden whitespace-nowrap overflow-ellipsis">{cardTitle}</h2>}
+
             {authState.isAuth && (
                 type === 'movie' ? (
                     <div className="p-4">
@@ -185,7 +258,7 @@ const Card = ({type, img, text, element}) => {
                                 <Button label={isFavourite ? <IoMdHeart /> : <IoMdHeartEmpty />} rounded={true} onClick={() => handleFavourites(element.id)}/>
                                 <Button label={isWatchlist ?  <GoClockFill /> : <FiClock />} rounded={true} onClick={() => handleWatchlist(element.id)}/>
                                 <div className="group inline-block relative">
-                                    <Button label={<FaPlus />} rounded={true} onClick={toggleDropdown} />
+                                    <Button label={<FaPlus />} rounded={true} onClick={() => toggleDropdown(element)} />
                                     {showDropdown && (
                                         <div className="absolute left-0 bottom-[112%] w-36 bg-white border rounded-lg shadow-lg">
                                             <ul className="p-2">
@@ -193,7 +266,7 @@ const Card = ({type, img, text, element}) => {
                                                     <li
                                                         key={list.id}
                                                         className="cursor-pointer py-1 px-2 hover:bg-gray-100"
-                                                        onClick={() => handleSaveToExistingList(list)}
+                                                        onClick={() => handleSaveToExistingList(list, element.id)}
                                                     >
                                                         {list.name}
                                                     </li>
@@ -224,7 +297,7 @@ const Card = ({type, img, text, element}) => {
             )}
             {createPopupVisible && (
                 <Modal
-                    title="Create new list"
+                    title={popupTitle}
                     body={popupBody}
                     onClose={() => {
                         closeCreateListPopup();
@@ -239,6 +312,8 @@ const Card = ({type, img, text, element}) => {
                         closeDeletePopup();
                     }}
                 />
+            )}
+        </div>
             )}
         </div>
     );

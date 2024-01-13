@@ -139,10 +139,12 @@ const Movie = () => {
             id: 1,
             user_id: authState.userId,
             name: listTitle,
-            movies: [movie],
+            movies: [],
             comments: [],
             likes: []
         };
+
+        console.log(authState)
         const token = Cookies.get("access-token");
         if (token) {
             try {

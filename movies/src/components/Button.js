@@ -10,7 +10,7 @@ const Button = React.memo(({onClick, label, variant, size, disabled, rounded, cl
                 'bg-blue-500 text-white': variant === 'primary',
                 'bg-gray-300 text-gray-700': variant === 'secondary',
                 'bg-gray-300 text-black': variant === 'cancel',
-                'text-blue-900 shadow-none': variant === 'nobg',
+                'text-blue-700 shadow-none': variant === 'nobg',
                 'text-sm px-2 py-1': size === 'small',
                 'text-lg px-4 py-2': size === 'large',
                 'text-lg h-full w-full': size === 'max',
