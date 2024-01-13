@@ -50,10 +50,12 @@ const AdminSearchList = () => {
             <h1 className="text-4xl font-bold">View and delete all lists</h1>
             <div className="h-4"/>
 
-            <div>
-                {lists}
-            </div>
-
+            {lists.length == 0 &&
+                <p className="text-3xl font-normal">
+                    No list found
+                </p>
+            }
+            {lists}
         </div>
     );
 }

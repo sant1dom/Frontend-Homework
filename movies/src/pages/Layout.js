@@ -14,10 +14,10 @@ const Layout = ({loading}) => {
         links.push({text: "Advanced Search", url: "/advanced-search"});
     }
     if (authState.is_superuser) {
-        links.push({text: "Admin: Edit Movies", url: "/admin/movies"});
-        links.push({text: "Admin: Add a Movie", url: "/admin/movie/create"});
-        links.push({text: "Admin: Edit Lists", url: "/admin/lists"});
-        links.push({text: "Admin: Edit Comments", url: "/admin/comments"});
+        links.push({text: "Admin: Edit/Delete Movies", url: "/admin/movies"});
+        links.push({text: "Admin: Add Movie", url: "/admin/movie/create"});
+        links.push({text: "Admin: Delete Lists", url: "/admin/lists"});
+        links.push({text: "Admin: Delete Comments", url: "/admin/comments"});
     }
 
     return (

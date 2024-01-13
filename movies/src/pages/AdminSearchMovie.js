@@ -48,21 +48,23 @@ const AdminSearchMovie = () => {
         <div className="container mx-auto items-center justify-center">
 
             <div className="h-4"/>
-            <h1 className="text-4xl font-bold">View and delete all films</h1>
+            <h1 className="text-4xl font-bold">Edit and delete all movies</h1>
             <div className="h-4"/>
 
             <ButtonLink
                 rounded={true}
                 key='admin/movie/create'
                 to='/admin/movie/create'
-                label="Add a new film"
+                label="Add a new movie"
             />
             <div className="h-4"/>
 
-            <div>
-                {movies}
-            </div>
-
+            {movies.length == 0 &&
+                <p className="text-3xl font-normal">
+                    No movie found
+                </p>
+            }
+            {movies}
         </div>
     );
 }

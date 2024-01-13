@@ -50,10 +50,12 @@ const AdminSearchComment = () => {
             <h1 className="text-4xl font-bold">View and delete all comments</h1>
             <div className="h-4"/>
 
-            <div>
-                {comments}
-            </div>
-
+            {comments.length == 0 &&
+                <p className="text-3xl font-normal">
+                    No comment found
+                </p>
+            }
+            {comments}
         </div>
     );
 }

@@ -11,7 +11,7 @@ const AdminRowComment = ({comment}) => {
     const title = comment.comment.replace(new RegExp('"', 'g'), "&quot;").replace(new RegExp("'", 'g'), "’");
 
     const handleEditPopup = () => {
-        alert("TODO");
+        console.log("Permettere all'admin di modificare i commenti altrui?");
     };
 
     const handleDeletePopup = () => {
@@ -35,12 +35,13 @@ const AdminRowComment = ({comment}) => {
             </div>
 
             <div className="inline-flex">
-                <Button
-                    onClick={handleEditPopup}
-                    rounded={true}
-                    label="Edit"
-                    classes={""}
-                />
+                {false &&
+                    <Button
+                        onClick={handleEditPopup}
+                        rounded={true}
+                        label="Edit"
+                        classes={""}
+                    />}
 
                 <Button
                     onClick={handleDeletePopup}

@@ -11,7 +11,7 @@ const AdminRowList = ({list}) => {
     const title = list.name.replace(new RegExp('"', 'g'), "&quot;").replace(new RegExp("'", 'g'), "’");
 
     const handleEditPopup = () => {
-        alert("TODO");
+        console.log("Permettere all'admin di modificare le liste altrui?");
     };
 
     const handleDeletePopup = () => {
@@ -31,17 +31,18 @@ const AdminRowList = ({list}) => {
                  style={{overflow: "hidden"}}>
                 <div style={{display: "block"}}>
                     {title}
-                    <br /> {list.movies.length} films - {list.comments.length} comments - {list.likes.length} likes
+                    <br/> {list.movies.length} movies - {list.comments.length} comments - {list.likes.length} likes
                 </div>
             </div>
 
             <div className="inline-flex">
-                <Button
-                    onClick={handleEditPopup}
-                    rounded={true}
-                    label="Edit"
-                    classes={""}
-                />
+                {false &&
+                    <Button
+                        onClick={handleEditPopup}
+                        rounded={true}
+                        label="Edit"
+                        classes={""}
+                    />}
 
                 <Button
                     onClick={handleDeletePopup}
