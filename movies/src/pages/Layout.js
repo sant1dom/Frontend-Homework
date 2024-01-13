@@ -6,12 +6,12 @@ const Layout = ({loading}) => {
     const authState = useSelector((state) => state.auth);
     const links = [
         {text: "Home", url: "/"},
+        {text: "Advanced Search", url: "/advanced-search"}
     ];
     if (authState.isAuth) {
         // links.push({text: "Watchlist", url: "/watchlist"});
         // links.push({text: "Favorites", url: "/favorites"});
         links.push({text: "MyLists", url: "/mylists"});
-        links.push({text: "Advanced Search", url: "/advanced-search"});
     }
     if (authState.is_superuser) {
         links.push({text: "Admin: Edit/Delete Movies", url: "/admin/movies"});
@@ -24,6 +24,7 @@ const Layout = ({loading}) => {
         <>
             <Navbar title="Movies" links={links} backgroundColor="bg-gray-800" loading={loading}/>
             <Outlet />
+            <div className="h-20"/>
         </>
     );
 }

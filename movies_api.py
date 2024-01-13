@@ -183,13 +183,10 @@ async def get_genres(db: Session = Depends(get_db)) -> list[str]:
 
 
 @app.get("/languages", response_model=list[str])
-async def get_languages(user: user_dependency, db: Session = Depends(get_db)):
-    if user["is_superuser"]:
-        languages = db.query(DBMovie.language).distinct().all()
-        languages = [language[0] for language in languages]
-        return languages
-    else:
-        raise HTTPException(status_code=403, detail="You are not allowed to view this resource")
+async def get_languages(db: Session = Depends(get_db)):
+    languages = db.query(DBMovie.language).distinct().all()
+    languages = [language[0] for language in languages]
+    return languages
 
 
 @app.get("/mylists")

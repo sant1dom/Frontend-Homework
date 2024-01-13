@@ -98,6 +98,11 @@ const Login = () => {
                         onChange={(e) => {
                             handleInputChange(e, setEmail)
                         }}
+                        onKeyUp={(e) => {
+                            if (e.key === 'Enter') {
+                                handleLogin();
+                            }
+                        }}
                     />
                     {validationErrors.email && <p className="text-red-500 text-xs mt-1">{validationErrors.email}</p>}
                 </div>
@@ -114,6 +119,11 @@ const Login = () => {
                         value={password}
                         onChange={(e) => {
                             handleInputChange(e, setPassword)
+                        }}
+                        onKeyUp={(e) => {
+                            if (e.key === 'Enter') {
+                                handleLogin();
+                            }
                         }}
                     />
                     {validationErrors.password &&

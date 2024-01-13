@@ -21,6 +21,7 @@ import Spinner from "./components/Spinner";
 import MyLists from "./pages/MyLists";
 import AdminSearchList from "./pages/AdminSearchList";
 import AdminSearchComment from "./pages/AdminSearchComment";
+import AdvancedSearch from "./pages/AdvancedSearch";
 
 function App() {
     const dispatch = useDispatch();
@@ -97,6 +98,7 @@ function App() {
                             <Route path="/login" element={<Login/>}/>
                             <Route path="/register" element={<Registration/>}/>
                             <Route path="/movie/:id" element={<Movie/>}/>
+                            <Route path="/advanced-search" element={<AdvancedSearch/>}/>
                             {authState.isAuth && <>
                                 <Route path="/mylists" element={<MyLists/>}/>
                                 <Route path="/profile" element={<Profile/>}/>
