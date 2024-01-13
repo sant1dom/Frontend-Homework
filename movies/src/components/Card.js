@@ -246,7 +246,7 @@ const Card = ({type, img, text, element}) => {
     return (
         <div>
             {!isDeleted && (
-        <div key={element.id} className={color}>
+        <div key={element.id} className={color + " flex flex-col justify-between hover:shadow-2xl transition duration-300 ease-in-out hover:scale-105 cursor-pointer"}>
             {img}
             {initialState ? <div>{text}</div> : <h2
                 className="text-xl mb-2 overflow-hidden whitespace-nowrap overflow-ellipsis">{cardTitle}</h2>}
