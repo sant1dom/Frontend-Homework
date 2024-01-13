@@ -19,7 +19,7 @@ from LogConfig import LogConfig
 from database import Base, engine, fill_db, get_db, DBMovie, DBMovieList, DBLike, DBComment
 from exceptions_handlers import rate_limit_exceeded_handler
 from models import Movie, MovieUpdate, MovieCreate, MovieList
-from routers import site, auth
+from routers import site, auth, lists
 from routers.auth import user_dependency
 
 from slowapi import Limiter
@@ -60,7 +60,7 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 
 #app.include_router(site.router)
 app.include_router(auth.router)
-
+app.include_router(lists.router)
 
 @app.middleware("http")
 async def logging_middleware(request: Request, call_next):
