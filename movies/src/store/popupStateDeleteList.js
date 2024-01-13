@@ -1,4 +1,4 @@
-const popupStateListDelete = (list_id, list_title) => {
+const popupStateDeleteList = (list_id, list_title) => {
 
     let payload = {
         show: true,
@@ -20,4 +20,4 @@ const popupStateListDelete = (list_id, list_title) => {
     };
 };
 
-export default popupStateListDelete;
+export default popupStateDeleteList;

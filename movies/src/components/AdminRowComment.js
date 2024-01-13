@@ -2,24 +2,29 @@ import {useDispatch, useSelector} from "react-redux";
 import Button from "./Button";
 import ButtonLink from "./ButtonLink";
 import React from "react";
-import popupStateMovieDelete from "../store/popupStateMovieDelete";
+import popupStateDeleteComment from "../store/popupStateDeleteComment";
 
-const MovieRow = ({movie}) => {
+const AdminRowComment = ({comment}) => {
 
     const dispatch = useDispatch();
-    const title = movie.title.replace(new RegExp('"', 'g'), "&quot;").replace(new RegExp("'", 'g'), "’");
 
-    const handleDeletePopup = () => {
-        dispatch(popupStateMovieDelete(movie.id, title));
+    const title = comment.name.replace(new RegExp('"', 'g'), "&quot;").replace(new RegExp("'", 'g'), "’");
+
+    const handleEditPopup = () => {
+        alert("TODO");
     };
 
-    const hidden = useSelector((state) => state.hiddenState.movie);
-    if (typeof (hidden) != "undefined" && hidden.hasOwnProperty(movie.id)) {
+    const handleDeletePopup = () => {
+        dispatch(popupStateDeleteComment(comment.id, title));
+    };
+
+    const hidden = useSelector((state) => state.hiddenState.comment);
+    if (typeof (hidden) != "undefined" && hidden.hasOwnProperty(comment.id)) {
         return (<></>);
     }
 
     return (
-        <div id={`movie_row_${movie.id}`}
+        <div id={`comment_row_${comment.id}`}
              className="mb-3 w-screen-sm mx-auto border-2 border-solid border-blue-700 rounded-xl p-2 max-w-fit">
 
             <div className="inline-flex text-left text-lg font-normal w-64 h-16 text-ellipsis"
@@ -30,10 +35,9 @@ const MovieRow = ({movie}) => {
             </div>
 
             <div className="inline-flex">
-                <ButtonLink
+                <Button
+                    onClick={handleEditPopup}
                     rounded={true}
-                    key={`/admin/movie/update/${movie.id}`}
-                    to={`/admin/movie/update/${movie.id}`}
                     label="Edit"
                     classes={""}
                 />
@@ -49,4 +53,4 @@ const MovieRow = ({movie}) => {
     )
 }
 
-export default MovieRow;
+export default AdminRowComment;

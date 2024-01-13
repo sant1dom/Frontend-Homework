@@ -7,7 +7,7 @@ import Button from "../components/Button";
 import popupStateMsg from "../store/popupStateMsg";
 import Cookies from "js-cookie";
 
-const AdminMovieUpdate = () => {
+const AdminUpdateMovie = () => {
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -192,4 +192,4 @@ const AdminMovieUpdate = () => {
         ;
 }
 
-export default AdminMovieUpdate;
+export default AdminUpdateMovie;

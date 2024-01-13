@@ -2,14 +2,15 @@ import api from "../utils/api";
 import React, {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {Link, useNavigate} from "react-router-dom";
-import ListRow from "../components/ListRow";
+import AdminRowMovie from "../components/AdminRowMovie";
+import ButtonLink from "../components/ButtonLink";
 import Cookies from "js-cookie";
 
-const AdminListSearch = () => {
+const AdminSearchMovie = () => {
 
     const navigate = useNavigate();
     const authState = useSelector((state) => state.auth);
-    const [lists, setLists] = useState([]);
+    const [movies, setMovies] = useState([]);
     const dispatch = useDispatch();
 
     const token = Cookies.get("access-token");
@@ -22,20 +23,20 @@ const AdminListSearch = () => {
     useEffect(() => {
         console.log("Faccio partire la ricerca");
 
-        api.get('/all_lists', config).then((response) => {
+        api.get('/movies', config).then((response) => {
 
             dispatch({
                 type: "hiddenState/clear",
                 payload:
                     {
-                        table: "list",
+                        table: "movie",
                     }
             });
 
-            const tempLists = response.data.map((list) => {
-                return <ListRow list={list} key={list.id}/>
+            const tempMovies = response.data.map((movie) => {
+                return <AdminRowMovie movie={movie} key={movie.id}/>
             });
-            setLists(tempLists);
+            setMovies(tempMovies);
 
         }).catch((error) => {
             console.log(error);
@@ -47,15 +48,23 @@ const AdminListSearch = () => {
         <div className="container mx-auto items-center justify-center">
 
             <div className="h-4"/>
-            <h1 className="text-4xl font-bold">Lists found: {lists.length}</h1>
+            <h1 className="text-4xl font-bold">Films found: {movies.length}</h1>
+            <div className="h-4"/>
+
+            <ButtonLink
+                rounded={true}
+                key='admin/movie/create'
+                to='/admin/movie/create'
+                label="Add a new film"
+            />
             <div className="h-4"/>
 
             <div>
-                {lists}
+                {movies}
             </div>
 
         </div>
     );
 }
 
-export default AdminListSearch;
+export default AdminSearchMovie;

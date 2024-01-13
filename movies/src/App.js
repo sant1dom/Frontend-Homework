@@ -12,14 +12,15 @@ import {login} from "./store/store";
 import Cookies from 'js-cookie';
 import Registration from "./pages/Registration";
 import api from "./utils/api";
-import AdminMovieSearch from "./pages/AdminMovieSearch";
-import AdminMovieUpdate from "./pages/AdminMovieUpdate";
+import AdminSearchMovie from "./pages/AdminSearchMovie";
+import AdminUpdateMovie from "./pages/AdminUpdateMovie";
 import Popup from "./components/Popup";
 import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
 import Spinner from "./components/Spinner";
 import MyLists from "./pages/MyLists";
-import AdminListSearch from "./pages/AdminListSearch";
+import AdminSearchList from "./pages/AdminSearchList";
+import AdminSearchComment from "./pages/AdminSearchComment";
 
 function App() {
     const dispatch = useDispatch();
@@ -101,10 +102,11 @@ function App() {
                                 <Route path="/profile" element={<Profile/>}/>
                                 <Route path="/mylists/:listname" element={<SingleList/>}/>
                                 {authState.is_superuser && <>
-                                    <Route path="/admin/movies" element={<AdminMovieSearch/>}/>
-                                    <Route path="/admin/movie/create" element={<AdminMovieUpdate/>}/>
-                                    <Route path="/admin/movie/update/:id" element={<AdminMovieUpdate/>}/>
-                                    <Route path="/admin/lists" element={<AdminListSearch/>}/>
+                                    <Route path="/admin/movies" element={<AdminSearchMovie/>}/>
+                                    <Route path="/admin/movie/create" element={<AdminUpdateMovie/>}/>
+                                    <Route path="/admin/movie/update/:id" element={<AdminUpdateMovie/>}/>
+                                    <Route path="/admin/lists" element={<AdminSearchList/>}/>
+                                    <Route path="/admin/comments" element={<AdminSearchComment/>}/>
                                 </>}
                             </>}
                             <Route path="*" element={<NotFound/>}/></>}

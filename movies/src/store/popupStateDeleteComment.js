@@ -1,16 +1,16 @@
-const popupStateMovieDelete = (movie_id, movie_title) => {
+const popupStateDeleteList = (list_id, list_title) => {
 
     let payload = {
         show: true,
         text_title: "Delete?",
-        text_msg: "Do you want to delete '" + movie_title + "'?",
+        text_msg: "Do you want to delete '" + list_title + "'?",
         text_yes: "Delete",
         text_no: "Close Popup",
         click_yes: {
-            url: "/movies/" + movie_id,
+            url: "/all_comment/" + list_id,
             method: "delete",
-            hide_table: 'movie',
-            hide_id: movie_id,
+            hide_table: 'list',
+            hide_id: list_id,
         },
     };
 
@@ -20,4 +20,4 @@ const popupStateMovieDelete = (movie_id, movie_title) => {
     };
 };
 
-export default popupStateMovieDelete;
+export default popupStateDeleteList;

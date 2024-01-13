@@ -11,7 +11,7 @@ from LogConfig import LogConfig
 from database import Base, engine, fill_db, get_db, DBMovie, DBMovieList, DBLike, DBComment, DBUser
 from exceptions_handlers import rate_limit_exceeded_handler
 from models import Movie, MovieUpdate, MovieCreate, MovieList, MovieListCreate, Comment, Like
-from routers import auth, lists
+from routers import auth, lists, comments
 from routers.auth import user_dependency
 
 from slowapi import Limiter
@@ -50,6 +50,7 @@ app.add_middleware(
 
 app.include_router(auth.router)
 app.include_router(lists.router)
+app.include_router(comments.router)
 
 @app.middleware("http")
 async def logging_middleware(request: Request, call_next):
