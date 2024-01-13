@@ -204,7 +204,6 @@ async def create_list(movie_list: MovieListCreate, user: user_dependency, db: Se
     db_movie_list.user = db.query(DBUser).filter(DBUser.id == user["id"]).first()
     db_movie_list.likes = []
     db_movie_list.comments = []
-    print(db_movie_list.__dict__)
     db.add(db_movie_list)
     db.commit()
     db.refresh(db_movie_list)

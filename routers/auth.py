@@ -30,7 +30,6 @@ oauth2_bearer = OAuth2PasswordBearer(tokenUrl="/auth/login")
 
 def authenticate_user(email: str, password: str, db: db_dependency) -> bool | DBUser:
     user = db.query(DBUser).filter(DBUser.email == email).first()
-    print(db.query(DBUser).all())
     if user is None or not user.is_active or not bcrypt_context.verify(password, user.hashed_password):
         return False
     return user
