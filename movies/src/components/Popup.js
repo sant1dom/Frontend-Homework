@@ -11,6 +11,8 @@ const Popup = () => {
     const popupState = useSelector((state) => state.popupState);
 
     const handleYes = () => {
+        console.log("Hai premuto YES");
+
         const url = popupState.click_yes.url;
         const method = popupState.click_yes.method;
         const hide_table = popupState.click_yes.hide_table;
@@ -38,6 +40,8 @@ const Popup = () => {
     };
 
     const handleNo = () => {
+        console.log("Hai premuto NO");
+
         const url = popupState.click_no.url;
         const method = popupState.click_no.method;
         const hide = popupState.click_no.hide;

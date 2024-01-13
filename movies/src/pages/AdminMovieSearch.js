@@ -53,8 +53,8 @@ const AdminMovieSearch = () => {
 
             <ButtonLink
                 rounded={true}
-                key='admin/create'
-                to='/admin/create'
+                key='admin/movie/create'
+                to='/admin/movie/create'
                 label="Add a new film"
             />
             <div className="h-4"/>

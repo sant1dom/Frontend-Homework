@@ -7,7 +7,7 @@ const popupStateListDelete = (list_id, list_title) => {
         text_yes: "Delete",
         text_no: "Close Popup",
         click_yes: {
-            url: "/lists/" + list_id,
+            url: "/all_lists/" + list_id,
             method: "delete",
             hide_table: 'list',
             hide_id: list_id,

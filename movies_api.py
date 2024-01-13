@@ -6,7 +6,6 @@ from sqlalchemy import and_, func
 from sqlalchemy.orm import Session
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.requests import Request
-from starlette.staticfiles import StaticFiles
 
 from LogConfig import LogConfig
 from database import Base, engine, fill_db, get_db, DBMovie, DBMovieList, DBLike, DBComment, DBUser
@@ -48,8 +47,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-app.mount("/static", StaticFiles(directory="static"), name="static")
 
 app.include_router(auth.router)
 app.include_router(lists.router)
@@ -120,7 +117,7 @@ async def create_movie(user: user_dependency, movie: MovieCreate, db: Session = 
 
 
 @app.delete("/movies/{movie_id}")
-async def delete_movie(movie_id: int, db: Session = Depends(get_db)):
+async def delete_movie(user: user_dependency, movie_id: int, db: Session = Depends(get_db)):
     if not user["is_superuser"]:
         raise HTTPException(status_code=403, detail="You are not allowed to view this resource")
 
