@@ -19,6 +19,7 @@ import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
 import Spinner from "./components/Spinner";
 import MyLists from "./pages/MyLists";
+import AdminListSearch from "./pages/AdminListSearch";
 
 function App() {
     const dispatch = useDispatch();
@@ -103,6 +104,7 @@ function App() {
                                     <Route path="/admin/movies" element={<AdminMovieSearch/>}/>
                                     <Route path="/admin/movie/create" element={<AdminMovieUpdate/>}/>
                                     <Route path="/admin/movie/update/:id" element={<AdminMovieUpdate/>}/>
+                                    <Route path="/admin/lists" element={<AdminListSearch/>}/>
                                 </>}
                             </>}
                             <Route path="*" element={<NotFound/>}/></>}

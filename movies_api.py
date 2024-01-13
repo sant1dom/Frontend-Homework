@@ -108,7 +108,10 @@ async def update_movie(movie_id: int, movie: MovieUpdate, db: Session = Depends(
 
 
 @app.post("/movies", response_model=Movie)
-async def create_movie(movie: MovieCreate, db: Session = Depends(get_db)) -> Movie:
+async def create_movie(user: user_dependency, movie: MovieCreate, db: Session = Depends(get_db)) -> Movie:
+    if not user["is_superuser"]:
+        raise HTTPException(status_code=403, detail="You are not allowed to view this resource")
+
     db_movie = DBMovie(**movie.model_dump())
     db.add(db_movie)
     db.commit()
@@ -118,6 +121,9 @@ async def create_movie(movie: MovieCreate, db: Session = Depends(get_db)) -> Mov
 
 @app.delete("/movies/{movie_id}")
 async def delete_movie(movie_id: int, db: Session = Depends(get_db)):
+    if not user["is_superuser"]:
+        raise HTTPException(status_code=403, detail="You are not allowed to view this resource")
+
     db_movie = db.query(DBMovie).filter(DBMovie.id == movie_id).first()
     if db_movie is None:
         raise HTTPException(status_code=404, detail="Movie not found")
@@ -180,7 +186,6 @@ async def get_genres(db: Session = Depends(get_db)) -> list[str]:
 
 @app.get("/languages", response_model=list[str])
 async def get_languages(user: user_dependency, db: Session = Depends(get_db)):
-    print(user)
     if user["is_superuser"]:
         languages = db.query(DBMovie.language).distinct().all()
         languages = [language[0] for language in languages]

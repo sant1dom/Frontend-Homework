@@ -8,9 +8,10 @@ router = APIRouter()
 
 @router.get("/all_lists", response_model=list[MovieList])
 async def get_all_lists(user: user_dependency, db: Session = Depends(get_db)) -> list[MovieList]:
-    if (user["is_superuser"]):
-        lists =  db.query(DBMovieList).all()
-        lists = [MovieList(**list.__dict__) for list in lists]
-        return lists
-    else:
+    if not user["is_superuser"]:
         raise HTTPException(status_code=403, detail="You are not allowed to view this resource")
+
+    lists =  db.query(DBMovieList).all()
+    lists = [MovieList(**list.__dict__) for list in lists]
+    return lists
+

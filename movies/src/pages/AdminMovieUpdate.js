@@ -5,6 +5,7 @@ import {useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import Button from "../components/Button";
 import popupStateMsg from "../store/popupStateMsg";
+import Cookies from "js-cookie";
 
 const AdminMovieUpdate = () => {
 
@@ -25,6 +26,13 @@ const AdminMovieUpdate = () => {
     if (method == "update") {
         movieId = path[4];
     }
+
+    const token = Cookies.get("access-token");
+    const config = {
+        headers: {
+            'Authorization': `Bearer ${token}`,
+        }
+    };
 
     useEffect(() => {
         console.log("Faccio partire Operation");
@@ -55,11 +63,11 @@ const AdminMovieUpdate = () => {
         } else if (method == "update") {
 
             if (movieId == null) {
-                navigate('/admin/search');
+                navigate('/admin/movies');
                 return;
             }
 
-            api.get('/movies/' + movieId).then((response) => {
+            api.get('/movies/' + movieId, config).then((response) => {
                 setInputs([
                     <Input key={"title_" + movieId} field="title" showError={clickedSave} value={response.data.title}
                            label="Title" type="text"/>,
@@ -71,16 +79,18 @@ const AdminMovieUpdate = () => {
                            label="Length" type="number" min={0} max={999}/>,
                     <Input key={"genre_" + movieId} field="genre" showError={clickedSave} value={response.data.genre}
                            label="Genre" type="text"/>,
-                    <Input key={"language_" + movieId} field="language" showError={clickedSave} value={response.data.language}
+                    <Input key={"language_" + movieId} field="language" showError={clickedSave}
+                           value={response.data.language}
                            label="Language" type="text"/>,
-                    <Input key={"imdb_url_" + movieId} field="imdb_url" showError={clickedSave} value={response.data.imdb_url}
+                    <Input key={"imdb_url_" + movieId} field="imdb_url" showError={clickedSave}
+                           value={response.data.imdb_url}
                            label="IMDB's URL" type="text"/>,
                 ]);
             }).catch((error) => {
                 console.log(error);
 
-                navigate("/admin/search");
-                dispatch(popupStateMsg("Movie does not exist", "Redirected to Admin Search"));
+                navigate("/admin/movies");
+                dispatch(popupStateMsg("Movie does not exist", "Redirected to Edit Movies"));
             });
         }
 
@@ -133,23 +143,23 @@ const AdminMovieUpdate = () => {
         };
 
         if (method == "update") {
-            api.put('/movies/' + movieId, JSON.stringify(formData))
+            api.put('/movies/' + movieId, JSON.stringify(formData), config)
                 .then((response) => {
 
-                    navigate("/admin/search");
-                    dispatch(popupStateMsg("Movie updated", "Redirected to Admin Search"));
+                    navigate("/admin/movies");
+                    dispatch(popupStateMsg("Movie updated", "Redirected to Edit Movies"));
 
                 }).catch((error) => {
                 handleError(error);
             });
 
         } else if (method == "create") {
-            api.post('/movies/', JSON.stringify(formData))
+            api.post('/movies/', JSON.stringify(formData), config)
                 .then((response) => {
                     console.log(response.data.id);
 
-                    navigate("/admin/search");
-                    dispatch(popupStateMsg("Movie created", "Redirected to Admin Search"));
+                    navigate("/admin/movies");
+                    dispatch(popupStateMsg("Movie created", "Redirected to Edit Movies"));
 
                 }).catch((error) => {
                 handleError(error);
