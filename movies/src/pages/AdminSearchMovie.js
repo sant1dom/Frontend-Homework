@@ -48,7 +48,7 @@ const AdminSearchMovie = () => {
         <div className="container mx-auto items-center justify-center">
 
             <div className="h-4"/>
-            <h1 className="text-4xl font-bold">Films found: {movies.length}</h1>
+            <h1 className="text-4xl font-bold">View and delete all films</h1>
             <div className="h-4"/>
 
             <ButtonLink

@@ -1,6 +1,6 @@
 from fastapi import Depends, HTTPException, APIRouter
 from sqlalchemy.orm import Session
-from database import Base, engine, fill_db, get_db, DBMovie, DBMovieList, DBLike, DBComment
+from database import get_db, DBMovieList
 from models import MovieList
 from routers.auth import user_dependency
 

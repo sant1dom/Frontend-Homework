@@ -8,7 +8,7 @@ const AdminRowComment = ({comment}) => {
 
     const dispatch = useDispatch();
 
-    const title = comment.name.replace(new RegExp('"', 'g'), "&quot;").replace(new RegExp("'", 'g'), "’");
+    const title = comment.comment.replace(new RegExp('"', 'g'), "&quot;").replace(new RegExp("'", 'g'), "’");
 
     const handleEditPopup = () => {
         alert("TODO");
