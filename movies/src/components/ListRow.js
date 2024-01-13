@@ -36,10 +36,9 @@ const ListRow = ({list}) => {
             </div>
 
             <div className="inline-flex">
-                <ButtonLink
+                <Button
+                    onClick={handleEditPopup}
                     rounded={true}
-                    key={`/admin/list/update/${list.id}`}
-                    to={`/admin/list/update/${list.id}`}
                     label="Edit"
                     classes={""}
                 />

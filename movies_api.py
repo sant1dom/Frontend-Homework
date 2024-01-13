@@ -198,8 +198,6 @@ async def get_my_lists(user: user_dependency, db: Session = Depends(get_db)):
 
 
 @app.post("/mylists")
-async def create_list(movie_list: MovieList, user: user_dependency, db: Session = Depends(get_db)):
-    db_movie_list = DBMovieList(**movie_list.model_dump(), user_id=user["id"])
 async def create_list(movie_list: MovieListCreate, user: user_dependency, db: Session = Depends(get_db)):
     db_movie_list = DBMovieList()
     db_movie_list.name = movie_list.name
@@ -212,7 +210,6 @@ async def create_list(movie_list: MovieListCreate, user: user_dependency, db: Se
     db.add(db_movie_list)
     db.commit()
     db.refresh(db_movie_list)
-    return MovieList(**db_movie_list.__dict__)
     return_list = MovieList(id=db_movie_list.id, name=db_movie_list.name, user_id=db_movie_list.user_id)
     return_list.movies = [Movie(**movie.__dict__) for movie in db_movie_list.movies]
     return_list.comments = [Comment(**comment.__dict__) for comment in db_movie_list.comments]

@@ -4,11 +4,19 @@ import popupStateMsg from "../store/popupStateMsg";
 import React, {useEffect} from "react";
 import Button from "./Button";
 import Modal from "./Modal";
+import Cookies from "js-cookie";
 
 const Popup = () => {
 
     const dispatch = useDispatch();
     const popupState = useSelector((state) => state.popupState);
+
+    const token = Cookies.get("access-token");
+    const config = {
+        headers: {
+            'Authorization': `Bearer ${token}`,
+        }
+    };
 
     const handleYes = () => {
         console.log("Hai premuto YES");
@@ -19,7 +27,7 @@ const Popup = () => {
         const hide_id = popupState.click_yes.hide_id;
 
         if (url != null) {
-            api[method](url)
+            api[method](url, config)
                 .then(response => {
                     dispatch({
                         type: "hiddenState/add",
@@ -70,7 +78,7 @@ const Popup = () => {
                             <p className="text-2xl">
                                 {popupState.text_msg}
                             </p>
-                            <br />
+                            <br/>
                             {
                                 popupState.text_no &&
                                 <Button
