@@ -157,7 +157,7 @@ const Navbar = ({title, links, backgroundColor, loading}) => {
 
                         <div className="w-2"/>
                         {loading && <Spinner/>}
-                        {!loading && !authState.isAuth && <Button onClick={handleButtonClick} label="Login"/>}
+                        {!loading && !authState.isAuth && <Button onClick={handleButtonClick} label="Login" rounded={true}/>}
                     </div>
                 </div>
             </nav>

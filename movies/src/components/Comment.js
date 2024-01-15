@@ -15,13 +15,13 @@ const Comment = ({ content }) => {
         fetchAuthor();
     }, []);
 
-    var lastDate = new Date(content.updated_at);
-    var currentDate = new Date();
-    var millisecondsPeriod = currentDate - lastDate;
-    var daysPeriod = Math.floor(millisecondsPeriod / (24 * 60 * 60 * 1000));
+    const lastDate = new Date(content.updated_at);
+    const currentDate = new Date();
+    const millisecondsPeriod = currentDate - lastDate;
+    const daysPeriod = Math.floor(millisecondsPeriod / (24 * 60 * 60 * 1000));
 
     return(
-        <Fragment>
+        <>
             <div className="container px-0 mx-auto sm:px-5 mb-5">
                 <div className="flex-col w-full py-4 mx-auto bg-white border-b-2 border-r-2 border-gray-200 sm:px-4 sm:py-4 md:px-4 sm:rounded-lg sm:shadow-sm md:w-2/3">
                     <div className="flex flex-row">
@@ -39,7 +39,7 @@ const Comment = ({ content }) => {
                     </div>
                 </div>
             </div>
-        </Fragment>
+        </>
     )
 }
 

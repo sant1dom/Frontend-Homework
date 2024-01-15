@@ -1,10 +1,15 @@
+import logging
 import time
 from contextlib import asynccontextmanager
+from logging.config import dictConfig
 
 from fastapi import FastAPI, Depends, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+from slowapi import Limiter
+from slowapi.errors import RateLimitExceeded
+from slowapi.util import get_remote_address
 from sqlalchemy import and_, func
 from sqlalchemy.orm import Session
-from fastapi.middleware.cors import CORSMiddleware
 from starlette.requests import Request
 
 from LogConfig import LogConfig
@@ -13,13 +18,6 @@ from exceptions_handlers import rate_limit_exceeded_handler
 from models import Movie, MovieUpdate, MovieCreate, MovieList, MovieListCreate, Comment, Like
 from routers import auth, lists, comments
 from routers.auth import user_dependency
-
-from slowapi import Limiter
-from slowapi.util import get_remote_address
-from slowapi.errors import RateLimitExceeded
-
-import logging
-from logging.config import dictConfig
 
 dictConfig(LogConfig().model_dump())
 logger = logging.getLogger(__name__)
@@ -51,6 +49,7 @@ app.add_middleware(
 app.include_router(auth.router)
 app.include_router(lists.router)
 app.include_router(comments.router)
+
 
 @app.middleware("http")
 async def logging_middleware(request: Request, call_next):
@@ -109,7 +108,6 @@ async def update_movie(movie_id: int, movie: MovieUpdate, db: Session = Depends(
 async def create_movie(user: user_dependency, movie: MovieCreate, db: Session = Depends(get_db)) -> Movie:
     if not user["is_superuser"]:
         raise HTTPException(status_code=403, detail="You are not allowed to view this resource")
-
     db_movie = DBMovie(**movie.model_dump())
     db.add(db_movie)
     db.commit()
@@ -236,7 +234,8 @@ async def get_list_by_id(movie_list_id: int, user: user_dependency, db: Session 
 
 
 @app.put("/mylists/{movie_list_id}")
-async def update_list(movie_list_id: int, movie_list: MovieListCreate, user: user_dependency, db: Session = Depends(get_db)):
+async def update_list(movie_list_id: int, movie_list: MovieListCreate, user: user_dependency,
+                      db: Session = Depends(get_db)):
     db_movie_list = db.query(DBMovieList).filter(
         and_(DBMovieList.id == movie_list_id, DBMovieList.user_id == user["id"])).first()
     if db_movie_list is None:
@@ -245,7 +244,8 @@ async def update_list(movie_list_id: int, movie_list: MovieListCreate, user: use
         setattr(db_movie_list, key, value)
     db_movie_list.name = movie_list.name
     if movie_list.movies is not None:
-        db_movie_list.movies = [db.query(DBMovie).filter(DBMovie.id == movie_id).first() for movie_id in movie_list.movies]
+        db_movie_list.movies = [db.query(DBMovie).filter(DBMovie.id == movie_id).first() for movie_id in
+                                movie_list.movies]
     db.commit()
     db.refresh(db_movie_list)
     return MovieList(**db_movie_list.__dict__)
@@ -332,7 +332,8 @@ async def delete_comment(comment_id: int, user: user_dependency, db: Session = D
 
 @app.get("/most_commented_lists")
 async def get_most_commented_lists(db: Session = Depends(get_db)):
-    most_commented_lists = db.query(DBComment.movie_list_id, func.count(DBComment.movie_list_id)).group_by( DBComment.movie_list_id).order_by(func.count(DBComment.movie_list_id).desc()).all()
+    most_commented_lists = db.query(DBComment.movie_list_id, func.count(DBComment.movie_list_id)).group_by(
+        DBComment.movie_list_id).order_by(func.count(DBComment.movie_list_id).desc()).all()
     most_commented_lists = db.query(DBComment.movie_list_id, func.count(DBComment.movie_list_id)).group_by(
         DBComment.movie_list_id).order_by(func.count(DBComment.movie_list_id).desc()).all()
     most_commented_lists = [movie_list[0] for movie_list in most_commented_lists]
@@ -351,3 +352,33 @@ async def get_user_details_by_id(user_id: int, db: Session = Depends(get_db)):
         "image": db_user.profile_image
     }
     return user_details
+
+
+from sqlalchemy.orm import joinedload
+
+
+@app.post("/get_lists_for_movie")
+async def get_lists_for_movie(movie_id: int, user: user_dependency, db: Session = Depends(get_db)):
+    user_id = user["id"]
+
+    movie_lists = (
+        db.query(DBMovieList)
+        .filter(DBMovieList.user_id == user_id)
+        .filter(DBMovieList.movies.any(id=movie_id))
+        .options(joinedload(DBMovieList.movies), joinedload(DBMovieList.comments), joinedload(DBMovieList.likes))
+        .all()
+    )
+
+    return_list = [
+        MovieList(
+            id=movie_list.id,
+            name=movie_list.name,
+            user_id=movie_list.user_id,
+            movies=[Movie(**movie.__dict__) for movie in movie_list.movies],
+            comments=[Comment(**comment.__dict__) for comment in movie_list.comments],
+            likes=[Like(**like.__dict__) for like in movie_list.likes],
+        )
+        for movie_list in movie_lists
+    ]
+
+    return return_list

@@ -116,6 +116,18 @@ def fill_db():
         db_movie_list = DBMovieList(**movie_list)
         db.add(db_movie_list)
 
+    try:
+        db.commit()
+    except Exception as e:
+        print(e)
+        db.rollback()
+
+    # Add movies to movie lists
+    for movie_movie_list_el in movies_movie_lists:
+        db_movie_list = db.query(DBMovieList).filter(DBMovieList.id == movie_movie_list_el["movie_list_id"]).first()
+        db_movie = db.query(DBMovie).filter_by(id=movie_movie_list_el["movie_id"]).first()
+        db_movie_list.movies.append(db_movie)
+
     # Add comments to database
     for comment in comments:
         db_comment = DBComment(**comment)

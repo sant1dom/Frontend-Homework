@@ -5,6 +5,7 @@ import axios from 'axios';
 import Filter from '../components/Filter';
 import LoadingCardSkeleton from '../components/LoadingCardSkeleton';
 import Comment from '../components/Comment';
+import EditorComment from "../components/EditorComment";
 
 const OMDB_API_KEY = process.env.REACT_APP_OMDB_API_KEY;
 
@@ -132,6 +133,10 @@ const SingleList = () => {
             {comments.map((element) => (
                 <Comment content={element}/>
             ))}
+            <h1 className="mt-5 mb-5 text-2xl">Add a comment</h1>
+            <div className="container px-0 mx-auto sm:px-5 mb-5">
+                <EditorComment/>
+            </div>
 
         </div>
     );
