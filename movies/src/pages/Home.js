@@ -32,7 +32,7 @@ const Home = () => {
                     return movie;
                 }));
 
-                setMovies(moviesWithPosters); 
+                setMovies(moviesWithPosters);
                 setLoading(false);
 
             } catch (error) {
@@ -64,7 +64,7 @@ const Home = () => {
         localStorage.setItem("Favourites", JSON.stringify(favourites));
         setHoveredMovie(null);
     };
-    
+
     const handleWatchlist = (id) => {
 
         const index = watchlist.indexOf(id);
@@ -82,25 +82,27 @@ const Home = () => {
     return (
         <div className="mx-auto">
             <h1 className="mt-5 mb-5 text-4xl">Trending Films</h1>
-            <div className="mx-8 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-8 mb-5">
+            <div className="mx-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8 mb-5">
                 {loading ? (
                     Array.from({ length: 6 }).map((_) => (
                         <LoadingCardSkeleton />
                     ))
-                    ) : (
-                        movies.map((movie) => (
-                            <Card type={'movie'}
-                                img={<Link to={`/movie/${movie.id}`} className="block">
-                                        <img className="w-full h-80 object-cover rounded-t-lg -z-20" src={movie.poster} alt="Film" />
-                                        </Link>}
-                                  text={<div>
-                                      <Link to={`/movie/${movie.id}`} className="block">
-                                        <h2 className="px-4 py-2 text-xl mb-2 overflow-hidden whitespace-nowrap overflow-ellipsis">{movie.title}</h2>
-                                     </Link>
-                                <p className="text-base">{movie.release_year}</p></div>}
-                                  element={movie} />
-                        ))
-                    )
+                ) : (
+                    movies.map((movie) => (
+                        <Card key={movie.id}
+                              classes={" flex flex-col justify-between hover:shadow-2xl transition duration-300 ease-in-out hover:scale-105 cursor-pointer"}
+                              type={'movie'}
+                              img={<Link to={`/movie/${movie.id}`} className="block">
+                                  <img className="w-full h-80 object-cover rounded-t-lg -z-20" src={movie.poster} alt="Film" />
+                              </Link>}
+                              text={<div>
+                                  <Link to={`/movie/${movie.id}`} className="block">
+                                      <h2 className="px-4 py-2 text-xl mb-2 overflow-hidden whitespace-nowrap overflow-ellipsis">{movie.title}</h2>
+                                  </Link>
+                                  <p className="text-base">{movie.release_year}</p></div>}
+                              element={movie} />
+                    ))
+                )
                 }
             </div>
         </div>
