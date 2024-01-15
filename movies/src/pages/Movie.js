@@ -12,6 +12,7 @@ import FileUploader from "../components/FileUploader";
 import Cookies from "js-cookie";
 import {login} from "../store/store";
 import Card from "../components/Card";
+import Spinner from "../components/Spinner";
 
 const OMDB_API_KEY = process.env.REACT_APP_OMDB_API_KEY;
 
@@ -81,7 +82,7 @@ const Movie = () => {
     }, [id], [selectedList]);
 
     if (!movie) {
-        return <div>Loading...</div>;
+        return <div className={"flex justify-center items-center h-screen "}><Spinner/></div>;
     }
 
     const handleFavourites = (id) => {
