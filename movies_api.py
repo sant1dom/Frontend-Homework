@@ -334,8 +334,6 @@ async def delete_comment(comment_id: int, user: user_dependency, db: Session = D
 async def get_most_commented_lists(db: Session = Depends(get_db)):
     most_commented_lists = db.query(DBComment.movie_list_id, func.count(DBComment.movie_list_id)).group_by(
         DBComment.movie_list_id).order_by(func.count(DBComment.movie_list_id).desc()).all()
-    most_commented_lists = db.query(DBComment.movie_list_id, func.count(DBComment.movie_list_id)).group_by(
-        DBComment.movie_list_id).order_by(func.count(DBComment.movie_list_id).desc()).all()
     most_commented_lists = [movie_list[0] for movie_list in most_commented_lists]
     most_commented_lists = db.query(DBMovieList).filter(DBMovieList.id.in_(most_commented_lists)).all()
     most_commented_lists = [MovieList(**movie_list.__dict__) for movie_list in most_commented_lists]

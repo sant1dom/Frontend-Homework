@@ -127,7 +127,7 @@ const AdvancedSearch = () => {
     const [genre, setGenre] = useState('');
     const [language, setLanguage] = useState('');
     const [searchResults, setSearchResults] = useState([]);
-    const [showAdvancedSearch, setShowAdvancedSearch] = useState(false);
+    const [showAdvancedSearch, setShowAdvancedSearch] = useState(searchParams.get('title') == null);
     const OMDB_API_KEY = process.env.REACT_APP_OMDB_API_KEY;
     const [loading, setLoading] = useState(false);
 
@@ -173,8 +173,7 @@ const AdvancedSearch = () => {
                     }).catch((error) => {
                         console.log(error);
                     });
-                } else {
-                    setShowAdvancedSearch(true);
+                    setShowAdvancedSearch(false);
                 }
             } catch (error) {
                 console.log(error);
