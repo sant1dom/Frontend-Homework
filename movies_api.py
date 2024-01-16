@@ -291,9 +291,9 @@ async def get_most_liked_lists(db: Session = Depends(get_db)):
     most_liked_lists = db.query(DBMovieList).filter(DBMovieList.id.in_(most_liked_lists)).all()
     most_liked_movie_lists = [MovieList(**movie_list.__dict__) for movie_list in most_liked_lists]
     for lista in most_liked_movie_lists:
-        lista.movies = [Movie(**movie.__dict__) for movie in most_liked_lists.movies]
-        lista.comments = [Comment(**comment.__dict__) for comment in most_liked_lists.comments]
-        lista.likes = [Like(**like.__dict__) for like in most_liked_lists.likes]
+        lista.movies = [Movie(**movie.__dict__) for movie_list in most_liked_lists for movie in movie_list.movies]
+        lista.comments = [Comment(**comment.__dict__) for comment_list in most_liked_lists for comment in comment_list.comments]
+        lista.likes = [Like(**like.__dict__) for like_list in most_liked_lists for like in like_list.likes ]
     return most_liked_lists
 
 @app.get("/bestlists/{movie_list_id}")
