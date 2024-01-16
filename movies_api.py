@@ -230,6 +230,10 @@ async def get_list_by_id(movie_list_id: int, user: user_dependency, db: Session 
     if db_movie_list is None:
         raise HTTPException(status_code=404, detail="Movie list not found")
     movie_list = MovieList(**db_movie_list.__dict__)
+    movie_list.movies = [Movie(**movie.__dict__) for movie in db_movie_list.movies]
+    movie_list.comments = [Comment(**comment.__dict__) for comment in db_movie_list.comments]
+    movie_list.likes = [Like(**like.__dict__) for like in db_movie_list.likes]
+
     return movie_list
 
 
