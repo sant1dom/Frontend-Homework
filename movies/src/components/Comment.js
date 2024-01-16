@@ -10,7 +10,7 @@ const Comment = ({ content }) => {
         const fetchAuthor = async () => {
             api.get('/users/' + content.user_id).then((response) => {
                 setAuthor(response.data.email);
-                setAvatar(response.data.image);
+                setAvatar(process.env.REACT_APP_BASE_URL + "/" + response.data.image);
             });
         };
         fetchAuthor();
