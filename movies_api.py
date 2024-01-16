@@ -289,16 +289,23 @@ async def get_most_liked_lists(db: Session = Depends(get_db)):
         DBLike.movie_list_id).order_by(func.count(DBLike.movie_list_id).desc()).all()
     most_liked_lists = [movie_list[0] for movie_list in most_liked_lists]
     most_liked_lists = db.query(DBMovieList).filter(DBMovieList.id.in_(most_liked_lists)).all()
-    most_liked_lists = [MovieList(**movie_list.__dict__) for movie_list in most_liked_lists]
+    most_liked_movie_lists = [MovieList(**movie_list.__dict__) for movie_list in most_liked_lists]
+    for lista in most_liked_movie_lists:
+        lista.movies = [Movie(**movie.__dict__) for movie in most_liked_lists.movies]
+        lista.comments = [Comment(**comment.__dict__) for comment in most_liked_lists.comments]
+        lista.likes = [Like(**like.__dict__) for like in most_liked_lists.likes]
     return most_liked_lists
 
 @app.get("/bestlists/{movie_list_id}")
 async def get_list_by_id(movie_list_id: int, db: Session = Depends(get_db)):
-    db_movie_list = db.query(DBMovieList).filter(
-        and_(DBMovieList.id == movie_list_id)).first()
+    db_movie_list = db.query(DBMovieList).filter((DBMovieList.id == movie_list_id)).first()
     if db_movie_list is None:
         raise HTTPException(status_code=404, detail="Movie list not found")
     movie_list = MovieList(**db_movie_list.__dict__)
+    movie_list.movies = [Movie(**movie.__dict__) for movie in db_movie_list.movies]
+    movie_list.comments = [Comment(**comment.__dict__) for comment in db_movie_list.comments]
+    movie_list.likes = [Like(**like.__dict__) for like in db_movie_list.likes]
+
     return movie_list
 
 @app.post("/like/{movie_list_id}")
