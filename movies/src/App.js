@@ -81,14 +81,22 @@ function App() {
                 console.log(error);
             });
         }
-        const expiration = Cookies.get("expiration");
-        const refreshTime = 5 * 60 * 1000;
-        if (expiration && new Date(expiration) < (new Date().getTime() + refreshTime)) {
-            console.log("Refreshing token");
-            refresh(token);
-        }
         setLoading(false);
     }, [authState.isAuth, dispatch]);
+
+    // Refresh token every 5 minutes
+    useEffect(() => {
+        const token = Cookies.get("access-token");
+        if (token) {
+            const expiration = new Date(Cookies.get("expiration"));
+            if (expiration.getTime() - new Date().getTime() < 5 * 60 * 1000) {
+                refresh(token);
+            }
+            setInterval(() => {
+                refresh(token);
+            }, 5 * 60 * 1000);
+        }
+    }, []);
 
     return (
         <BrowserRouter>

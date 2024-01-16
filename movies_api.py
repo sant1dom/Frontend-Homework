@@ -12,6 +12,7 @@ from slowapi.util import get_remote_address
 from sqlalchemy import and_, func
 from sqlalchemy.orm import Session
 from starlette.requests import Request
+from starlette.staticfiles import StaticFiles
 
 from LogConfig import LogConfig
 from database import Base, engine, fill_db, get_db, DBMovie, DBMovieList, DBLike, DBComment, DBUser
@@ -50,6 +51,7 @@ app.add_middleware(
 app.include_router(auth.router)
 app.include_router(lists.router)
 app.include_router(comments.router)
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 
 @app.middleware("http")
