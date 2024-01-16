@@ -311,7 +311,7 @@ async def unlike_movie_list(movie_list_id: int, user: user_dependency, db: Sessi
 
 @app.post("/comment/{movie_list_id}")
 async def comment_movie_list(movie_list_id: int, comment: str, user: user_dependency, db: Session = Depends(get_db)):
-    db_comment = DBComment(movie_list_id=movie_list_id, user_id=user["id"], comment=comment)
+    db_comment = DBComment(movie_list_id=movie_list_id, user_id=user["id"], comment=comment, created_at=time.time(), updated_at=time.time())
     db.add(db_comment)
     db.commit()
     db.refresh(db_comment)
