@@ -11,8 +11,8 @@ from passlib.context import CryptContext
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from starlette.responses import Response
 
-from database import db_dependency, DBUser
-from models import UserCreate, User, Token, UserReturn
+from database import db_dependency, DBUser, DBMovieList
+from models import UserCreate, User, Token, UserReturn, MovieList
 
 router = APIRouter(
     prefix="/auth",
@@ -56,18 +56,21 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_bearer)]):
         raise HTTPException(status_code=401, detail="Invalid credentials")
 
 
-@router.post("/register", status_code=201, response_model=UserReturn)
+@router.post("/register", status_code=201)
 async def create_user(user: UserCreate, db: db_dependency):
     db_user = DBUser(email=user.email, hashed_password=user.password, is_active=True, is_superuser=False,
                      profile_image="/static/profile_images/base_avatar.jpg")
     db_user.hashed_password = bcrypt_context.hash(db_user.hashed_password)
+    db_user.movie_lists = []
+    db_user.movie_lists.append(DBMovieList(name="Watchlist", user=db_user, movies=[], comments=[], likes=[]))
+    db_user.movie_lists.append(DBMovieList(name="Favourites", user=db_user, movies=[], comments=[], likes=[]))
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
     token = create_access_token(db_user.id, db_user.email, db_user.is_superuser, db_user.profile_image,
                                 timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES))
     return {"id": db_user.id, "email": db_user.email, "is_superuser": db_user.is_superuser, "access_token": token,
-            "profile_image": db_user.profile_image, "expiration": ACCESS_TOKEN_EXPIRE_MINUTES}
+            "profile_image": db_user.profile_image, "expiration": ACCESS_TOKEN_EXPIRE_MINUTES, "is_active": True}
 
 
 @router.post("/login")
