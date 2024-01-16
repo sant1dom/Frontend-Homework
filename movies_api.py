@@ -290,6 +290,14 @@ async def get_most_liked_lists(db: Session = Depends(get_db)):
     most_liked_lists = [MovieList(**movie_list.__dict__) for movie_list in most_liked_lists]
     return most_liked_lists
 
+@app.get("/bestlists/{movie_list_id}")
+async def get_list_by_id(movie_list_id: int, db: Session = Depends(get_db)):
+    db_movie_list = db.query(DBMovieList).filter(
+        and_(DBMovieList.id == movie_list_id)).first()
+    if db_movie_list is None:
+        raise HTTPException(status_code=404, detail="Movie list not found")
+    movie_list = MovieList(**db_movie_list.__dict__)
+    return movie_list
 
 @app.post("/like/{movie_list_id}")
 async def like_movie_list(movie_list_id: int, user: user_dependency, db: Session = Depends(get_db)):

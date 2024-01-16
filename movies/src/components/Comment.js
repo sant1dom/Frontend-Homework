@@ -1,5 +1,6 @@
 import { useEffect, useState, Fragment } from 'react';
 import api from "../utils/api";
+import parse from "html-react-parser";
 
 const Comment = ({ content }) => {
     const [author, setAuthor] = useState('');
@@ -33,7 +34,7 @@ const Comment = ({ content }) => {
                                 <span className="ml-2 text-xs font-normal text-gray-500">{daysPeriod} days ago</span>
                             </div>
                             <div className="flex-1 px-2 ml-2 text-sm font-medium leading-loose text-gray-600">
-                                {content.comment}
+                                {parse(content.comment)}
                             </div>
                         </div>
                     </div>

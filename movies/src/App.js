@@ -103,8 +103,9 @@ function App() {
                             {authState.isAuth && <>
                                 <Route path="/mylists" element={<MyLists/>}/>
                                 <Route path="/profile" element={<Profile/>}/>
-                                <Route path="/mylists/:id" element={<SingleList/>}/>
+                                <Route path="/mylists/:id" element={<SingleList url='/mylists/'/>}/>
                                 <Route path="/bestlists" element={<BestLists/>}/>
+                                <Route path="/bestlists/:id" element={<SingleList url='/bestlists/'/>}/>
                                 {authState.is_superuser && <>
                                     <Route path="/admin/movies" element={<AdminSearchMovie/>}/>
                                     <Route path="/admin/movie/create" element={<AdminUpdateMovie/>}/>

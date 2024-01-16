@@ -6,18 +6,22 @@ import Filter from '../components/Filter';
 import LoadingCardSkeleton from '../components/LoadingCardSkeleton';
 import Comment from '../components/Comment';
 import EditorComment from "../components/EditorComment";
+import CommentList from '../components/CommentList';
+import Cookies from 'js-cookie';
+import PropTypes from 'prop-types';
 
 const OMDB_API_KEY = process.env.REACT_APP_OMDB_API_KEY;
 
-const SingleList = () => {
+const SingleList = ({url}) => {
     const { id } = useParams();
     const [movies, setMovies] = useState([]);
-    const [comments, setComments] = useState([]);
     const [selectedGenre, setSelectedGenre] = useState('');
     const [selectedLanguage, setSelectedLanguage] = useState('');
     const [startYear, setStartYear] = useState('');
     const [endYear, setEndYear] = useState('');
     const [loading, setLoading] = useState(true);
+    const token = Cookies.get("access-token");
+    const [refresh, setRefresh] = useState(0)
 
     // Array of unique genres and languages based on fetched movies
     const genres = [...new Set(movies.map((movie) => movie.data.genre))];
@@ -65,11 +69,24 @@ const SingleList = () => {
         return res;
     }
 
+    const fetchMoviesDB = async () => {
+        let res = []
+        if(token){
+            res = await api.get(url + id, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                    }
+                });
+        }
+        console.log("DBMovies: ", res);
+    }
+
     useEffect(() => {
         const fetchData = async () => {
             try {
                 // const movies = fetchMovies(listname);
-                const items = await Promise.all(movies);
+                const DBMovies = fetchMoviesDB();
+                const items = await Promise.all(DBMovies);
                 const moviesWithPosters = await Promise.all(items.map(async (movie) => {
                     movie.poster = await fetchMoviePoster(movie.data.imdb_url.split('/')[4]);
                     return movie;
@@ -83,16 +100,19 @@ const SingleList = () => {
         fetchData();
     }, []);
 
-    useEffect(() => {
-        const fetchComments = async () => {
-            console.log("ID: ", id)
-            api.get('/comments/' + id).then((response) => {
-                setComments(response.data);
-                console.log("response: ", response.data)
-            });
-        };
-        fetchComments();
-    }, []);
+    
+    const handleCommentSubmit = async (comment) => {
+        if (token) {
+            api.post('/comment/' + id, null, 
+                {
+                    params: { comment },
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                    }
+                });
+        }
+        setRefresh(Math.random());
+    }
 
     return(
         <div className="mx-auto">
@@ -130,16 +150,17 @@ const SingleList = () => {
             </div>
 
             <h1 className="mt-5 mb-5 text-2xl">Comments section</h1>
-            {comments.map((element) => (
-                <Comment content={element}/>
-            ))}
+            <CommentList id={id} refresh={refresh} />
+
             <h1 className="mt-5 mb-5 text-2xl">Add a comment</h1>
-            <div className="container px-0 mx-auto sm:px-5 mb-5">
-                <EditorComment/>
+            <div className="container px-0 mx-auto sm:px-5 mb-5 w-1/2">
+                <EditorComment onSubmit={handleCommentSubmit}/>
             </div>
 
         </div>
     );
 }
+
+SingleList.propTypes = {url: PropTypes.string.isRequired}
 
 export default SingleList;

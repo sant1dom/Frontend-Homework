@@ -84,7 +84,7 @@ const Home = () => {
             <h1 className="mt-5 mb-5 text-4xl">Trending Films</h1>
             <div className="mx-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8 mb-5">
                 {loading ? (
-                    Array.from({ length: 6 }).map((_) => (
+                    Array.from({ length: 5 }).map((_) => (
                         <LoadingCardSkeleton />
                     ))
                 ) : (
