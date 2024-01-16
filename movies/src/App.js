@@ -71,7 +71,7 @@ function App() {
                 const data = response.data;
                 dispatch(login({
                     token: token,
-                    userId: data.userId,
+                    userId: data.id,
                     email: data.email,
                     photo: data.profile_image,
                     isAuth: true,

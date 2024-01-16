@@ -35,6 +35,8 @@ const Card = ({type, classes, img, text, element}) => {
     const authState = useSelector((state) => state.auth);
     const [isDeleted, setIsDeleted] = useState(false);
     const token = Cookies.get("access-token");
+    const [author, setAuthor] = useState('');
+    const [avatar, setAvatar] = useState('');
 
 
     // useEffect(() => {
@@ -43,6 +45,18 @@ const Card = ({type, classes, img, text, element}) => {
     //         document.removeEventListener("keydown", handleEscape, false);
     //     };
     // }, [handleEscape])
+
+    useEffect(() => {
+        if(type==='best-lists'){
+            const fetchAuthor = async () => {
+                api.get('/users/' + element.user_id).then((response) => {
+                    setAuthor(response.data.email);
+                    setAvatar(process.env.REACT_APP_BASE_URL + "/" + response.data.image);
+                });
+            };
+            fetchAuthor();
+        }
+    }, []);
 
     useEffect( () => {
         if (token && type === 'list') {
@@ -371,16 +385,20 @@ const Card = ({type, classes, img, text, element}) => {
                                 </div>
                             </div>
                         ) : type === 'best-lists' ? (
-                            <div className="p-2">
+                            <div className="pb-2">
                                 <div className="flex flex-col items-center">
+                                    <div className="flex pb-2">
+                                        <img className="object-cover w-8 h-8 border-2 border-gray-300 rounded-full mr-1" src={avatar}/>
+                                        <span className=''>{author}</span>
+                                    </div>
                                     <div className="flex space-x-4">
                                         <div className="flex items-center space-x-1">
                                             <BiLike size={21}/>
-                                            <span className=''>18</span>
+                                            <span className=''>{element.likes.length}</span>
                                         </div>
                                         <div className="flex items-center space-x-1">
                                             <FaRegComment size={21}/>
-                                            <span>18</span>
+                                            <span>{element.comments.length}</span>
                                         </div>
                                     </div>
                                 </div>
