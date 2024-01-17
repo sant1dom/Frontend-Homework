@@ -27,6 +27,7 @@ const EditorComment = ({ onSubmit }) => {
 
     return (
         <>
+            <div className="shadow-2xl">
             <Editor
                 tinymceScriptSrc={process.env.PUBLIC_URL + '/tinymce/tinymce.min.js'}
                 onInit={(evt, editor) => editorRef.current = editor}
@@ -49,6 +50,7 @@ const EditorComment = ({ onSubmit }) => {
                 onEditorChange={handleEditorChange}
                 value={comment}
             />
+            </div>
             <br />
             <Button onClick={handleSubmit} label={'Add Comment'} rounded={true} />
         </>

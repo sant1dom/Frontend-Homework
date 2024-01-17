@@ -59,7 +59,7 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_bearer)]):
 @router.post("/register", status_code=201)
 async def create_user(user: UserCreate, db: db_dependency):
     db_user = DBUser(email=user.email, hashed_password=user.password, is_active=True, is_superuser=False,
-                     profile_image="/static/profile_images/base_avatar.jpg")
+                     profile_image="static/profile_images/base_avatar.jpg")
     db_user.hashed_password = bcrypt_context.hash(db_user.hashed_password)
     db_user.movie_lists = []
     db_user.movie_lists.append(DBMovieList(name="Watchlist", user=db_user, movies=[], comments=[], likes=[]))

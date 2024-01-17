@@ -1,4 +1,4 @@
-import { useEffect, useState, Fragment } from 'react';
+import { useEffect, useState } from 'react';
 import api from "../utils/api";
 import parse from "html-react-parser";
 
@@ -24,7 +24,7 @@ const Comment = ({ content }) => {
     return(
         <>
             <div className="container px-0 mx-auto sm:px-5 mb-5 w-2/3">
-                <div className="flex-col w-full py-4 mx-auto bg-white border-b-2 border-r-2 border-gray-200 sm:px-4 sm:py-4 md:px-4 sm:rounded-lg sm:shadow-sm md:w-2/3">
+                <div className="flex-col w-full py-4 mx-auto bg-white border-b-2 border-r-2 border-gray-200 sm:px-4 sm:py-4 md:px-4 sm:rounded-lg md:w-2/3 shadow-2xl">
                     <div className="flex flex-row">
                         <img className="object-cover w-12 h-12 border-2 border-gray-300 rounded-full"
                             src={avatar}/>

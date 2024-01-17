@@ -10,8 +10,8 @@ import CommentList from '../components/CommentList';
 import Cookies from 'js-cookie';
 import PropTypes from 'prop-types';
 import { BiLike, BiSolidLike } from "react-icons/bi";
-import {FaRegComment} from "react-icons/fa"
 import Button from '../components/Button';
+import Card from '../components/Card';
 
 const OMDB_API_KEY = process.env.REACT_APP_OMDB_API_KEY;
 
@@ -33,13 +33,11 @@ const SingleList = ({url}) => {
     const [endYear, setEndYear] = useState('');
     const [loading, setLoading] = useState(true);
     const token = Cookies.get("access-token");
-    const [refresh, setRefresh] = useState(0)
+    const [refresh, setRefresh] = useState(true)
     const [listName, setListName] = useState('')
     const [likes, setLikes] = useState([])
-    const [comments, setComments] = useState([])
     const [isLiked, setIsLiked] = useState(false)
 
-    // Array of unique genres and languages based on fetched movies
     const genres = [...new Set(movies.map((movie) => movie.genre))];
     const languages = [...new Set(movies.map((movie) => movie.language))];
 
@@ -80,10 +78,8 @@ const SingleList = ({url}) => {
             }
             setListName(res.data.name);
             setLikes(res.data.likes);
-            setComments(res.data.comments);
         }
         fetchMoviesDB();
-        console.log("state: ", isLiked)
     }, []);
 
     useEffect(() => {
@@ -99,8 +95,33 @@ const SingleList = ({url}) => {
                         'Authorization': `Bearer ${token}`,
                     }
                 });
+            setRefresh(!refresh);
         }
-        setRefresh(Math.random());
+        
+    }
+
+    const handleLike = async () => {
+        if (token) {
+            if(!isLiked){
+                api.post('/like/' + id, null, 
+                    {
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                        }
+                    });
+                setIsLiked(true)
+                likes.push(Object);
+            }else{
+                api.delete('/like/' + id, 
+                    {
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                        }
+                    });
+                setIsLiked(false)
+                likes.pop(Object);
+            }
+        }
     }
 
     return(
@@ -109,7 +130,7 @@ const SingleList = ({url}) => {
 
             <div className="flex space-x-4 justify-center items-center">
                 <div className="flex items-center space-x-1">
-                    <Button label={isLiked ? <BiSolidLike size={32} className='mr-1'/> : <BiLike size={32} className='mr-1'/>} variant='nobg' classes={"hover:shadow-none"}/>
+                    <Button label={isLiked ? <BiSolidLike size={32} className='mr-1'/> : <BiLike size={32} className='mr-1'/>} variant='nobg' classes={"hover:shadow-none"}  onClick={handleLike}/>
                     {likes.length}
                 </div>
             </div>
@@ -123,27 +144,28 @@ const SingleList = ({url}) => {
             onEndYearChange={setEndYear}
             />
 
-            <div className="mx-8 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-8 mb-5">
+            <div className={`${loading ? 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6' : (filteredMovies.length === 0 ? 'flex justify-center items-center' : 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6')} mx-8 gap-8 mb-5`}>
                 {loading ? (cardLoading()) : (
-                    
-                    filteredMovies.map((movie) => (
-                    <div key={movie.id} className="rounded-lg bg-sky-100 shadow-2xl">
-                        <Link to={`/movie/${movie.id}`} className="block">
-                            <div className="relative rounded-t-lg pb-80">
-                                <img className="absolute inset-0 w-full h-full object-cover rounded-t-lg" src={movie.poster} alt="Film" />
-                            </div>
-                        </Link>
-                        <div className="p-4">
-                            <Link to={`/movie/${movie.id}`} className="block">
-                                <h2 className="text-xl mb-2 overflow-hidden whitespace-nowrap overflow-ellipsis">{movie.title}</h2>
-                            </Link>
-                            <p className="text-base">{movie.release_year}</p>
+                    filteredMovies.length === 0 ? (
+                        <div className="rounded-lg bg-sky-100 shadow-2xl p-4 text-center">
+                          <p>No films with these filters.</p>
                         </div>
-                    </div>
-                    ))
-
-                    )
-                }
+                    ):(
+                    filteredMovies.map((movie) => (
+                        <Card key={movie.id}
+                        classes={" flex flex-col justify-between hover:shadow-2xl transition duration-300 ease-in-out hover:scale-105 cursor-pointer"}
+                        type={'movie'}
+                        img={<Link to={`/movie/${movie.id}`} className="block">
+                            <img className="w-full h-80 object-cover rounded-t-lg -z-20" src={movie.poster} alt="Film" />
+                        </Link>}
+                        text={<div>
+                            <Link to={`/movie/${movie.id}`} className="block">
+                                <h2 className="px-4 py-2 text-xl mb-2 overflow-hidden whitespace-nowrap overflow-ellipsis">{movie.title}</h2>
+                            </Link>
+                            <p className="text-base">{movie.release_year}</p></div>}
+                        element={movie} />
+                    )))
+                )}
             </div>
 
             <h1 className="mt-5 mb-5 text-2xl">Comments section</h1>

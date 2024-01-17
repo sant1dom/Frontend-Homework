@@ -379,6 +379,38 @@
     {
       "name": "Best Action Movies",
       "user_id": 2
+    },
+    {
+      "name": "Favourites",
+      "user_id": 1
+    },
+    {
+      "name": "Watchlist",
+      "user_id": 1
+    },
+    {
+      "name": "Favourites",
+      "user_id": 2
+    },
+    {
+      "name": "Watchlist",
+      "user_id": 2
+    },
+    {
+      "name": "Favourites",
+      "user_id": 3
+    },
+    {
+      "name": "Watchlist",
+      "user_id": 3
+    },
+    {
+      "name": "Favourites",
+      "user_id": 4
+    },
+    {
+      "name": "Watchlist",
+      "user_id": 4
     }
   ],
   "movies_movies_lists": [

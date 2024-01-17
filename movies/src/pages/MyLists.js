@@ -100,7 +100,7 @@ const MyLists = () => {
 
     return (
         <div className="mx-auto">
-            <h1 className="mt-5 mb-5 text-4xl">Trending Films</h1>
+            <h1 className="mt-5 mb-5 text-4xl">My Lists</h1>
             <div className="mx-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8 mb-5">
 
                 {DBLists.map((list) => (

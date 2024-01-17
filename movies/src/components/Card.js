@@ -19,9 +19,9 @@ const Card = ({type, classes, img, text, element}) => {
 
     const [movies, setMovies] = useState([]);
     const [collageMovies, setCollageMovies] = useState([]);
-    const [favourites, setFavourites] = useState([]);
+    // const [favourites, setFavourites] = useState([]);
     const [isFavourite, setIsFavourite] = useState(false);
-    const [watchlist, setWatchlist] = useState([]);
+    // const [watchlist, setWatchlist] = useState([]);
     const [isWatchlist, setIsWatchlist] = useState(false);
     const [showDropdown, setShowDropdown] = useState(false);
     const [userLists, setUserLists] = useState([]);
@@ -37,6 +37,7 @@ const Card = ({type, classes, img, text, element}) => {
     const token = Cookies.get("access-token");
     const [author, setAuthor] = useState('');
     const [avatar, setAvatar] = useState('');
+    const [lists, ] = useState([]);
 
 
     // useEffect(() => {
@@ -60,41 +61,21 @@ const Card = ({type, classes, img, text, element}) => {
 
     useEffect( () => {
         if (token && type === 'list') {
-            // api.get(`/mylists/${element.id}`,
-            //     {
-            //         headers: {
-            //             'Authorization': `Bearer ${token}`,
-            //         }
-            //     }).then((response) => {
-            //         setMovies(response.data.movies.slice(0, 4)); // Prendi i primi 4 film
-            //         console.log(movies)
-            //     }
-            // )
-            // api.get("/movies",
-            //     {
-            //         headers: {
-            //             'Authorization': `Bearer ${token}`,
-            //         }
-            //     }).then((response) => {
-            //         setMovies(response.data.slice(0, 4)); // Prendi i primi 4 film
-            //         console.log(movies)
-            //     }
-            // )
             const fetchData = async () => {
-                // api.get(`/mylists/${element.id}`,
-                //         {
-                //             headers: {
-                //                 'Authorization': `Bearer ${token}`,
-                //             }
-                //         }).then((response) => {
-                //             setMovies(response.data.movies.slice(0, 4)); // Prendi i primi 4 film
-                //             console.log(movies)
-                //         }
-                //     )
-                const res = await api.get("/movies");
-                console.log(res);
-                console.log(res.data);
-                const moviesWithPosters = await Promise.all(res.data.map(async (movie) => {
+                api.get(`/mylists/${element.id}`,
+                        {
+                            headers: {
+                                'Authorization': `Bearer ${token}`,
+                            }
+                        }).then((response) => {
+                            setMovies(response.data.movies.slice(0, 4)); // Prendi i primi 4 film
+                            console.log(movies)
+                        }
+                    )
+                // const res = await api.get("/movies");
+                // console.log(res);
+                // console.log(res.data);
+                const moviesWithPosters = await Promise.all(movies.map(async (movie) => {
                     movie.poster = await fetchMoviePoster(movie.imdb_url.split('/')[4]);
                     return movie;
                 }));
@@ -110,11 +91,11 @@ const Card = ({type, classes, img, text, element}) => {
         return response.data.Poster;
     };
 
-    const fetchUserLists = async (movie) => {
-        const token = Cookies.get("access-token");
+    const fetchUserLists = async (movie_id) => {
         if (token) {
             try {
-                const response = await api.get("/mylists", {
+                const response = await api.post("/get_not_lists_for_movie/", null,{
+                    params: {movie_id},
                     headers: {
                         'Authorization': `Bearer ${token}`,
                     }
@@ -128,36 +109,9 @@ const Card = ({type, classes, img, text, element}) => {
         return [];
     }
 
-    const handleFavourites = (id) => {
+    const toggleDropdown = async (movie_id) => {
 
-        const index = favourites.indexOf(id);
-        if (index === -1) {
-            favourites.push(id);
-        } else {
-            favourites.splice(index, 1);
-        }
-
-        localStorage.setItem("favourites", JSON.stringify(favourites));
-
-        setIsFavourite(!isFavourite);
-    };
-    const handleWatchlist = (id) => {
-
-        const index = watchlist.indexOf(id);
-        if (index === -1) {
-            watchlist.push(id);
-        } else {
-            watchlist.splice(index, 1);
-        }
-
-        localStorage.setItem("watchlist", JSON.stringify(watchlist));
-
-        setIsWatchlist(!isWatchlist);
-    };
-
-    const toggleDropdown = async (movie) => {
-
-        const userLists = await fetchUserLists(movie);
+        const userLists = await fetchUserLists(movie_id);
         setUserLists(userLists);
 
         setShowDropdown(!showDropdown);
@@ -193,6 +147,7 @@ const Card = ({type, classes, img, text, element}) => {
                 console.log('Film salvato nella lista con successo:', response.data);
 
                 setSelectedList(list); // Aggiorna lo stato con la lista selezionata
+                setShowDropdown(false);
 
             } catch (error) {
                 // Gestisci gli errori qui
@@ -322,7 +277,7 @@ const Card = ({type, classes, img, text, element}) => {
     return (
         <div>
             {!isDeleted && (
-                <div key={element.id} className={color + classes + " min-w-[200px]"}>
+                <div key={element.id} className={color + classes}>
                     {img}
                     {initialState ? <div>{text}</div> : <h2
                         className="text-xl mb-2 overflow-hidden whitespace-nowrap overflow-ellipsis">{cardTitle}</h2>}
@@ -331,11 +286,8 @@ const Card = ({type, classes, img, text, element}) => {
                         type === 'movie' ? (
                             <div className="p-4">
                                 <div className="mt-2 flex flex-col items-center">
-                                    <div className="flex space-x-2">
-                                        <Button label={isFavourite ? <IoMdHeart /> : <IoMdHeartEmpty />} rounded={true} onClick={() => handleFavourites(element.id)}/>
-                                        <Button label={isWatchlist ?  <GoClockFill /> : <FiClock />} rounded={true} onClick={() => handleWatchlist(element.id)}/>
                                         <div className="group inline-block relative">
-                                            <Button label={<FaPlus />} rounded={true} onClick={() => toggleDropdown(element)} />
+                                            <Button label={<FaPlus />} rounded={true} onClick={() => toggleDropdown(element.id)} />
                                             {showDropdown && (
                                                 <div className="absolute left-0 bottom-[112%] w-36 bg-white border rounded-lg shadow-lg">
                                                     <ul className="p-2">
@@ -358,7 +310,6 @@ const Card = ({type, classes, img, text, element}) => {
                                                 </div>
                                             )}
                                         </div>
-                                    </div>
                                 </div>
                             </div>
                         ) : type === 'list' ? (
