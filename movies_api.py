@@ -9,7 +9,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from slowapi import Limiter
 from slowapi.errors import RateLimitExceeded
 from slowapi.util import get_remote_address
-from sqlalchemy import and_, func
+from sqlalchemy import and_, func, not_
 from sqlalchemy.orm import Session
 from starlette.requests import Request
 from starlette.staticfiles import StaticFiles
@@ -389,6 +389,32 @@ async def get_lists_for_movie(movie_id: int, user: user_dependency, db: Session 
         db.query(DBMovieList)
         .filter(DBMovieList.user_id == user_id)
         .filter(DBMovieList.movies.any(id=movie_id))
+        .options(joinedload(DBMovieList.movies), joinedload(DBMovieList.comments), joinedload(DBMovieList.likes))
+        .all()
+    )
+
+    return_list = [
+        MovieList(
+            id=movie_list.id,
+            name=movie_list.name,
+            user_id=movie_list.user_id,
+            movies=[Movie(**movie.__dict__) for movie in movie_list.movies],
+            comments=[Comment(**comment.__dict__) for comment in movie_list.comments],
+            likes=[Like(**like.__dict__) for like in movie_list.likes],
+        )
+        for movie_list in movie_lists
+    ]
+
+    return return_list
+
+@app.post("/get_not_lists_for_movie")
+async def get_not_lists_for_movie(movie_id: int, user: user_dependency, db: Session = Depends(get_db)):
+    user_id = user["id"]
+
+    movie_lists = (
+        db.query(DBMovieList)
+        .filter(DBMovieList.user_id == user_id)
+        .filter(DBMovieList.movies.any(movie_id))
         .options(joinedload(DBMovieList.movies), joinedload(DBMovieList.comments), joinedload(DBMovieList.likes))
         .all()
     )
