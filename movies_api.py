@@ -414,7 +414,7 @@ async def get_not_lists_for_movie(movie_id: int, user: user_dependency, db: Sess
     movie_lists = (
         db.query(DBMovieList)
         .filter(DBMovieList.user_id == user_id)
-        .filter(DBMovieList.movies.any(movie_id))
+        .filter(not_(DBMovieList.movies.any(id=movie_id)))
         .options(joinedload(DBMovieList.movies), joinedload(DBMovieList.comments), joinedload(DBMovieList.likes))
         .all()
     )
