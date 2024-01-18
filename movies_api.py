@@ -292,13 +292,15 @@ async def get_most_liked_lists(db: Session = Depends(get_db)):
     most_liked_movie_lists = [MovieList(**movie_list.__dict__) for movie_list in most_liked_lists]
     for lista in most_liked_movie_lists:
         lista.movies = [Movie(**movie.__dict__) for movie_list in most_liked_lists for movie in movie_list.movies]
-        lista.comments = [Comment(**comment.__dict__) for comment_list in most_liked_lists for comment in comment_list.comments]
-        lista.likes = [Like(**like.__dict__) for like_list in most_liked_lists for like in like_list.likes ]
+        lista.comments = [Comment(**comment.__dict__) for comment_list in most_liked_lists for comment in
+                          comment_list.comments]
+        lista.likes = [Like(**like.__dict__) for like_list in most_liked_lists for like in like_list.likes]
     return most_liked_lists
+
 
 @app.get("/bestlists/{movie_list_id}")
 async def get_list_by_id(movie_list_id: int, db: Session = Depends(get_db)):
-    db_movie_list = db.query(DBMovieList).filter((DBMovieList.id == movie_list_id)).first()
+    db_movie_list = db.query(DBMovieList).filter(DBMovieList.id == movie_list_id).filter(DBMovieList.private == False).first()
     if db_movie_list is None:
         raise HTTPException(status_code=404, detail="Movie list not found")
     movie_list = MovieList(**db_movie_list.__dict__)
@@ -308,13 +310,18 @@ async def get_list_by_id(movie_list_id: int, db: Session = Depends(get_db)):
 
     return movie_list
 
+
 @app.post("/like/{movie_list_id}")
 async def like_movie_list(movie_list_id: int, user: user_dependency, db: Session = Depends(get_db)):
-    db_like = DBLike(movie_list_id=movie_list_id, user_id=user["id"])
-    db.add(db_like)
-    db.commit()
-    db.refresh(db_like)
-    return {"message": "Movie list liked successfully"}
+    # Check if the user has already liked the movie list
+    db_like = db.query(DBLike).filter(and_(DBLike.movie_list_id == movie_list_id, DBLike.user_id == user["id"])).first()
+    if db_like is None:
+        db_like = DBLike(movie_list_id=movie_list_id, user_id=user["id"])
+        db.add(db_like)
+        db.commit()
+        db.refresh(db_like)
+        return {"message": "Movie list liked successfully"}
+    raise HTTPException(status_code=400, detail="You have already liked this movie list")
 
 
 @app.delete("/like/{movie_list_id}")
@@ -406,6 +413,7 @@ async def get_lists_for_movie(movie_id: int, user: user_dependency, db: Session 
     ]
 
     return return_list
+
 
 @app.post("/get_not_lists_for_movie")
 async def get_not_lists_for_movie(movie_id: int, user: user_dependency, db: Session = Depends(get_db)):

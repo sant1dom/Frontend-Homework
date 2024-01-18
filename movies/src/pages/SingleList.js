@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import {useEffect, useState} from 'react';
+import {Link, useNavigate, useParams} from 'react-router-dom';
 import {useSelector} from "react-redux";
 import api from "../utils/api";
 import axios from 'axios';
@@ -9,23 +9,23 @@ import EditorComment from "../components/EditorComment";
 import CommentList from '../components/CommentList';
 import Cookies from 'js-cookie';
 import PropTypes from 'prop-types';
-import { BiLike, BiSolidLike } from "react-icons/bi";
+import {BiLike, BiSolidLike} from "react-icons/bi";
 import Button from '../components/Button';
 import Card from '../components/Card';
 
 const OMDB_API_KEY = process.env.REACT_APP_OMDB_API_KEY;
 
-const cardLoading = () =>{ 
-    return(
-        Array.from({ length: 6 }).map((_) => (
-        <LoadingCardSkeleton />
+const cardLoading = () => {
+    return (
+        Array.from({length: 6}).map((_) => (
+            <LoadingCardSkeleton/>
         ))
     )
 }
 
 const SingleList = ({url}) => {
     const authState = useSelector((state) => state.auth);
-    const { id } = useParams();
+    const {id} = useParams();
     const [movies, setMovies] = useState([]);
     const [selectedGenre, setSelectedGenre] = useState('');
     const [selectedLanguage, setSelectedLanguage] = useState('');
@@ -37,6 +37,8 @@ const SingleList = ({url}) => {
     const [listName, setListName] = useState('')
     const [likes, setLikes] = useState([])
     const [isLiked, setIsLiked] = useState(false)
+    const navigate = useNavigate();
+
 
     const genres = [...new Set(movies.map((movie) => movie.genre))];
     const languages = [...new Set(movies.map((movie) => movie.language))];
@@ -46,9 +48,9 @@ const SingleList = ({url}) => {
         const languageCondition = !selectedLanguage || movie.language === selectedLanguage;
         const startYearCondition = !startYear || parseInt(movie.release_year) >= parseInt(startYear);
         const endYearCondition = !endYear || parseInt(movie.release_year) <= parseInt(endYear);
-    
-    return genreCondition && languageCondition && startYearCondition && endYearCondition;
-      });
+
+        return genreCondition && languageCondition && startYearCondition && endYearCondition;
+    });
 
     const fetchMoviePoster = async (IMDBId) => {
         const response = await axios.get(`http://omdbapi.com/?apikey=${OMDB_API_KEY}&i=${IMDBId}`);
@@ -59,12 +61,18 @@ const SingleList = ({url}) => {
     useEffect(() => {
         const fetchMoviesDB = async () => {
             let res = []
-            if(token){
-                res = await api.get(url + id, {
+            if (token) {
+                try {
+                    res = await api.get(url + id, {
                         headers: {
                             'Authorization': `Bearer ${token}`,
                         }
                     });
+                } catch (error) {
+                    console.error(error);
+                    navigate('/404');
+                    return;
+                }
             }
             try {
                 const moviesWithPosters = await Promise.all(res.data.movies.map(async (movie) => {
@@ -72,7 +80,7 @@ const SingleList = ({url}) => {
                     return movie;
                 }));
                 setMovies(moviesWithPosters);
-                setLoading(false);    
+                setLoading(false);
             } catch (error) {
                 console.error(error);
             }
@@ -84,26 +92,26 @@ const SingleList = ({url}) => {
 
     useEffect(() => {
         setIsLiked(likes.some(like => like.user_id === authState.userId));
-    },[likes])
-    
+    }, [likes])
+
     const handleCommentSubmit = async (comment) => {
         if (token) {
-            api.post('/comment/' + id, null, 
+            api.post('/comment/' + id, null,
                 {
-                    params: { comment },
+                    params: {comment},
                     headers: {
                         'Authorization': `Bearer ${token}`,
                     }
                 });
             setRefresh(!refresh);
         }
-        
+
     }
 
     const handleLike = async () => {
         if (token) {
-            if(!isLiked){
-                api.post('/like/' + id, null, 
+            if (!isLiked) {
+                api.post('/like/' + id, null,
                     {
                         headers: {
                             'Authorization': `Bearer ${token}`,
@@ -111,8 +119,8 @@ const SingleList = ({url}) => {
                     });
                 setIsLiked(true)
                 likes.push(Object);
-            }else{
-                api.delete('/like/' + id, 
+            } else {
+                api.delete('/like/' + id,
                     {
                         headers: {
                             'Authorization': `Bearer ${token}`,
@@ -124,52 +132,56 @@ const SingleList = ({url}) => {
         }
     }
 
-    return(
+    return (
         <div className="mx-auto">
             <h1 className="mt-5 mb-5 text-4xl">{listName}</h1>
 
             <div className="flex space-x-4 justify-center items-center">
                 <div className="flex items-center space-x-1">
-                    <Button label={isLiked ? <BiSolidLike size={32} className='mr-1'/> : <BiLike size={32} className='mr-1'/>} variant='nobg' classes={"hover:shadow-none"}  onClick={handleLike}/>
+                    <Button label={isLiked ? <BiSolidLike size={32} className='mr-1'/> :
+                        <BiLike size={32} className='mr-1'/>} variant='nobg' classes={"hover:shadow-none"}
+                            onClick={handleLike}/>
                     {likes.length}
                 </div>
             </div>
 
             <Filter
-            genres={genres}
-            languages={languages}
-            onGenreChange={setSelectedGenre}
-            onLanguageChange={setSelectedLanguage}
-            onStartYearChange={setStartYear}
-            onEndYearChange={setEndYear}
+                genres={genres}
+                languages={languages}
+                onGenreChange={setSelectedGenre}
+                onLanguageChange={setSelectedLanguage}
+                onStartYearChange={setStartYear}
+                onEndYearChange={setEndYear}
             />
 
-            <div className={`${loading ? 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6' : (filteredMovies.length === 0 ? 'flex justify-center items-center' : 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6')} mx-8 gap-8 mb-5`}>
+            <div
+                className={`${loading ? 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6' : (filteredMovies.length === 0 ? 'flex justify-center items-center' : 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6')} mx-8 gap-8 mb-5`}>
                 {loading ? (cardLoading()) : (
                     filteredMovies.length === 0 ? (
                         <div className="rounded-lg bg-sky-100 shadow-2xl p-4 text-center">
-                          <p>No films with these filters.</p>
+                            <p>No films with these filters.</p>
                         </div>
-                    ):(
-                    filteredMovies.map((movie) => (
-                        <Card key={movie.id}
-                        classes={" flex flex-col justify-between hover:shadow-2xl transition duration-300 ease-in-out hover:scale-105 cursor-pointer"}
-                        type={'movie'}
-                        img={<Link to={`/movie/${movie.id}`} className="block">
-                            <img className="w-full h-80 object-cover rounded-t-lg -z-20" src={movie.poster} alt="Film" />
-                        </Link>}
-                        text={<div>
-                            <Link to={`/movie/${movie.id}`} className="block">
-                                <h2 className="px-4 py-2 text-xl mb-2 overflow-hidden whitespace-nowrap overflow-ellipsis">{movie.title}</h2>
-                            </Link>
-                            <p className="text-base">{movie.release_year}</p></div>}
-                        element={movie} />
-                    )))
+                    ) : (
+                        filteredMovies.map((movie) => (
+                            <Card key={movie.id}
+                                  classes={" flex flex-col justify-between hover:shadow-2xl transition duration-300 ease-in-out hover:scale-105 cursor-pointer"}
+                                  type={'movie'}
+                                  img={<Link to={`/movie/${movie.id}`} className="block">
+                                      <img className="w-full h-80 object-cover rounded-t-lg -z-20" src={movie.poster}
+                                           alt="Film"/>
+                                  </Link>}
+                                  text={<div>
+                                      <Link to={`/movie/${movie.id}`} className="block">
+                                          <h2 className="px-4 py-2 text-xl mb-2 overflow-hidden whitespace-nowrap overflow-ellipsis">{movie.title}</h2>
+                                      </Link>
+                                      <p className="text-base">{movie.release_year}</p></div>}
+                                  element={movie}/>
+                        )))
                 )}
             </div>
 
             <h1 className="mt-5 mb-5 text-2xl">Comments section</h1>
-            <CommentList id={id} refresh={refresh} />
+            <CommentList id={id} refresh={refresh}/>
 
             <h1 className="mt-5 mb-5 text-2xl">Add a comment</h1>
             <div className="container px-0 mx-auto sm:px-5 mb-5 w-1/2">

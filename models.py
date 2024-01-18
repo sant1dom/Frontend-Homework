@@ -94,6 +94,7 @@ class MovieList(BaseModel):
     movies: List[Movie] = []
     comments: List[Comment] = []
     likes: List[Like] = []
+    private: bool = False
 
 
 class MovieListCreate(BaseModel):

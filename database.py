@@ -2,7 +2,7 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Annotated, List
 from fastapi import Depends
-from sqlalchemy import create_engine, ForeignKey, String, DateTime, Table, Column, Integer, Boolean
+from sqlalchemy import create_engine, ForeignKey, String, DateTime, Table, Column, Integer, Boolean, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, DeclarativeBase, sessionmaker, Session, relationship
 
 import json
@@ -40,6 +40,7 @@ class DBUser(Base):
 
 class DBLike(Base):
     __tablename__ = "likes"
+    __table_args__ = (UniqueConstraint('user_id', 'movie_list_id', name='unique_user_movie_list'),)
 
     id: Mapped[int] = mapped_column(primary_key=True, index=True)
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
@@ -57,6 +58,7 @@ class DBMovieList(Base):
     movies: Mapped[List[DBMovie]] = relationship(secondary="movie_movie_list", back_populates="movie_lists")
     comments: Mapped[List[DBComment]] = relationship(back_populates="movie_list")
     likes: Mapped[List[DBLike]] = relationship(back_populates="movie_list")
+    private: Mapped[bool] = mapped_column(Boolean, nullable=False)
 
 
 class DBMovie(Base):
@@ -114,6 +116,10 @@ def fill_db():
     # Add movie lists to database
     for movie_list in movies_lists:
         db_movie_list = DBMovieList(**movie_list)
+        if db_movie_list.name == "Watchlist" or db_movie_list.name == "Favourites":
+            db_movie_list.private = True
+        else:
+            db_movie_list.private = False
         db.add(db_movie_list)
 
     try:
