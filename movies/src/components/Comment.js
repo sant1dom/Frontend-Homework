@@ -16,10 +16,25 @@ const Comment = ({ content }) => {
         fetchAuthor();
     }, []);
 
-    const lastDate = new Date(content.updated_at);
-    const currentDate = new Date();
-    const millisecondsPeriod = currentDate - lastDate;
-    const daysPeriod = Math.floor(millisecondsPeriod / (24 * 60 * 60 * 1000));
+    const formatTimeAgo = (updatedAt) => {
+        const lastDate = new Date(updatedAt);
+        const currentDate = new Date();
+        const millisecondsPeriod = currentDate - lastDate;
+        const seconds = Math.floor(millisecondsPeriod / 1000);
+      
+        if (seconds < 60) {
+          return "few seconds ago";
+        } else if (seconds < 3600) {
+          const minutes = Math.floor(seconds / 60);
+          return `${minutes} ${minutes === 1 ? "minute" : "minutes"} ago`;
+        } else if (seconds < 86400) {
+          const hours = Math.floor(seconds / 3600);
+          return `${hours} ${hours === 1 ? "hour" : "hours"} ago`;
+        } else {
+          const days = Math.floor(seconds / 86400);
+          return `${days} ${days === 1 ? "day" : "days"} ago`;
+        }
+      };      
 
     return(
         <>
@@ -31,7 +46,7 @@ const Comment = ({ content }) => {
                         <div className="flex-col mt-1">
                             <div className="flex items-center flex-1 px-4 font-bold leading-tight">
                                 {author}
-                                <span className="ml-2 text-xs font-normal text-gray-500">{daysPeriod} days ago</span>
+                                <span className="ml-2 text-xs font-normal text-gray-500">{formatTimeAgo(content.updated_at)}</span>
                             </div>
                             <div className="flex-1 px-2 ml-2 font-medium leading-loose text-gray-600 text-left">
                                 {parse(content.comment)}

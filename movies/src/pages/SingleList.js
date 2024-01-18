@@ -37,6 +37,7 @@ const SingleList = ({url}) => {
     const [listName, setListName] = useState('')
     const [likes, setLikes] = useState([])
     const [isLiked, setIsLiked] = useState(false)
+    const [isPrivate, setIsPrivate] = useState(false)
     const navigate = useNavigate();
 
 
@@ -86,6 +87,7 @@ const SingleList = ({url}) => {
             }
             setListName(res.data.name);
             setLikes(res.data.likes);
+            setIsPrivate(res.data.private);
         }
         fetchMoviesDB();
     }, []);
@@ -136,14 +138,19 @@ const SingleList = ({url}) => {
         <div className="mx-auto">
             <h1 className="mt-5 mb-5 text-4xl">{listName}</h1>
 
-            <div className="flex space-x-4 justify-center items-center">
-                <div className="flex items-center space-x-1">
-                    <Button label={isLiked ? <BiSolidLike size={32} className='mr-1'/> :
-                        <BiLike size={32} className='mr-1'/>} variant='nobg' classes={"hover:shadow-none"}
-                            onClick={handleLike}/>
-                    {likes.length}
+            { !isPrivate ? (
+                <div className="flex space-x-4 justify-center items-center">
+                    <div className="flex items-center space-x-1">
+                        <Button
+                            label={isLiked ? <BiSolidLike size={32} className='mr-1'/> : <BiLike size={32} className='mr-1'/>}
+                            variant='nobg'
+                            classes={"hover:shadow-none"}
+                            onClick={handleLike}
+                        />
+                        {likes.length}
+                    </div>
                 </div>
-            </div>
+            ) : null }
 
             <Filter
                 genres={genres}
@@ -180,13 +187,17 @@ const SingleList = ({url}) => {
                 )}
             </div>
 
-            <h1 className="mt-5 mb-5 text-2xl">Comments section</h1>
-            <CommentList id={id} refresh={refresh}/>
+            { !isPrivate ? (
+                <>
+                <h1 className="mt-5 mb-5 text-2xl">Comments section</h1>
+                <CommentList id={id} refresh={refresh}/>
 
-            <h1 className="mt-5 mb-5 text-2xl">Add a comment</h1>
-            <div className="container px-0 mx-auto sm:px-5 mb-5 w-1/2">
-                <EditorComment onSubmit={handleCommentSubmit}/>
-            </div>
+                <h1 className="mt-5 mb-5 text-2xl">Add a comment</h1>
+                <div className="container px-0 mx-auto sm:px-5 mb-5 w-1/2">
+                    <EditorComment onSubmit={handleCommentSubmit}/>
+                </div>
+                </>
+            ) : null }
 
         </div>
     );
