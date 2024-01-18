@@ -3,14 +3,14 @@ import PropTypes from 'prop-types';
 import api from "../utils/api";
 import { useEffect, useState } from "react";
 
-const CommentList = ({id, refresh}) => {
+const CommentList = ({id, refresh, onCommentDelete}) => {
     const [comments, setComments] = useState([]);
 
     useEffect(() => {
         const fetchComments = async () => {
-            api.get('/comments/' + id).then((response) => {
-                setComments(response.data);
-            });
+            const response = await api.get('/comments/' + id);
+            const reversedComments = response.data.reverse();
+            setComments(reversedComments);
         };
         fetchComments();
     }, [refresh]);
@@ -25,7 +25,7 @@ const CommentList = ({id, refresh}) => {
 
     return(
         <div className="max-h-[500px] overflow-y-scroll no-scrollbar">
-            {comments.map((comment) => <Comment key={comment.id} content={comment}/>)}
+            {comments.map((comment) => <Comment key={comment.id} content={comment} onCommentDelete={onCommentDelete}/>)}
         </div>
     )
 }

@@ -27,6 +27,7 @@ const BestLists = () => {
             <h1 className="mt-5 mb-5 text-4xl">Best Lists</h1>
             <div className="mx-8 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-8 mb-5">
                 {bestLists.map((list) => (
+                    <div key={Math.random()}>
                         <Card img={<Link to={`/bestlists/${list.id}`} className="block">
                             <div className="relative rounded-t-lg pb-80">
                                 <img className="absolute inset-0 w-full h-full object-cover rounded-t-lg"
@@ -38,6 +39,7 @@ const BestLists = () => {
                                 className="text-xl mb-2 overflow-hidden whitespace-nowrap overflow-ellipsis">{list.name}</h2>
                             }
                             element={list}/>
+                    </div>
                     ))}
             </div>
         </div>

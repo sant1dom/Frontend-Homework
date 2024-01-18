@@ -193,7 +193,7 @@ const Movie = () => {
                     <ul className="list-spacing">
                         <li className="text-left"><strong>Year:</strong> {movie.release_year}</li>
                         <li className="text-left"><strong>Genre:</strong> {movie.genre}</li>
-                        <li className="text-left"><strong>Length:</strong> {movie.movie_length}</li>
+                        <li className="text-left"><strong>Length:</strong> {movie.movie_length} mins</li>
                         <li className="text-left"><strong>Language:</strong> {movie.language}</li>
                         <li className="text-left"><strong><a href={movie.imdb_url} target="_blank" rel="noopener noreferrer" className="text-blue-500">Pagina IMDB</a></strong></li>
                         <li className="text-left mt-3"><strong>Plot</strong></li>

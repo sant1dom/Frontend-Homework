@@ -15,7 +15,7 @@ import {Link} from "react-router-dom";
 
 const OMDB_API_KEY = process.env.REACT_APP_OMDB_API_KEY;
 
-const Card = ({type, classes, img, text, element}) => {
+const Card = ({type, classes, img, text, element, removeMovieFromList}) => {
 
     const [movies, setMovies] = useState([]);
     const [collageMovies, setCollageMovies] = useState([]);
@@ -352,6 +352,34 @@ const Card = ({type, classes, img, text, element}) => {
                                             <span>{element.comments.length}</span>
                                         </div>
                                     </div>
+                                </div>
+                            </div>
+                        ) : type === 'my-movie' ? (
+                            <div className="p-4">
+                                <div className="grid grid-cols-2 gap-5 ml-5 mr-5">
+                                    <Button label={<FaPlus />} rounded={true} onClick={() => toggleDropdown(element.id)} />
+                                    {showDropdown && (
+                                        <div className="absolute left-0 bottom-[112%] w-36 bg-white border rounded-lg shadow-lg">
+                                            <ul className="p-2">
+                                                {userLists.map((list) => (
+                                                    <li
+                                                        key={list.id}
+                                                        className="cursor-pointer py-1 px-2 hover:bg-gray-100"
+                                                        onClick={() => handleSaveToExistingList(list, element.id)}
+                                                    >
+                                                        {list.name}
+                                                    </li>
+                                                ))}
+                                                <li
+                                                    className="cursor-pointer py-1 px-2 hover:bg-gray-100"
+                                                    onClick={openCreateListPopup}
+                                                >
+                                                    <FaPlus className="mr-2 inline" />New List
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    )}
+                                    <Button label={<FaTrash />} rounded={true} variant="cancel" onClick={() => removeMovieFromList(element.id)} />
                                 </div>
                             </div>
                         ) : null

@@ -40,9 +40,10 @@ const SingleList = ({url}) => {
     const [isPrivate, setIsPrivate] = useState(false)
     const navigate = useNavigate();
 
-
     const genres = [...new Set(movies.map((movie) => movie.genre))];
     const languages = [...new Set(movies.map((movie) => movie.language))];
+
+    const cardType = url === "/mylists/" ? "my-movie" : "movie";
 
     const filteredMovies = movies.filter((movie) => {
         const genreCondition = !selectedGenre || movie.genre === selectedGenre;
@@ -98,7 +99,7 @@ const SingleList = ({url}) => {
 
     const handleCommentSubmit = async (comment) => {
         if (token) {
-            api.post('/comment/' + id, null,
+            await api.post('/comment/' + id, null,
                 {
                     params: {comment},
                     headers: {
@@ -133,6 +134,28 @@ const SingleList = ({url}) => {
             }
         }
     }
+
+    const removeMovieFromList = async (movieId) => {
+        if (token) {
+            try {
+                await api.delete(`/mylists/${id}/${movieId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                    },
+                });
+    
+                setMovies((prevMovies) => prevMovies.filter((movie) => movie.id !== movieId));
+            } catch (error) {
+                console.error('Errore nella rimozione del film dalla lista:', error);
+            }
+        }
+    };
+
+    const handleCommentDelete = () => {
+        // Aggiornare lo stato refresh per forzare il render della CommentList
+        setRefresh(!refresh);
+    };
+    
 
     return (
         <div className="mx-auto">
@@ -170,19 +193,22 @@ const SingleList = ({url}) => {
                         </div>
                     ) : (
                         filteredMovies.map((movie) => (
-                            <Card key={movie.id}
-                                  classes={" flex flex-col justify-between hover:shadow-2xl transition duration-300 ease-in-out hover:scale-105 cursor-pointer"}
-                                  type={'movie'}
-                                  img={<Link to={`/movie/${movie.id}`} className="block">
-                                      <img className="w-full h-80 object-cover rounded-t-lg -z-20" src={movie.poster}
-                                           alt="Film"/>
-                                  </Link>}
-                                  text={<div>
-                                      <Link to={`/movie/${movie.id}`} className="block">
-                                          <h2 className="px-4 py-2 text-xl mb-2 overflow-hidden whitespace-nowrap overflow-ellipsis">{movie.title}</h2>
-                                      </Link>
-                                      <p className="text-base">{movie.release_year}</p></div>}
-                                  element={movie}/>
+                            <div key={Math.random()}>
+                                <Card key={movie.id}
+                                    classes={" flex flex-col justify-between hover:shadow-2xl transition duration-300 ease-in-out hover:scale-105 cursor-pointer"}
+                                    type={cardType}
+                                    img={<Link to={`/movie/${movie.id}`} className="block">
+                                        <img className="w-full h-80 object-cover rounded-t-lg -z-20" src={movie.poster}
+                                            alt="Film"/>
+                                    </Link>}
+                                    text={<div>
+                                        <Link to={`/movie/${movie.id}`} className="block">
+                                            <h2 className="px-4 py-2 text-xl mb-2 overflow-hidden whitespace-nowrap overflow-ellipsis">{movie.title}</h2>
+                                        </Link>
+                                        <p className="text-base">{movie.release_year}</p></div>}
+                                    element={movie}
+                                    removeMovieFromList={removeMovieFromList}/>
+                            </div>
                         )))
                 )}
             </div>
@@ -190,7 +216,7 @@ const SingleList = ({url}) => {
             { !isPrivate ? (
                 <>
                 <h1 className="mt-5 mb-5 text-2xl">Comments section</h1>
-                <CommentList id={id} refresh={refresh}/>
+                <CommentList id={id} refresh={refresh} onCommentDelete={handleCommentDelete}/>
 
                 <h1 className="mt-5 mb-5 text-2xl">Add a comment</h1>
                 <div className="container px-0 mx-auto sm:px-5 mb-5 w-1/2">

@@ -1,10 +1,16 @@
 import { useEffect, useState } from 'react';
 import api from "../utils/api";
 import parse from "html-react-parser";
+import Cookies from 'js-cookie';
+import {useSelector} from "react-redux";
+import Button from './Button';
+import {FaTrash} from "react-icons/fa";
 
-const Comment = ({ content }) => {
+const Comment = ({ content, onCommentDelete }) => {
     const [author, setAuthor] = useState('');
     const [avatar, setAvatar] = useState('');
+    const authState = useSelector((state) => state.auth);
+    const token = Cookies.get("access-token");
 
     useEffect(() => {
         const fetchAuthor = async () => {
@@ -36,13 +42,34 @@ const Comment = ({ content }) => {
         }
       };      
 
+      const handleDeleteComment = async () => {
+        if(token){
+            try {
+                await api.delete(`/comment/${content.id}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+                onCommentDelete();
+            } catch (error) {
+                console.error("Error deleting comment:", error);
+            }
+        }
+    };
+
+
     return(
         <>
             <div className="container px-0 mx-auto sm:px-5 mb-5 w-2/3">
-                <div className="flex-col w-full py-4 mx-auto bg-white border-b-2 border-r-2 border-gray-200 sm:px-4 sm:py-4 md:px-4 sm:rounded-lg md:w-2/3 shadow-2xl">
+                <div className="flex-col py-4 bg-white border-b-2 border-r-2 border-gray-200 sm:px-4 sm:py-4 md:px-4 sm:rounded-lg shadow-2xl">
                     <div className="flex flex-row">
-                        <img className="object-cover w-12 h-12 border-2 border-gray-300 rounded-full"
-                            src={avatar}/>
+                        <div>
+                            <img className="object-cover w-12 h-12 border-2 border-gray-300 rounded-full mb-3"
+                                src={avatar} alt="Avatar"/>
+                            {content.user_id === authState.userId ? (
+                                <Button label={<FaTrash/>} variant="cancel" onClick={handleDeleteComment}/>                              
+                            ): null}
+                        </div>
                         <div className="flex-col mt-1">
                             <div className="flex items-center flex-1 px-4 font-bold leading-tight">
                                 {author}
