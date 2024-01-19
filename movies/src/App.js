@@ -28,6 +28,7 @@ function App() {
     const dispatch = useDispatch();
     const authState = useSelector((state) => state.auth);
     const [loading, setLoading] = useState(true);
+    const token = Cookies.get("access-token");
 
     const refresh = (token) => {
         api.post('/auth/refresh_token', {}, {
@@ -36,13 +37,6 @@ function App() {
             }
         }).then((response) => {
             const data = response.data;
-            dispatch(login({
-                token: data.access_token,
-                userId: data.id,
-                email: data.email,
-                photo: data.profile_image,
-                is_superuser: data.is_superuser,
-            }));
             const expiration = new Date(new Date().getTime() + data.expiration * 60 * 1000)
             Cookies.set('access-token',
                 data.access_token,
