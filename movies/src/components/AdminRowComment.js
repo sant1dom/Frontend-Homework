@@ -1,8 +1,6 @@
 import {useDispatch, useSelector} from "react-redux";
-import Button from "./Button";
-import ButtonLink from "./ButtonLink";
-import React from "react";
 import popupStateDeleteComment from "../store/popupStateDeleteComment";
+import Comment from "./Comment";
 
 const AdminRowComment = ({comment}) => {
 
@@ -15,6 +13,7 @@ const AdminRowComment = ({comment}) => {
     };
 
     const handleDeletePopup = () => {
+        alert("CANCELLO!");
         dispatch(popupStateDeleteComment(comment.id, title));
     };
 
@@ -24,33 +23,8 @@ const AdminRowComment = ({comment}) => {
     }
 
     return (
-        <div id={`comment_row_${comment.id}`}
-             className="mb-3 w-screen-sm mx-auto border-2 border-solid border-blue-700 rounded-xl p-2 max-w-fit">
-
-            <div className="inline-flex text-left text-lg font-normal w-64 h-16 text-ellipsis"
-                 style={{overflow: "hidden"}}>
-                <div style={{display: "block"}}>
-                    {title}
-                </div>
-            </div>
-
-            <div className="inline-flex">
-                {/*
-                <Button
-                    onClick={handleEditPopup}
-                    rounded={true}
-                    label="Edit"
-                    classes={""}
-                />
-                */}
-
-                <Button
-                    onClick={handleDeletePopup}
-                    rounded={true}
-                    label="Delete"
-                    classes={"bg-red-500 hover:bg-red-600 ml-2"}
-                />
-            </div>
+        <div id={`comment_row_${comment.id}`}>
+            <Comment key={comment.id} content={comment} onCommentDelete={handleDeletePopup}/>
         </div>
     )
 }

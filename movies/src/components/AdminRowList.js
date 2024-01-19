@@ -9,6 +9,7 @@ const AdminRowList = ({list}) => {
     const dispatch = useDispatch();
 
     const title = list.name.replace(new RegExp('"', 'g'), "&quot;").replace(new RegExp("'", 'g'), "’");
+    console.log(list.user_id);
 
     const handleEditPopup = () => {
         console.log("Permettere all'admin di modificare le liste altrui?");

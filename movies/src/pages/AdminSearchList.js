@@ -33,6 +33,7 @@ const AdminSearchList = () => {
             });
 
             const tempLists = response.data.map((list) => {
+                if (list.private) return <div key={list.id}></div>;
                 return <AdminRowList list={list} key={list.id}/>
             });
             setLists(tempLists);

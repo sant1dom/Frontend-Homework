@@ -55,7 +55,7 @@ const AdminSearchComment = () => {
                     No comment found
                 </p>
             }
-            <div className="max-h-[650px] overflow-y-scroll  max-w-fit mx-auto">
+            <div className="max-h-[650px] overflow-y-scroll">
                 {comments}
             </div>
         </div>

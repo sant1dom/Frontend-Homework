@@ -5,6 +5,7 @@ import Cookies from 'js-cookie';
 import {useSelector} from "react-redux";
 import Button from './Button';
 import {FaTrash} from "react-icons/fa";
+import popupStateDeleteComment from "../store/popupStateDeleteComment";
 
 const Comment = ({ content, onCommentDelete }) => {
     const [author, setAuthor] = useState('');
@@ -43,6 +44,9 @@ const Comment = ({ content, onCommentDelete }) => {
       };      
 
       const handleDeleteComment = async () => {
+          dispatch(popupStateDeleteComment(comment.id, title));
+          return;
+
         if(token){
             try {
                 await api.delete(`/comment/${content.id}`, {
@@ -66,7 +70,7 @@ const Comment = ({ content, onCommentDelete }) => {
                         <div>
                             <img className="object-cover w-12 h-12 border-2 border-gray-300 rounded-full mb-3"
                                 src={avatar} alt="Avatar"/>
-                            {content.user_id === authState.userId ? (
+                            {(content.user_id === authState.userId) || authState.is_superuser? (
                                 <Button label={<FaTrash/>} variant="cancel" onClick={handleDeleteComment}/>                              
                             ): null}
                         </div>
