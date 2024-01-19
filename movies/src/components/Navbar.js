@@ -96,7 +96,7 @@ const Navbar = ({title, links, links_admin, backgroundColor, loading}) => {
             <MenuItem
                 key={link.url}
                 to={link.url}
-                className="mt-4 text-gray-200 hover:text-white mr-4 block lg:inline-block"
+                className="mt-4 text-gray-200 hover:text-white mr-4 block lg:inline-block text-left "
                 label={link.text}
             >
             </MenuItem>
