@@ -64,7 +64,9 @@ const AdminSearchMovie = () => {
                     No movie found
                 </p>
             }
-            {movies}
+            <div className="max-h-[650px] overflow-y-scroll  max-w-fit mx-auto">
+                {movies}
+            </div>
         </div>
     );
 }
