@@ -59,7 +59,7 @@ const Navbar = ({title, links, links_admin, backgroundColor, loading}) => {
                   }}
             >
                 <img
-                    className="block h-20 w-20 rounded-full"
+                    className="block h-20 w-20 rounded-full text-white"
                     src={profileImageUrl}
                     alt="Profile"
                 />
@@ -117,7 +117,7 @@ const Navbar = ({title, links, links_admin, backgroundColor, loading}) => {
     const DropdownProfile = (
         isHoveredProfile &&
         <div
-            className="absolute z-10 mt-1 w-56 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none group-hover:block"
+            className="absolute right-0 z-10 mt-1 w-56 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none group-hover:block"
         >
             <div className="py-1" role="none">
                 <MenuItem to={`/profile`} label="Account settings"/>
@@ -185,7 +185,7 @@ const Navbar = ({title, links, links_admin, backgroundColor, loading}) => {
                                      onMouseLeave={() => setIsHoveredProfile(false)}>
                                     <Link to={`/profile`}>
                                         <img
-                                            className="inline-block h-10 w-10 rounded-full"
+                                            className="inline-block h-10 w-10 rounded-full text-white"
                                             src={process.env.REACT_APP_BASE_URL + "/" + authState.photo}
                                             alt="Profile"
                                         />
