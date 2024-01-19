@@ -1,4 +1,3 @@
-import {Link} from 'react-router-dom';
 import {FaPlus} from 'react-icons/fa';
 import Button from '../components/Button';
 import api from '../utils/api';
@@ -6,13 +5,8 @@ import React, {useState, useEffect} from 'react';
 import Cookies from 'js-cookie';
 import {useSelector} from "react-redux";
 import Modal from "../components/Modal";
-import {IoMdHeart, IoMdHeartEmpty} from "react-icons/io";
-import {GoClockFill} from "react-icons/go";
-import {FiClock} from "react-icons/fi";
-import {FaEdit, FaTrash} from 'react-icons/fa';
 import Card from "../components/Card";
 
-let lsLists = Object.keys(localStorage);
 
 const MyLists = () => {
     const [DBLists, setDBLists] = useState([]);
@@ -100,34 +94,59 @@ const MyLists = () => {
 
     return (
         <div className="mx-auto">
-            <h1 className="mt-5 mb-5 text-4xl">My Lists</h1>
-            <div className="mx-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8 mb-5">
+            
+            <div className="mx-8 mb-5">
+                <h1 className="mt-5 mb-5 text-4xl">My Private Lists</h1>
 
-                {DBLists.map((list) => (
-                    <Card key={list.id}
-                          classes={" flex flex-col justify-between hover:shadow-2xl transition duration-300 ease-in-out hover:scale-105 cursor-pointer"}
-                          type={"list"}
-                          text={<h2
-                              className="text-xl mb-2 overflow-hidden whitespace-nowrap overflow-ellipsis">{list.name}</h2>
-                          }
-                          element={list}/>
-                ))}
+                <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8'>
+                    <div></div>
+                    {DBLists.filter(list => list.private).map((list) => (
+                        <>
+                            <Card key={list.id}
+                                classes={" flex flex-col justify-between hover:shadow-2xl transition duration-300 ease-in-out hover:scale-105 cursor-pointer"}
+                                type={"list"}
+                                text={<h2
+                                    className="text-xl mb-2 overflow-hidden whitespace-nowrap overflow-ellipsis">{list.name}</h2>
+                                }
+                                element={list}/>
+                            <div></div>
+                        </>
+                    ))}
+                </div>
+            </div>
+            
+            <div className="mx-8 mb-5">
+                <h1 className="mt-5 mb-5 text-4xl">My Public Lists</h1>
 
-                {popupVisible && (
-                    <Modal
-                        title="Create new list"
-                        body={popupBody}
-                        onClose={() => {
-                            closeCreateListPopup();
-                        }}
-                    />
-                )}
+                <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8'>
+                    {DBLists.filter(list => !list.private).map((list) => (
+                        <Card key={list.id}
+                            classes={" flex flex-col justify-between hover:shadow-2xl transition duration-300 ease-in-out hover:scale-105 cursor-pointer"}
+                            type={"list"}
+                            text={<h2
+                                className="text-xl mb-2 overflow-hidden whitespace-nowrap overflow-ellipsis">{list.name}</h2>
+                            }
+                            element={list}/>
+                    
+                    ))}
 
-                <div className="rounded-lg bg-amber-300 shadow-2xl  max-w-72">
-                    <div className="flex items-center justify-center h-full">
-                        <Button label={<FaPlus size="6rem"/>} variant="nobg" onClick={openCreateListPopup}
-                                size={'max'}/>
+                    <div className="rounded-lg bg-amber-300 shadow-2xl  max-w-72">
+                        <div className="flex items-center justify-center h-full">
+                            <Button label={<FaPlus size="6rem"/>} variant="nobg" onClick={openCreateListPopup} size={'max'}/>
+                        </div>
                     </div>
+
+                    
+
+                    {popupVisible && (
+                        <Modal
+                            title="Create new list"
+                            body={popupBody}
+                            onClose={() => {
+                                closeCreateListPopup();
+                            }}
+                        />
+                    )}
                 </div>
             </div>
         </div>

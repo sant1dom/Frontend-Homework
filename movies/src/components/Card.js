@@ -282,7 +282,7 @@ const Card = ({type, classes, img, text, element, removeMovieFromList}) => {
 
 
     return (
-        <div>
+        <>
             {!isDeleted && (
                 <div key={element.id} className={color + classes}>
                     {img}
@@ -338,7 +338,7 @@ const Card = ({type, classes, img, text, element, removeMovieFromList}) => {
                                 <div className="p-2">
                                     <div className="flex flex-col items-center">
                                         <div className="flex space-x-2"
-                                             style={{visibility: element.private ? 'hidden' : 'visible'}}>
+                                            style={{visibility: element.private ? 'hidden' : 'visible'}}>
                                             <Button label={<FaEdit/>} rounded={true}
                                                     onClick={() => editList(element)} size={'small'}
                                                     disabled={element.private}
@@ -356,7 +356,7 @@ const Card = ({type, classes, img, text, element, removeMovieFromList}) => {
                                 <div className="flex flex-col items-center">
                                     <div className="flex pb-2">
                                         <img className="object-cover w-8 h-8 border-2 border-gray-300 rounded-full mr-1"
-                                             src={avatar}/>
+                                            src={avatar}/>
                                         <span className=''>{author}</span>
                                     </div>
                                     <div className="flex space-x-4">
@@ -425,7 +425,7 @@ const Card = ({type, classes, img, text, element, removeMovieFromList}) => {
                     }}
                 />
             )}
-        </div>
+        </>
     );
 }
 
