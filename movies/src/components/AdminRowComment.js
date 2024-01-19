@@ -1,5 +1,4 @@
 import {useDispatch, useSelector} from "react-redux";
-import popupStateAdminDeleteComment from "../store/popupStateAdminDeleteComment";
 import Comment from "./Comment";
 
 const AdminRowComment = ({comment}) => {
