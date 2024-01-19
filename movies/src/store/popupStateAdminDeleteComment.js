@@ -4,7 +4,7 @@ const popupStateAdminDeleteComment = (comment_id, comment_title) => {
         show: true,
         text_title: "Delete?",
         //text_msg: "Do you want to delete '" + comment_title + "'?",
-        text_msg: "Do you want to ADMIN delete this comment?",
+        text_msg: "Do you want to delete this comment?",
         text_yes: "Delete",
         text_no: "Close Popup",
         click_yes: {

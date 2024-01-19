@@ -3,7 +3,8 @@ const popupStateAdminDeleteList = (list_id, list_title) => {
     let payload = {
         show: true,
         text_title: "Delete?",
-        text_msg: "Do you want to delete '" + list_title + "'?",
+        //text_msg: "Do you want to delete '" + list_title + "'?",
+        text_msg: "Do you want to delete this comment?",
         text_yes: "Delete",
         text_no: "Close Popup",
         click_yes: {
