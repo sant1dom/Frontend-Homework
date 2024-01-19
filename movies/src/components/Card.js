@@ -272,10 +272,10 @@ const Card = ({type, classes, img, text, element, removeMovieFromList}) => {
     </div>
 
     const deletePopupButtons = <div>
-        <Button onClick={() => deleteList(element)}
-                classes={"bg-red-500 text-white rounded-full py-1 px-2 hover:bg-red-600"} label={"Delete"}/>
         <Button onClick={closeDeletePopup} variant={'cancel'}
-                classes={"bg-gray-200 text-black rounded-full py-1 px-2 ml-2 hover:bg-gray-300"} label={"Cancel"}/>
+                classes={"bg-gray-200 text-black rounded-full py-1 px-2 hover:bg-gray-300"} label={"Cancel"}/>
+                <Button onClick={() => deleteList(element)}
+                classes={"bg-red-500 text-white rounded-full py-1 px-2 hover:bg-red-600 ml-2"} label={"Delete"}/>
     </div>;
 
     const color = type === 'movie' ? 'rounded-lg bg-sky-100 shadow-2xl max-w-72' : 'rounded-lg bg-amber-300 shadow-2xl max-w-72';
@@ -418,7 +418,7 @@ const Card = ({type, classes, img, text, element, removeMovieFromList}) => {
             )}
             {deletePopupVisible && (
                 <Modal
-                    title="Are you sure you want to delete the list?"
+                    title="Are you sure you want to delete this list?"
                     body={deletePopupButtons}
                     onClose={() => {
                         closeDeletePopup();

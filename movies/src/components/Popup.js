@@ -93,7 +93,8 @@ const Popup = () => {
                                     onClick={handleNo}
                                     //rounded={true}
                                     label={popupState.text_no}
-                                    classes={"mr-2 ml-2 bg-gray-500 hover:bg-gray-600 rounded-full"}
+                                    variant={'cancel'}
+                                    classes={"bg-gray-200 text-black rounded-full py-1 px-2 hover:bg-gray-300"}
                                 />
                             }
                             {
@@ -102,7 +103,7 @@ const Popup = () => {
                                     onClick={handleYes}
                                     //rounded={true}
                                     label={popupState.text_yes}
-                                    classes={"mr-2 ml-2 bg-red-500 hover:bg-red-600 rounded-full"}
+                                    classes={"bg-red-500 text-white rounded-full py-1 px-2 hover:bg-red-600 ml-2"}
                                 />
                             }
                         </>
