@@ -2,7 +2,7 @@ import {useDispatch, useSelector} from "react-redux";
 import Button from "./Button";
 import ButtonLink from "./ButtonLink";
 import React from "react";
-import popupStateDeleteList from "../store/popupStateDeleteList";
+import popupStateAdminDeleteList from "../store/popupStateAdminDeleteList";
 
 const AdminRowList = ({list}) => {
 
@@ -16,7 +16,7 @@ const AdminRowList = ({list}) => {
     };
 
     const handleDeletePopup = () => {
-        dispatch(popupStateDeleteList(list.id, title));
+        dispatch(popupStateAdminDeleteList(list.id, title));
     };
 
     const hidden = useSelector((state) => state.hiddenState.list);

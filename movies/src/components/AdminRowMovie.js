@@ -2,7 +2,7 @@ import {useDispatch, useSelector} from "react-redux";
 import Button from "./Button";
 import ButtonLink from "./ButtonLink";
 import React from "react";
-import popupStateDeleteMovie from "../store/popupStateDeleteMovie";
+import popupStateAdminDeleteMovie from "../store/popupStateAdminDeleteMovie";
 
 const AdminRowMovie = ({movie}) => {
 
@@ -10,7 +10,7 @@ const AdminRowMovie = ({movie}) => {
     const title = movie.title.replace(new RegExp('"', 'g'), "&quot;").replace(new RegExp("'", 'g'), "’");
 
     const handleDeletePopup = () => {
-        dispatch(popupStateDeleteMovie(movie.id, title));
+        dispatch(popupStateAdminDeleteMovie(movie.id, title));
     };
 
     const hidden = useSelector((state) => state.hiddenState.movie);

@@ -2,16 +2,17 @@ import { useEffect, useState } from 'react';
 import api from "../utils/api";
 import parse from "html-react-parser";
 import Cookies from 'js-cookie';
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import Button from './Button';
 import {FaTrash} from "react-icons/fa";
-import popupStateDeleteComment from "../store/popupStateDeleteComment";
+import popupStateUserDeleteComment from "../store/popupStateUserDeleteComment";
+import popupStateAdminDeleteComment from "../store/popupStateAdminDeleteComment";
 
 const Comment = ({ content, onCommentDelete }) => {
     const [author, setAuthor] = useState('');
     const [avatar, setAvatar] = useState('');
     const authState = useSelector((state) => state.auth);
-    const token = Cookies.get("access-token");
+    const dispatch = useDispatch();
 
     useEffect(() => {
         const fetchAuthor = async () => {
@@ -44,21 +45,17 @@ const Comment = ({ content, onCommentDelete }) => {
       };      
 
       const handleDeleteComment = async () => {
-          //dispatch(popupStateDeleteComment(comment.id, title));
-          //return;
+          const title = content.comment.replace(new RegExp('"', 'g'), "&quot;").replace(new RegExp("'", 'g'), "’");
 
-        if(token){
-            try {
-                await api.delete(`/comment/${content.id}`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                });
-                onCommentDelete();
-            } catch (error) {
-                console.error("Error deleting comment:", error);
-            }
-        }
+          if (content.user_id === authState.userId) {
+              dispatch(popupStateUserDeleteComment(content.id, title));
+
+              onCommentDelete();
+          }
+
+          if(authState.is_superuser){
+                dispatch(popupStateAdminDeleteComment(content.id, title));
+          }
     };
 
 

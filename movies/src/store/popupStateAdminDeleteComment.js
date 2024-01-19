@@ -1,9 +1,10 @@
-const popupStateDeleteComment = (comment_id, comment_title) => {
+const popupStateAdminDeleteComment = (comment_id, comment_title) => {
 
     let payload = {
         show: true,
         text_title: "Delete?",
-        text_msg: "Do you want to delete '" + comment_title + "'?",
+        //text_msg: "Do you want to delete '" + comment_title + "'?",
+        text_msg: "Do you want to delete this comment?",
         text_yes: "Delete",
         text_no: "Close Popup",
         click_yes: {
@@ -20,4 +21,4 @@ const popupStateDeleteComment = (comment_id, comment_title) => {
     };
 };
 
-export default popupStateDeleteComment;
+export default popupStateAdminDeleteComment;
