@@ -44,8 +44,8 @@ const Comment = ({ content, onCommentDelete }) => {
       };      
 
       const handleDeleteComment = async () => {
-          dispatch(popupStateDeleteComment(comment.id, title));
-          return;
+          //dispatch(popupStateDeleteComment(comment.id, title));
+          //return;
 
         if(token){
             try {
