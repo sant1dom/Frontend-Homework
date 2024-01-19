@@ -127,10 +127,12 @@ const Navbar = ({title, links, links_admin, backgroundColor, loading}) => {
     );
 
     const DropdownAdmin = (
-        (true || isHoveredAdmin) &&
+        isHoveredAdmin &&
         <div
             className="absolute py-1 z-10 mt-1 w-40 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none group-hover:block"
             style={{"margin-left": "45%"}}
+            onMouseEnter={() => setIsHoveredAdmin(true)}
+            onMouseLeave={() => setIsHoveredAdmin(false)}
         >
             {linkElementsAdmin}
         </div>
