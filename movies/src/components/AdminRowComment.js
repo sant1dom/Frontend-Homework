@@ -35,13 +35,14 @@ const AdminRowComment = ({comment}) => {
             </div>
 
             <div className="inline-flex">
-                {false &&
-                    <Button
-                        onClick={handleEditPopup}
-                        rounded={true}
-                        label="Edit"
-                        classes={""}
-                    />}
+                {/*
+                <Button
+                    onClick={handleEditPopup}
+                    rounded={true}
+                    label="Edit"
+                    classes={""}
+                />
+                */}
 
                 <Button
                     onClick={handleDeletePopup}

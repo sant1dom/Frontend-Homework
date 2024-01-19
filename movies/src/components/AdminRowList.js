@@ -36,13 +36,14 @@ const AdminRowList = ({list}) => {
             </div>
 
             <div className="inline-flex">
-                {false &&
-                    <Button
-                        onClick={handleEditPopup}
-                        rounded={true}
-                        label="Edit"
-                        classes={""}
-                    />}
+                {/*
+                <Button
+                    onClick={handleEditPopup}
+                    rounded={true}
+                    label="Edit"
+                    classes={""}
+                />
+                */}
 
                 <Button
                     onClick={handleDeletePopup}
