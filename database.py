@@ -95,7 +95,7 @@ def get_db():
 def fill_db():
     db = SessionLocal()
     # Load movies and users from json file
-    with open("db.json", "r") as f:
+    with open("db.json", "r", encoding="utf-8") as f:
         data = json.load(f)
         movies = data["movies"]
         users = data["users"]
