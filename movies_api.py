@@ -205,6 +205,7 @@ async def create_list(movie_list: MovieListCreate, user: user_dependency, db: Se
     db_movie_list.user = db.query(DBUser).filter(DBUser.id == user["id"]).first()
     db_movie_list.likes = []
     db_movie_list.comments = []
+    db_movie_list.private = False
     db.add(db_movie_list)
     db.commit()
     db.refresh(db_movie_list)
@@ -247,6 +248,8 @@ async def update_list(movie_list_id: int, movie_list: MovieListCreate, user: use
         and_(DBMovieList.id == movie_list_id, DBMovieList.user_id == user["id"])).first()
     if db_movie_list is None:
         raise HTTPException(status_code=404, detail="Movie list not found")
+    if db_movie_list.name == "Watchlist" or db_movie_list.name == "Favourites":
+        raise HTTPException(status_code=400, detail="You are not allowed to change the name of this list")
     for key, value in movie_list.model_dump().items():
         setattr(db_movie_list, key, value)
     db_movie_list.name = movie_list.name
