@@ -55,7 +55,9 @@ const AdminSearchList = () => {
                     No list found
                 </p>
             }
-            {lists}
+            <div className="max-h-[650px] overflow-y-scroll  max-w-fit mx-auto">
+                {lists}
+            </div>
         </div>
     );
 }
