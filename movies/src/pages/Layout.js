@@ -1,5 +1,5 @@
 import Navbar from "../components/Navbar";
-import { Outlet } from "react-router-dom";
+import {Outlet} from "react-router-dom";
 import {useSelector} from "react-redux";
 
 const Layout = ({loading}) => {
@@ -8,21 +8,27 @@ const Layout = ({loading}) => {
         {text: "Home", url: "/"},
         {text: "Advanced Search", url: "/advanced-search"}
     ];
+
     if (authState.isAuth) {
         links.push({text: "MyLists", url: "/mylists"});
         links.push({text: "Best Lists", url: "/bestlists"});
     }
+
+    let links_admin = [];
     if (authState.is_superuser) {
-        links.push({text: "Admin: Edit/Delete Movies", url: "/admin/movies"});
-        links.push({text: "Admin: Add Movie", url: "/admin/movie/create"});
-        links.push({text: "Admin: Delete Lists", url: "/admin/lists"});
-        links.push({text: "Admin: Delete Comments", url: "/admin/comments"});
+        links_admin = [
+            {text: "Edit/Delete Movies", url: "/admin/movies"},
+            {text: "Add Movie", url: "/admin/movie/create"},
+            {text: "Delete Lists", url: "/admin/lists"},
+            {text: "Delete Comments", url: "/admin/comments"},
+        ];
     }
 
     return (
         <>
-            <Navbar title="Movies" links={links} backgroundColor="bg-gray-800" loading={loading}/>
-            <Outlet />
+            <Navbar title="Movies" links={links} links_admin={links_admin} backgroundColor="bg-gray-800"
+                    loading={loading}/>
+            <Outlet/>
             <div className="h-20"/>
         </>
     );

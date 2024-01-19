@@ -9,11 +9,12 @@ import Button from './Button';
 import Spinner from "./Spinner";
 
 
-const Navbar = ({title, links, backgroundColor, loading}) => {
+const Navbar = ({title, links, links_admin, backgroundColor, loading}) => {
     const authState = useSelector((state) => state.auth);
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const [isHovered, setIsHovered] = useState(false);
+    const [isHoveredProfile, setIsHoveredProfile] = useState(false);
+    const [isHoveredAdmin, setIsHoveredAdmin] = useState(false);
     const [showMobileMenu, setShowMobileMenu] = useState(false);
 
     const MenuItem = React.memo(({to, label, onClick}) => (
@@ -27,19 +28,6 @@ const Navbar = ({title, links, backgroundColor, loading}) => {
             {label}
         </Link>
     ));
-
-    const ProfileDropdown = ({isHovered, handleButtonClick}) => (
-        isHovered && (
-            <div
-                className="absolute right-0 z-10 mt-1 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none group-hover:block hidden"
-            >
-                <div className="py-1" role="none">
-                    <MenuItem to={`/profile`} label="Account settings"/>
-                    <MenuItem label="Sign out" onClick={handleButtonClick}/>
-                </div>
-            </div>
-        )
-    );
 
     const MobileMenu = ({backgroundColor, linkElements, authState, handleButtonClick, loading}) => (
         <div
@@ -103,13 +91,59 @@ const Navbar = ({title, links, backgroundColor, loading}) => {
         </Link>
     )), [links]);
 
+    const linkElementsAdmin = useMemo(() => links_admin.map((link) => (
+        <>
+            <MenuItem
+                key={link.url}
+                to={link.url}
+                className="mt-4 text-gray-200 hover:text-white mr-4 block lg:inline-block"
+                label={link.text}
+            >
+            </MenuItem>
+            <br/>
+        </>
+    )), [links_admin]);
+
+    const linkElementsMobile = useMemo(() => links.concat(links_admin).map((link) => (
+        <Link
+            key={link.url}
+            to={link.url}
+            className="mt-4 text-gray-200 hover:text-white mr-4 block lg:inline-block"
+        >
+            {link.text}
+        </Link>
+    )), [links]);
+
+    const DropdownProfile = (
+        isHoveredProfile &&
+        <div
+            className="absolute z-10 mt-1 w-56 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none group-hover:block"
+        >
+            <div className="py-1" role="none">
+                <MenuItem to={`/profile`} label="Account settings"/>
+                <MenuItem label="Sign out" onClick={handleButtonClick}/>
+            </div>
+        </div>
+    );
+
+    const DropdownAdmin = (
+        (true || isHoveredAdmin) &&
+        <div
+            className="absolute py-1 z-10 mt-1 w-40 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none group-hover:block"
+            style={{"margin-left": "45%"}}
+        >
+            {linkElementsAdmin}
+        </div>
+    );
+
     return (
         <div className={`sticky ${backgroundColor} top-0 z-50`}>
             <nav
                 className={`sticky flex items-center justify-between ${backgroundColor} p-2 flex-no-wrap relative top-0`}>
                 <Link to={`/`}>
                     <div className="flex items-center flex-shrink-0 text-white mr-6">
-                        <img src={process.env.PUBLIC_URL + '/Screenshot_2024-01-10_195526.png'} alt="Logo" className="h-10"/>
+                        <img src={process.env.PUBLIC_URL + '/Screenshot_2024-01-10_195526.png'} alt="Logo"
+                             className="h-10"/>
                     </div>
                 </Link>
 
@@ -123,17 +157,30 @@ const Navbar = ({title, links, backgroundColor, loading}) => {
                 </div>
 
                 <div className="w-full block flex-grow lg:flex lg:items-center lg:w-auto hidden lg:block">
-                    <div className="text-sm lg:flex-grow">{linkElements}</div>
+                    <div className="text-sm lg:flex-grow">
+                        {linkElements}
+
+                        {links_admin.length &&
+                            <div
+                                className="mt-4 text-gray-200 hover:text-white mr-4 block lg:inline-block cursor-pointer"
+                                onMouseEnter={() => setIsHoveredAdmin(true)}
+                                onMouseLeave={() => setIsHoveredAdmin(false)}>
+                                Admin
+                            </div>
+                        }
+
+                        {DropdownAdmin}
+                    </div>
 
                     <div className="flex justify-end items-center">
                         <SearchBar setShowMobileMenu={setShowMobileMenu}/>
 
                         {authState.isAuth && (
                             <>
-                                <div className="w-2" onMouseEnter={() => setIsHovered(true)}
-                                     onMouseLeave={() => setIsHovered(false)}/>
-                                <div className="relative group pb-1" onMouseEnter={() => setIsHovered(true)}
-                                     onMouseLeave={() => setIsHovered(false)}>
+                                <div className="w-2" onMouseEnter={() => setIsHoveredProfile(true)}
+                                     onMouseLeave={() => setIsHoveredProfile(false)}/>
+                                <div className="relative group pb-1" onMouseEnter={() => setIsHoveredProfile(true)}
+                                     onMouseLeave={() => setIsHoveredProfile(false)}>
                                     <Link to={`/profile`}>
                                         <img
                                             className="inline-block h-10 w-10 rounded-full"
@@ -142,22 +189,15 @@ const Navbar = ({title, links, backgroundColor, loading}) => {
                                         />
                                     </Link>
 
-                                    {isHovered && (
-                                        <div
-                                            className="absolute right-0 z-10 mt-1 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none group-hover:block hidden">
-                                            <div className="py-1" role="none">
-                                                <MenuItem to={`/profile`} label="Account settings"/>
-                                                <MenuItem label="Sign out" onClick={handleButtonClick}/>
-                                            </div>
-                                        </div>
-                                    )}
+                                    {DropdownProfile}
                                 </div>
                             </>
                         )}
 
                         <div className="w-2"/>
                         {loading && <Spinner/>}
-                        {!loading && !authState.isAuth && <Button onClick={handleButtonClick} label="Login" rounded={true}/>}
+                        {!loading && !authState.isAuth &&
+                            <Button onClick={handleButtonClick} label="Login" rounded={true}/>}
                     </div>
                 </div>
             </nav>
@@ -165,7 +205,7 @@ const Navbar = ({title, links, backgroundColor, loading}) => {
             {showMobileMenu && (
                 <MobileMenu
                     backgroundColor={backgroundColor}
-                    linkElements={linkElements}
+                    linkElements={linkElementsMobile}
                     authState={authState}
                     handleButtonClick={handleButtonClick}
                     loading={loading}
