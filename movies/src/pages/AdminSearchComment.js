@@ -1,9 +1,10 @@
 import api from "../utils/api";
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {Link, useNavigate} from "react-router-dom";
 import AdminRowComment from "../components/AdminRowComment";
 import Cookies from "js-cookie";
+import AdminRowMovie from "../components/AdminRowMovie";
 
 const AdminSearchComment = () => {
 
@@ -11,6 +12,12 @@ const AdminSearchComment = () => {
     const authState = useSelector((state) => state.auth);
     const [comments, setComments] = useState([]);
     const dispatch = useDispatch();
+
+    const [search, setSearch] = useState('');
+    const refSearch = useRef();
+    const onchangeSearch = () => {
+        setSearch(refSearch.current.value);
+    };
 
     const token = Cookies.get("access-token");
     const config = {
@@ -33,7 +40,11 @@ const AdminSearchComment = () => {
             });
 
             const tempComments = response.data.map((comment) => {
-                return <AdminRowComment comment={comment} key={comment.id}/>
+                if (comment.comment.toLowerCase().includes(search.toLowerCase())) {
+                    return <AdminRowComment comment={comment} key={comment.id}/>
+                } else {
+                    return <div key={comment.id}></div>;
+                }
             });
             setComments(tempComments);
 
@@ -41,7 +52,7 @@ const AdminSearchComment = () => {
             console.log(error);
         });
 
-    }, []);
+    }, [search]);
 
     return (
         <div className="container mx-auto items-center justify-center">
@@ -49,6 +60,10 @@ const AdminSearchComment = () => {
             <div className="h-4"/>
             <h1 className="text-4xl font-bold">View and delete all comments</h1>
             <div className="h-4"/>
+
+            <input type="text" ref={refSearch} onChange={onchangeSearch}
+                   className="border-2 border-gray-300 rounded-md w-64 p-2"/>
+            <div className="h-5"/>
 
             {comments.length == 0 &&
                 <p className="text-3xl font-normal">

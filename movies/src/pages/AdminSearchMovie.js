@@ -1,5 +1,5 @@
 import api from "../utils/api";
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {Link, useNavigate} from "react-router-dom";
 import AdminRowMovie from "../components/AdminRowMovie";
@@ -12,6 +12,12 @@ const AdminSearchMovie = () => {
     const authState = useSelector((state) => state.auth);
     const [movies, setMovies] = useState([]);
     const dispatch = useDispatch();
+
+    const [search, setSearch] = useState('');
+    const refSearch = useRef();
+    const onchangeSearch = () => {
+        setSearch(refSearch.current.value);
+    };
 
     const token = Cookies.get("access-token");
     const config = {
@@ -34,7 +40,11 @@ const AdminSearchMovie = () => {
             });
 
             const tempMovies = response.data.map((movie) => {
-                return <AdminRowMovie movie={movie} key={movie.id}/>
+                if (movie.title.toLowerCase().includes(search.toLowerCase())) {
+                    return <AdminRowMovie movie={movie} key={movie.id}/>
+                } else {
+                    return <div key={movie.id}></div>;
+                }
             });
             setMovies(tempMovies);
 
@@ -42,7 +52,7 @@ const AdminSearchMovie = () => {
             console.log(error);
         });
 
-    }, []);
+    }, [search]);
 
     return (
         <div className="container mx-auto items-center justify-center">
@@ -58,6 +68,10 @@ const AdminSearchMovie = () => {
                 label="Add a new movie"
             />
             <div className="h-4"/>
+
+            <input type="text" ref={refSearch} onChange={onchangeSearch}
+                   className="border-2 border-gray-300 rounded-md w-64 p-2"/>
+            <div className="h-5"/>
 
             {movies.length == 0 &&
                 <p className="text-3xl font-normal">

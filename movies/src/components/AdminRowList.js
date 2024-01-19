@@ -15,7 +15,6 @@ const AdminRowList = ({list}) => {
     const [avatar, setAvatar] = useState('');
 
     const title = list.name.replace(new RegExp('"', 'g'), "&quot;").replace(new RegExp("'", 'g'), "’");
-    console.log(list.user_id);
 
     const handleEditPopup = () => {
         console.log("Permettere all'admin di modificare le liste altrui?");
