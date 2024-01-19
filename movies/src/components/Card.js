@@ -1,11 +1,8 @@
 import propTypes from 'prop-types';
 import React, {useEffect, useState} from "react";
 import Button from "./Button";
-import {IoMdHeart, IoMdHeartEmpty} from "react-icons/io";
-import {FiClock} from "react-icons/fi";
-import {GoClockFill} from "react-icons/go";
-import {FaEdit, FaPlus, FaTrash, FaRegComment} from "react-icons/fa";
-import { BiLike } from "react-icons/bi";
+import {FaEdit, FaPlus, FaRegComment, FaTrash} from "react-icons/fa";
+import {BiLike} from "react-icons/bi";
 import Cookies from "js-cookie";
 import api from "../utils/api";
 import Modal from "./Modal";
@@ -37,7 +34,7 @@ const Card = ({type, classes, img, text, element, removeMovieFromList}) => {
     const token = Cookies.get("access-token");
     const [author, setAuthor] = useState('');
     const [avatar, setAvatar] = useState('');
-    const [lists, ] = useState([]);
+    const [lists,] = useState([]);
 
 
     // useEffect(() => {
@@ -48,7 +45,7 @@ const Card = ({type, classes, img, text, element, removeMovieFromList}) => {
     // }, [handleEscape])
 
     useEffect(() => {
-        if(type==='best-lists'){
+        if (type === 'best-lists') {
             const fetchAuthor = async () => {
                 api.get('/users/' + element.user_id).then((response) => {
                     setAuthor(response.data.email);
@@ -59,19 +56,19 @@ const Card = ({type, classes, img, text, element, removeMovieFromList}) => {
         }
     }, []);
 
-    useEffect( () => {
+    useEffect(() => {
         if (token && type === 'list') {
             const fetchData = async () => {
                 api.get(`/mylists/${element.id}`,
-                        {
-                            headers: {
-                                'Authorization': `Bearer ${token}`,
-                            }
-                        }).then((response) => {
-                            setMovies(response.data.movies.slice(0, 4)); // Prendi i primi 4 film
-                            console.log(movies)
+                    {
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
                         }
-                    )
+                    }).then((response) => {
+                        setMovies(response.data.movies.slice(0, 4)); // Prendi i primi 4 film
+                        console.log(movies)
+                    }
+                )
                 // const res = await api.get("/movies");
                 // console.log(res);
                 // console.log(res.data);
@@ -94,7 +91,7 @@ const Card = ({type, classes, img, text, element, removeMovieFromList}) => {
     const fetchUserLists = async (movie_id) => {
         if (token) {
             try {
-                const response = await api.post("/get_not_lists_for_movie/", null,{
+                const response = await api.post("/get_not_lists_for_movie/", null, {
                     params: {movie_id},
                     headers: {
                         'Authorization': `Bearer ${token}`,
@@ -134,7 +131,7 @@ const Card = ({type, classes, img, text, element, removeMovieFromList}) => {
 
         if (token) {
             try {
-                const response = await api.post(`/mylists/${list.id}`, element,{
+                const response = await api.post(`/mylists/${list.id}`, element, {
                     headers: {
                         'Authorization': `Bearer ${token}`,
                     },
@@ -220,12 +217,18 @@ const Card = ({type, classes, img, text, element, removeMovieFromList}) => {
     };
 
     const editList = (list) => {
+        if (list.name === "Watchlist" || list.name === "Favourites") {
+            return;
+        }
         setPopupTitle("Edit list")
         setCreatePopupVisible(true);
         setListTitle(list.name)
     };
 
     const deleteList = async (list) => {
+        if (list.name === "Watchlist" || list.name === "Favourites") {
+            return;
+        }
         const token = Cookies.get("access-token");
         if (token) {
             try {
@@ -262,13 +265,17 @@ const Card = ({type, classes, img, text, element, removeMovieFromList}) => {
         onChange={(e) => setListTitle(e.target.value)}
         className="w-full p-2 mb-2 border rounded"
     />
-        <Button onClick={() => createNewList(element)} classes={"bg-blue-500 text-white rounded-full py-1 px-2 hover:bg-blue-600"} label={"Send"}/>
-        <Button onClick={closeCreateListPopup} variant={'cancel'} classes={" rounded-full py-1 px-2 ml-2 hover:bg-gray-300"} label={"Cancel"}/>
+        <Button onClick={() => createNewList(element)}
+                classes={"bg-blue-500 text-white rounded-full py-1 px-2 hover:bg-blue-600"} label={"Send"}/>
+        <Button onClick={closeCreateListPopup} variant={'cancel'}
+                classes={" rounded-full py-1 px-2 ml-2 hover:bg-gray-300"} label={"Cancel"}/>
     </div>
 
     const deletePopupButtons = <div>
-        <Button onClick={() => deleteList(element)} classes={"bg-red-500 text-white rounded-full py-1 px-2 hover:bg-blue-600"} label={"DELETE"}/>
-        <Button onClick={closeDeletePopup} variant={'cancel'} classes={"bg-gray-200 text-black rounded-full py-1 px-2 ml-2 hover:bg-gray-300"} label={"Cancel"}/>
+        <Button onClick={() => deleteList(element)}
+                classes={"bg-red-500 text-white rounded-full py-1 px-2 hover:bg-blue-600"} label={"DELETE"}/>
+        <Button onClick={closeDeletePopup} variant={'cancel'}
+                classes={"bg-gray-200 text-black rounded-full py-1 px-2 ml-2 hover:bg-gray-300"} label={"Cancel"}/>
     </div>;
 
     const color = type === 'movie' ? 'rounded-lg bg-sky-100 shadow-2xl max-w-72' : 'rounded-lg bg-amber-300 shadow-2xl max-w-72';
@@ -286,30 +293,32 @@ const Card = ({type, classes, img, text, element, removeMovieFromList}) => {
                         type === 'movie' ? (
                             <div className="p-4">
                                 <div className="mt-2 flex flex-col items-center">
-                                        <div className="group inline-block relative">
-                                            <Button label={<FaPlus />} rounded={true} onClick={() => toggleDropdown(element.id)} />
-                                            {showDropdown && (
-                                                <div className="absolute left-0 bottom-[112%] w-36 bg-white border rounded-lg shadow-lg">
-                                                    <ul className="p-2">
-                                                        {userLists.map((list) => (
-                                                            <li
-                                                                key={list.id}
-                                                                className="cursor-pointer py-1 px-2 hover:bg-gray-100"
-                                                                onClick={() => handleSaveToExistingList(list, element.id)}
-                                                            >
-                                                                {list.name}
-                                                            </li>
-                                                        ))}
+                                    <div className="group inline-block relative">
+                                        <Button label={<FaPlus/>} rounded={true}
+                                                onClick={() => toggleDropdown(element.id)}/>
+                                        {showDropdown && (
+                                            <div
+                                                className="absolute left-0 bottom-[112%] w-36 bg-white border rounded-lg shadow-lg">
+                                                <ul className="p-2">
+                                                    {userLists.map((list) => (
                                                         <li
+                                                            key={list.id}
                                                             className="cursor-pointer py-1 px-2 hover:bg-gray-100"
-                                                            onClick={openCreateListPopup}
+                                                            onClick={() => handleSaveToExistingList(list, element.id)}
                                                         >
-                                                            <FaPlus className="mr-2 inline" />New List
+                                                            {list.name}
                                                         </li>
-                                                    </ul>
-                                                </div>
-                                            )}
-                                        </div>
+                                                    ))}
+                                                    <li
+                                                        className="cursor-pointer py-1 px-2 hover:bg-gray-100"
+                                                        onClick={openCreateListPopup}
+                                                    >
+                                                        <FaPlus className="mr-2 inline"/>New List
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
                         ) : type === 'list' ? (
@@ -328,9 +337,16 @@ const Card = ({type, classes, img, text, element, removeMovieFromList}) => {
                                 </Link>
                                 <div className="p-2">
                                     <div className="flex flex-col items-center">
-                                        <div className="flex space-x-2">
-                                            <Button label={<FaEdit />} rounded={true} onClick={() => editList(element)} size={'small'}/>
-                                            <Button label={<FaTrash/>} rounded={true} onClick={() => showDeletePopup(element.id)} size={'small'} variant={'secondary'}/>
+                                        <div className="flex space-x-2"
+                                             style={{visibility: element.private ? 'hidden' : 'visible'}}>
+                                            <Button label={<FaEdit/>} rounded={true}
+                                                    onClick={() => editList(element)} size={'small'}
+                                                    disabled={element.private}
+                                                    variant={element.private ? 'nobg' : 'secondary'}/>
+                                            <Button label={<FaTrash/>} rounded={true}
+                                                    onClick={() => showDeletePopup(element.id)} size={'small'}
+                                                    disabled={element.private}
+                                                    variant={element.private ? 'nobg' : 'secondary'} />
                                         </div>
                                     </div>
                                 </div>
@@ -339,7 +355,8 @@ const Card = ({type, classes, img, text, element, removeMovieFromList}) => {
                             <div className="pb-2">
                                 <div className="flex flex-col items-center">
                                     <div className="flex pb-2">
-                                        <img className="object-cover w-8 h-8 border-2 border-gray-300 rounded-full mr-1" src={avatar}/>
+                                        <img className="object-cover w-8 h-8 border-2 border-gray-300 rounded-full mr-1"
+                                             src={avatar}/>
                                         <span className=''>{author}</span>
                                     </div>
                                     <div className="flex space-x-4">
@@ -356,10 +373,12 @@ const Card = ({type, classes, img, text, element, removeMovieFromList}) => {
                             </div>
                         ) : type === 'my-movie' ? (
                             <div className="p-4">
-                                <div className="grid grid-cols-2 gap-5 ml-5 mr-5">
-                                    <Button label={<FaPlus />} rounded={true} onClick={() => toggleDropdown(element.id)} />
+                                <div className="grid grid-cols-2 gap-5 ml-5 mr-5 relative">
+                                    <Button label={<FaPlus/>} rounded={true}
+                                            onClick={() => toggleDropdown(element.id)}/>
                                     {showDropdown && (
-                                        <div className="absolute left-0 bottom-[112%] w-36 bg-white border rounded-lg shadow-lg">
+                                        <div
+                                            className="absolute left-0 bottom-[112%] w-36 bg-white border rounded-lg shadow-lg">
                                             <ul className="p-2">
                                                 {userLists.map((list) => (
                                                     <li
@@ -374,12 +393,13 @@ const Card = ({type, classes, img, text, element, removeMovieFromList}) => {
                                                     className="cursor-pointer py-1 px-2 hover:bg-gray-100"
                                                     onClick={openCreateListPopup}
                                                 >
-                                                    <FaPlus className="mr-2 inline" />New List
+                                                    <FaPlus className="mr-2 inline"/>New List
                                                 </li>
                                             </ul>
                                         </div>
                                     )}
-                                    <Button label={<FaTrash />} rounded={true} variant="cancel" onClick={() => removeMovieFromList(element.id)} />
+                                    <Button label={<FaTrash/>} rounded={true} variant="cancel"
+                                            onClick={() => removeMovieFromList(element.id)}/>
                                 </div>
                             </div>
                         ) : null

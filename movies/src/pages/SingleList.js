@@ -112,26 +112,30 @@ const SingleList = ({url}) => {
     }
 
     const handleLike = async () => {
-        if (token) {
-            if (!isLiked) {
-                api.post('/like/' + id, null,
-                    {
-                        headers: {
-                            'Authorization': `Bearer ${token}`,
-                        }
-                    });
-                setIsLiked(true)
-                likes.push(Object);
-            } else {
-                api.delete('/like/' + id,
-                    {
-                        headers: {
-                            'Authorization': `Bearer ${token}`,
-                        }
-                    });
-                setIsLiked(false)
-                likes.pop(Object);
+        try {
+            if (token) {
+                if (!isLiked) {
+                    await api.post('/like/' + id, null,
+                        {
+                            headers: {
+                                'Authorization': `Bearer ${token}`,
+                            }
+                        });
+                    setIsLiked(true)
+                    likes.push(Object);
+                } else {
+                    await api.delete('/like/' + id,
+                        {
+                            headers: {
+                                'Authorization': `Bearer ${token}`,
+                            }
+                        });
+                    setIsLiked(false)
+                    likes.pop(Object);
+                }
             }
+        } catch (error) {
+            console.error('Errore: ', error);
         }
     }
 
