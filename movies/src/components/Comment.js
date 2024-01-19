@@ -48,12 +48,9 @@ const Comment = ({ content, onCommentDelete }) => {
           const title = content.comment.replace(new RegExp('"', 'g'), "&quot;").replace(new RegExp("'", 'g'), "’");
 
           if (content.user_id === authState.userId) {
-              dispatch(popupStateUserDeleteComment(content.id, title));
-
-              onCommentDelete();
+              dispatch(popupStateUserDeleteComment(content.id, title, onCommentDelete));
           }
-
-          if(authState.is_superuser){
+          else if(authState.is_superuser){
                 dispatch(popupStateAdminDeleteComment(content.id, title));
           }
     };

@@ -25,6 +25,7 @@ const Popup = () => {
         const method = popupState.click_yes.method;
         const hide_table = popupState.click_yes.hide_table;
         const hide_id = popupState.click_yes.hide_id;
+        const function_success = popupState.click_yes.function_success;
 
         if (url != null) {
             api[method](url, config)
@@ -40,6 +41,11 @@ const Popup = () => {
                                 value: hide_id,
                             }
                     });
+
+                    //Questa parte per lo più nella parte user
+                    if (function_success != null) {
+                        function_success();
+                    }
                 })
                 .catch(error => {
                     console.error('There was a problem with the fetch operation: ', error);

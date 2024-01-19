@@ -1,4 +1,4 @@
-const popupStateUserDeleteComment = (comment_id, comment_title) => {
+const popupStateUserDeleteComment = (comment_id, comment_title, function_success = null) => {
 
     let payload = {
         show: true,
@@ -11,6 +11,7 @@ const popupStateUserDeleteComment = (comment_id, comment_title) => {
             method: "delete",
             hide_table: 'comment',
             hide_id: comment_id,
+            function_success: function_success,
         },
     };
 
