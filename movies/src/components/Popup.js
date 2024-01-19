@@ -91,18 +91,18 @@ const Popup = () => {
                                 popupState.text_no &&
                                 <Button
                                     onClick={handleNo}
-                                    rounded={true}
+                                    //rounded={true}
                                     label={popupState.text_no}
-                                    classes={"mr-2 ml-2 bg-gray-500 hover:bg-gray-600"}
+                                    classes={"mr-2 ml-2 bg-gray-500 hover:bg-gray-600 rounded-full"}
                                 />
                             }
                             {
                                 popupState.text_yes &&
                                 <Button
                                     onClick={handleYes}
-                                    rounded={true}
+                                    //rounded={true}
                                     label={popupState.text_yes}
-                                    classes={"mr-2 ml-2 bg-red-500 hover:bg-red-600"}
+                                    classes={"mr-2 ml-2 bg-red-500 hover:bg-red-600 rounded-full"}
                                 />
                             }
                         </>

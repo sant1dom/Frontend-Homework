@@ -273,7 +273,7 @@ const Card = ({type, classes, img, text, element, removeMovieFromList}) => {
 
     const deletePopupButtons = <div>
         <Button onClick={() => deleteList(element)}
-                classes={"bg-red-500 text-white rounded-full py-1 px-2 hover:bg-blue-600"} label={"Delete"}/>
+                classes={"bg-red-500 text-white rounded-full py-1 px-2 hover:bg-red-600"} label={"Delete"}/>
         <Button onClick={closeDeletePopup} variant={'cancel'}
                 classes={"bg-gray-200 text-black rounded-full py-1 px-2 ml-2 hover:bg-gray-300"} label={"Cancel"}/>
     </div>;
