@@ -9,6 +9,7 @@ import Modal from "./Modal";
 import {useSelector} from "react-redux";
 import axios from "axios";
 import {Link} from "react-router-dom";
+import FeedbackMessage from "./FeedbackMessage";
 
 const OMDB_API_KEY = process.env.REACT_APP_OMDB_API_KEY;
 
@@ -29,6 +30,8 @@ const Card = ({type, classes, img, text, element, removeMovieFromList}) => {
     const [initialState, setInitialState] = useState(true);
     const [popupTitle, setPopupTitle] = useState('Create new list');
     const [selectedList, setSelectedList] = useState(null);
+    const [showFeedback, setShowFeedback] = useState(false);
+    const [feedbackMessage, setFeedbackMessage] = useState("Operazione eseguita");
     const authState = useSelector((state) => state.auth);
     const [isDeleted, setIsDeleted] = useState(false);
     const token = Cookies.get("access-token");
@@ -146,12 +149,24 @@ const Card = ({type, classes, img, text, element, removeMovieFromList}) => {
                 setSelectedList(list); // Aggiorna lo stato con la lista selezionata
                 setShowDropdown(false);
 
+                showAndHideFeedbackMessage("Movie added to the list!", 2000);
+
             } catch (error) {
                 // Gestisci gli errori qui
                 console.error('Errore nel salvataggio del film nella lista:', error);
             }
         }
         setSelectedList(list);
+    };
+
+    const showAndHideFeedbackMessage = (message, duration) => {
+        setFeedbackMessage(message);
+        setShowFeedback(true);
+
+        setTimeout(() => {
+            setShowFeedback(false);
+            setFeedbackMessage('');
+        }, duration);
     };
 
     const createNewList = async (list) => {
@@ -181,6 +196,8 @@ const Card = ({type, classes, img, text, element, removeMovieFromList}) => {
                     console.log('Lista creata con successo:', response.data);
 
                     closeCreateListPopup();
+
+                    showAndHideFeedbackMessage("Movie added to the new list!", 2000);
 
                 } catch (error) {
                     // Gestisci gli errori qui
@@ -278,7 +295,7 @@ const Card = ({type, classes, img, text, element, removeMovieFromList}) => {
                 classes={"bg-red-500 text-white rounded-full py-1 px-2 hover:bg-red-600 ml-2"} label={"Delete"}/>
     </div>;
 
-    const color = type === 'movie' ? 'rounded-lg bg-sky-100 shadow-2xl max-w-72' : 'rounded-lg bg-amber-300 shadow-2xl max-w-72';
+    const color = type === 'movie' || type === 'my-movie' ? 'rounded-lg bg-sky-100 shadow-2xl max-w-72' : 'rounded-lg bg-amber-300 shadow-2xl max-w-72';
 
 
     return (
@@ -423,6 +440,11 @@ const Card = ({type, classes, img, text, element, removeMovieFromList}) => {
                     onClose={() => {
                         closeDeletePopup();
                     }}
+                />
+            )}
+            {showFeedback && (
+                <FeedbackMessage
+                    message={feedbackMessage}
                 />
             )}
         </>
