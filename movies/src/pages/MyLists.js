@@ -44,13 +44,16 @@ const MyLists = () => {
         setDBLists((prevLists) => [...prevLists, newList]);
     };
 
+    const removeList = (listId) => {
+        setDBLists((prevLists) => prevLists.filter((list) => list.id !== listId));
+    };
+
     const createNewList = async () => {
         if (listTitle.trim() === '') {
             return;
         }
 
         const newList = {
-            id: 1,
             user_id: authState.userId,
             name: listTitle,
             movies: [],
@@ -69,7 +72,7 @@ const MyLists = () => {
                 // Gestisci la risposta, ad esempio aggiornando lo stato o mostrando un messaggio
                 console.log('Lista creata con successo:', response.data);
 
-                handleAddCard(newList);
+                handleAddCard(response.data);
                 closeCreateListPopup();
 
             } catch (error) {
@@ -98,19 +101,17 @@ const MyLists = () => {
             <div className="mx-8 mb-5">
                 <h1 className="mt-5 mb-5 text-4xl">My Private Lists</h1>
 
-                <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8'>
-                    <div></div>
+                <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-8'>
                     {DBLists.filter(list => list.private).map((list) => (
-                        <>
-                            <Card key={list.id}
-                                classes={" flex flex-col justify-between hover:shadow-2xl transition duration-300 ease-in-out hover:scale-105 cursor-pointer"}
+                        <div key={list.id} className='flex justify-center'>
+                            <Card
+                                classes={" flex flex-col justify-between hover:shadow-2xl transition duration-300 ease-in-out hover:scale-105 cursor-pointer w-60"}
                                 type={"list"}
                                 text={<h2
                                     className="text-xl mb-2 overflow-hidden whitespace-nowrap overflow-ellipsis">{list.name}</h2>
                                 }
                                 element={list}/>
-                            <div></div>
-                        </>
+                        </div>
                     ))}
                 </div>
             </div>
@@ -120,20 +121,23 @@ const MyLists = () => {
 
                 <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8'>
                     {DBLists.filter(list => !list.private).map((list) => (
+                        <div key={list.id} className='flex justify-center'>
                         <Card key={list.id}
-                            classes={" flex flex-col justify-between hover:shadow-2xl transition duration-300 ease-in-out hover:scale-105 cursor-pointer"}
+                            classes={" flex flex-col justify-between hover:shadow-2xl transition duration-300 ease-in-out hover:scale-105 cursor-pointer w-60"}
                             type={"list"}
                             text={<h2
                                 className="text-xl mb-2 overflow-hidden whitespace-nowrap overflow-ellipsis">{list.name}</h2>
                             }
-                            element={list}/>
-                    
+                            element={list}
+                            removeList={removeList}/>
+                        </div>
                     ))}
-
+                    <div className='flex justify-center'>
                     <div className="rounded-lg bg-amber-300 shadow-2xl  max-w-72">
-                        <div className="flex items-center justify-center h-full">
+                        <div className="flex items-center justify-center h-full w-60">
                             <Button label={<FaPlus size="6rem"/>} variant="nobg" onClick={openCreateListPopup} size={'max'}/>
                         </div>
+                    </div>
                     </div>
 
                     

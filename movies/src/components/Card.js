@@ -13,7 +13,7 @@ import FeedbackMessage from "./FeedbackMessage";
 
 const OMDB_API_KEY = process.env.REACT_APP_OMDB_API_KEY;
 
-const Card = ({type, classes, img, text, element, removeMovieFromList}) => {
+const Card = ({type, classes, img, text, element, removeMovieFromList, removeList}) => {
 
     const [movies, setMovies] = useState([]);
     const [collageMovies, setCollageMovies] = useState([]);
@@ -61,28 +61,30 @@ const Card = ({type, classes, img, text, element, removeMovieFromList}) => {
 
     useEffect(() => {
         if (token && type === 'list') {
-            const fetchData = async () => {
-                api.get(`/mylists/${element.id}`,
-                    {
-                        headers: {
-                            'Authorization': `Bearer ${token}`,
+            if (element.id) {
+                const fetchData = async () => {
+                    api.get(`/mylists/${element.id}`,
+                        {
+                            headers: {
+                                'Authorization': `Bearer ${token}`,
+                            }
+                        }).then((response) => {
+                            console.log(response.data)
+                            setMovies(response.data.movies.slice(0, 4)); // Prendi i primi 4 film
                         }
-                    }).then((response) => {
-                        setMovies(response.data.movies.slice(0, 4)); // Prendi i primi 4 film
-                        console.log(movies)
-                    }
-                )
-                // const res = await api.get("/movies");
-                // console.log(res);
-                // console.log(res.data);
-                const moviesWithPosters = await Promise.all(movies.map(async (movie) => {
-                    movie.poster = await fetchMoviePoster(movie.imdb_url.split('/')[4]);
-                    return movie;
-                }));
-                setMovies(moviesWithPosters);
-                setCollageMovies(moviesWithPosters.slice(0, 4));
+                    )
+                    // const res = await api.get("/movies");
+                    // console.log(res);
+                    // console.log(res.data);
+                    const moviesWithPosters = await Promise.all(movies.map(async (movie) => {
+                        movie.poster = await fetchMoviePoster(movie.imdb_url.split('/')[4]);
+                        return movie;
+                    }));
+                    setMovies(moviesWithPosters);
+                    setCollageMovies(moviesWithPosters.slice(0, 4));
+                }
+                fetchData();
             }
-            fetchData();
         }
     }, [element.id]);
 
@@ -208,7 +210,7 @@ const Card = ({type, classes, img, text, element, removeMovieFromList}) => {
                 try {
                     const updateList = {
                         name: listTitle,
-                        movies: [], //TODO: Mettere i veri movies
+                        movies: movies,
                         //movies: [movies.map(movie => movie.id)],
                     };
                     console.log("movies" + list.movies)
@@ -223,6 +225,7 @@ const Card = ({type, classes, img, text, element, removeMovieFromList}) => {
 
                     closeCreateListPopup();
                     setCardTitle(updateList.name)
+                    element = response.data;
                     setInitialState(false)
 
                 } catch (error) {
@@ -256,6 +259,7 @@ const Card = ({type, classes, img, text, element, removeMovieFromList}) => {
                 });
                 setDeletePopupVisible(false);
                 setIsDeleted(true);
+                removeList(element.id)
                 return response.data;
             } catch (error) {
                 console.log(error);

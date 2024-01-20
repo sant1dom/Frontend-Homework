@@ -11,7 +11,7 @@ const FeedbackMessage = React.memo(({message, classes}) => {
     };
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center overflow-x-hidden overflow-y-auto outline-none focus:outline-none">
+        <div className="fixed inset-0 z-50 flex items-center justify-center focus:outline-none pointer-events-none">
             <div className="relative w-auto my-6 mx-auto max-w-3xl">
                 <div className={getClasses()}>
                     <p>{message}</p>
