@@ -4,7 +4,7 @@ import parse from "html-react-parser";
 import Cookies from 'js-cookie';
 import {useDispatch, useSelector} from "react-redux";
 import Button from './Button';
-import {FaTrash} from "react-icons/fa";
+import {FaEdit, FaTrash} from "react-icons/fa";
 import popupStateUserDeleteComment from "../store/popupStateUserDeleteComment";
 import popupStateAdminDeleteComment from "../store/popupStateAdminDeleteComment";
 
@@ -42,7 +42,11 @@ const Comment = ({ content, onCommentDelete }) => {
           const days = Math.floor(seconds / 86400);
           return `${days} ${days === 1 ? "day" : "days"} ago`;
         }
-      };      
+      };
+
+    const handleEditComment = async () => {
+        //TODO: Open popup and edit comment
+    };
 
       const handleDeleteComment = async () => {
           const title = content.comment.replace(new RegExp('"', 'g'), "&quot;").replace(new RegExp("'", 'g'), "’");
@@ -61,12 +65,17 @@ const Comment = ({ content, onCommentDelete }) => {
             <div className="container px-0 mx-auto sm:px-5 mb-5 w-2/3">
                 <div className="flex-col py-4 bg-white border-b-2 border-r-2 border-gray-200 sm:px-4 sm:py-4 md:px-4 sm:rounded-lg shadow-2xl">
                     <div className="flex flex-row">
-                        <div>
-                            <img className="object-cover w-12 h-12 border-2 border-gray-300 rounded-full mb-3"
+                        <div className="text-center">
+                            <img className="mx-auto object-cover w-12 h-12 border-2 border-gray-300 rounded-full mb-3"
                                 src={avatar} alt="Avatar"/>
-                            {(content.user_id === authState.userId) || authState.is_superuser? (
-                                <Button label={<FaTrash/>} variant="cancel" onClick={handleDeleteComment}/>                              
-                            ): null}
+                            <div className="mx-auto">
+                                {(content.user_id === authState.userId) || authState.is_superuser? (
+                                    <>
+                                        <Button label={<FaEdit/>} variant="hover-nobg" size="small" onClick={handleEditComment}/>
+                                        <Button label={<FaTrash/>} variant="hover-nobg" size="small" onClick={handleDeleteComment}/>
+                                    </>
+                                ): null}
+                            </div>
                         </div>
                         <div className="flex-col mt-1">
                             <div className="flex items-center flex-1 px-4 font-bold leading-tight">
