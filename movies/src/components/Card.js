@@ -10,6 +10,7 @@ import {useSelector} from "react-redux";
 import axios from "axios";
 import {Link} from "react-router-dom";
 import FeedbackMessage from "./FeedbackMessage";
+import Dropdown from "./Dropdown";
 
 const OMDB_API_KEY = process.env.REACT_APP_OMDB_API_KEY;
 
@@ -17,10 +18,6 @@ const Card = ({type, classes, img, text, element, removeMovieFromList, removeLis
 
     const [movies, setMovies] = useState([]);
     const [collageMovies, setCollageMovies] = useState([]);
-    // const [favourites, setFavourites] = useState([]);
-    const [isFavourite, setIsFavourite] = useState(false);
-    // const [watchlist, setWatchlist] = useState([]);
-    const [isWatchlist, setIsWatchlist] = useState(false);
     const [showDropdown, setShowDropdown] = useState(false);
     const [userLists, setUserLists] = useState([]);
     const [createPopupVisible, setCreatePopupVisible] = useState(false);
@@ -29,7 +26,6 @@ const Card = ({type, classes, img, text, element, removeMovieFromList, removeLis
     const [cardTitle, setCardTitle] = useState('');
     const [initialState, setInitialState] = useState(true);
     const [popupTitle, setPopupTitle] = useState('Create new list');
-    const [selectedList, setSelectedList] = useState(null);
     const [showFeedback, setShowFeedback] = useState(false);
     const [feedbackMessage, setFeedbackMessage] = useState("Operazione eseguita");
     const authState = useSelector((state) => state.auth);
@@ -38,53 +34,41 @@ const Card = ({type, classes, img, text, element, removeMovieFromList, removeLis
     const token = Cookies.get("access-token");
     const [author, setAuthor] = useState('');
     const [avatar, setAvatar] = useState('');
-    const [lists,] = useState([]);
 
-
-    // useEffect(() => {
-    //     document.addEventListener("keydown", handleEscape, false);
-    //     return () => {
-    //         document.removeEventListener("keydown", handleEscape, false);
-    //     };
-    // }, [handleEscape])
 
     useEffect(() => {
-        if (type === 'best-lists') {
-            const fetchAuthor = async () => {
-                api.get('/users/' + element.user_id).then((response) => {
-                    setAuthor(response.data.email);
-                    setAvatar(process.env.REACT_APP_BASE_URL + "/" + response.data.image);
-                });
-            };
-            fetchAuthor();
-        }
-    }, []);
-
-    useEffect(() => {
-        if (token && type === 'list') {
-            if (element.id) {
-                const fetchData = async () => {
-                    api.get(`/mylists/${element.id}`,
-                        {
-                            headers: {
-                                'Authorization': `Bearer ${token}`,
+        if (token) {
+            if (type === 'best-lists') {
+                const fetchAuthor = async () => {
+                    api.get('/users/' + element.user_id).then((response) => {
+                        setAuthor(response.data.email);
+                        setAvatar(process.env.REACT_APP_BASE_URL + "/" + response.data.image);
+                    });
+                };
+                fetchAuthor();
+            }
+            if (type === 'list') {
+                if (element.id) {
+                    const fetchData = async () => {
+                        api.get(`/mylists/${element.id}`,
+                            {
+                                headers: {
+                                    'Authorization': `Bearer ${token}`,
+                                }
+                            }).then((response) => {
+                                console.log(response.data)
+                                setMovies(response.data.movies.slice(0, 4)); // Prendi i primi 4 film
                             }
-                        }).then((response) => {
-                            console.log(response.data)
-                            setMovies(response.data.movies.slice(0, 4)); // Prendi i primi 4 film
-                        }
-                    )
-                    // const res = await api.get("/movies");
-                    // console.log(res);
-                    // console.log(res.data);
-                    const moviesWithPosters = await Promise.all(movies.map(async (movie) => {
-                        movie.poster = await fetchMoviePoster(movie.imdb_url.split('/')[4]);
-                        return movie;
-                    }));
-                    setMovies(moviesWithPosters);
-                    setCollageMovies(moviesWithPosters.slice(0, 4));
+                        )
+                        const moviesWithPosters = await Promise.all(movies.map(async (movie) => {
+                            movie.poster = await fetchMoviePoster(movie.imdb_url.split('/')[4]);
+                            return movie;
+                        }));
+                        setMovies(moviesWithPosters);
+                        setCollageMovies(moviesWithPosters.slice(0, 4));
+                    }
+                    fetchData();
                 }
-                fetchData();
             }
         }
     }, [element.id]);
@@ -120,6 +104,16 @@ const Card = ({type, classes, img, text, element, removeMovieFromList, removeLis
         setShowDropdown(!showDropdown);
     };
 
+    const showAndHideFeedbackMessage = (message, duration) => {
+        setFeedbackMessage(message);
+        setShowFeedback(true);
+
+        setTimeout(() => {
+            setShowFeedback(false);
+            setFeedbackMessage('');
+        }, duration);
+    };
+
     const openCreateListPopup = () => {
         setPopupTitle("Create new list")
         setCreatePopupVisible(true);
@@ -133,45 +127,6 @@ const Card = ({type, classes, img, text, element, removeMovieFromList, removeLis
         setListTitle('');
     };
 
-    const handleSaveToExistingList = async (list, movie_id) => {
-        const token = Cookies.get("access-token");
-
-        if (token) {
-            try {
-                const response = await api.post(`/mylists/${list.id}`, element, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                    },
-                    params: {
-                        movie_id: movie_id,
-                    },
-                });
-
-                // Gestisci la risposta, ad esempio aggiornando lo stato o mostrando un messaggio
-                console.log('Film salvato nella lista con successo:', response.data);
-
-                setSelectedList(list); // Aggiorna lo stato con la lista selezionata
-                setShowDropdown(false);
-
-                showAndHideFeedbackMessage("Movie added to the list!", 2000);
-
-            } catch (error) {
-                // Gestisci gli errori qui
-                console.error('Errore nel salvataggio del film nella lista:', error);
-            }
-        }
-        setSelectedList(list);
-    };
-
-    const showAndHideFeedbackMessage = (message, duration) => {
-        setFeedbackMessage(message);
-        setShowFeedback(true);
-
-        setTimeout(() => {
-            setShowFeedback(false);
-            setFeedbackMessage('');
-        }, duration);
-    };
 
     const createNewList = async (list) => {
         const token = Cookies.get("access-token");
@@ -236,7 +191,6 @@ const Card = ({type, classes, img, text, element, removeMovieFromList, removeLis
                     setInitialState(false)
 
                 } catch (error) {
-                    // Gestisci gli errori qui
                     console.error('Errore nella modifica della lista:', error);
                 }
             }
@@ -309,12 +263,13 @@ const Card = ({type, classes, img, text, element, removeMovieFromList, removeLis
                     classes={" rounded-full py-1 px-2 ml-2 hover:bg-gray-300"} label={"Cancel"}/>
         </>
 
-    const deletePopupButtons = <div>
-        <Button onClick={closeDeletePopup} variant={'cancel'}
-                classes={"bg-gray-200 text-black rounded-full py-1 px-2 hover:bg-gray-300"} label={"Cancel"}/>
-                <Button onClick={() => deleteList(element)}
-                classes={"bg-red-500 text-white rounded-full py-1 px-2 hover:bg-red-600 ml-2"} label={"Delete"}/>
-    </div>;
+    const deletePopupButtons =
+        <div>
+            <Button onClick={closeDeletePopup} variant={'cancel'}
+                    classes={"bg-gray-200 text-black rounded-full py-1 px-2 hover:bg-gray-300"} label={"Cancel"}/>
+            <Button onClick={() => deleteList(element)}
+                    classes={"bg-red-500 text-white rounded-full py-1 px-2 hover:bg-red-600 ml-2"} label={"Delete"}/>
+        </div>;
 
     const color = type === 'movie' || type === 'my-movie' ? 'rounded-lg bg-sky-100 shadow-2xl max-w-72' : 'rounded-lg bg-amber-300 shadow-2xl max-w-72';
 
@@ -335,26 +290,12 @@ const Card = ({type, classes, img, text, element, removeMovieFromList, removeLis
                                         <Button label={<FaPlus/>} rounded={true}
                                                 onClick={() => toggleDropdown(element.id)}/>
                                         {showDropdown && (
-                                            <div
-                                                className="absolute left-0 bottom-[112%] w-36 bg-white border rounded-lg shadow-lg">
-                                                <ul className="p-2">
-                                                    {userLists.map((list) => (
-                                                        <li
-                                                            key={list.id}
-                                                            className="cursor-pointer py-1 px-2 hover:bg-gray-100"
-                                                            onClick={() => handleSaveToExistingList(list, element.id)}
-                                                        >
-                                                            {list.name}
-                                                        </li>
-                                                    ))}
-                                                    <li
-                                                        className="cursor-pointer py-1 px-2 hover:bg-gray-100"
-                                                        onClick={openCreateListPopup}
-                                                    >
-                                                        <FaPlus className="mr-2 inline"/>New List
-                                                    </li>
-                                                </ul>
-                                            </div>
+                                            <Dropdown movie={element}
+                                                      elements={userLists}
+                                                      toggleDropdown={toggleDropdown}
+                                                      showAndHideFeedbackMessage={showAndHideFeedbackMessage}
+                                                      openCreateListPopup={openCreateListPopup}
+                                            />
                                         )}
                                     </div>
                                 </div>
@@ -429,26 +370,7 @@ const Card = ({type, classes, img, text, element, removeMovieFromList, removeLis
                                     <Button label={<FaPlus/>} rounded={true}
                                             onClick={() => toggleDropdown(element.id)}/>
                                     {showDropdown && (
-                                        <div
-                                            className="absolute left-0 bottom-[112%] w-36 bg-white border rounded-lg shadow-lg">
-                                            <ul className="p-2">
-                                                {userLists.map((list) => (
-                                                    <li
-                                                        key={list.id}
-                                                        className="cursor-pointer py-1 px-2 hover:bg-gray-100"
-                                                        onClick={() => handleSaveToExistingList(list, element.id)}
-                                                    >
-                                                        {list.name}
-                                                    </li>
-                                                ))}
-                                                <li
-                                                    className="cursor-pointer py-1 px-2 hover:bg-gray-100"
-                                                    onClick={openCreateListPopup}
-                                                >
-                                                    <FaPlus className="mr-2 inline"/>New List
-                                                </li>
-                                            </ul>
-                                        </div>
+                                        <Dropdown movie={element} elements={userLists} toggleDropdown={toggleDropdown} showAndHideFeedbackMessage={showAndHideFeedbackMessage}/>
                                     )}
                                     <Button label={<FaTrash/>} rounded={true} variant="cancel"
                                             onClick={() => removeMovieFromList(element.id)}/>
