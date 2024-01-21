@@ -34,6 +34,7 @@ const Card = ({type, classes, img, text, element, removeMovieFromList, removeLis
     const [feedbackMessage, setFeedbackMessage] = useState("Operazione eseguita");
     const authState = useSelector((state) => state.auth);
     const [isDeleted, setIsDeleted] = useState(false);
+    const [errorVisibility, setErrorVisibility] = useState("hidden");
     const token = Cookies.get("access-token");
     const [author, setAuthor] = useState('');
     const [avatar, setAvatar] = useState('');
@@ -122,6 +123,7 @@ const Card = ({type, classes, img, text, element, removeMovieFromList, removeLis
     const openCreateListPopup = () => {
         setPopupTitle("Create new list")
         setCreatePopupVisible(true);
+        setErrorVisibility("hidden")
 
         setShowDropdown(!showDropdown);
     };
@@ -176,6 +178,7 @@ const Card = ({type, classes, img, text, element, removeMovieFromList, removeLis
         if (token) {
             if (popupTitle === "Create new list") { //Create list
                 if (listTitle.trim() === '') {
+                    setErrorVisibility("")
                     return;
                 }
 
@@ -208,6 +211,10 @@ const Card = ({type, classes, img, text, element, removeMovieFromList, removeLis
 
             } else if (popupTitle === "Edit list") { //Edit list
                 try {
+                    if (listTitle.trim() === '') {
+                        setErrorVisibility("")
+                        return;
+                    }
                     const updateList = {
                         name: listTitle,
                         movies: movies,
@@ -279,18 +286,28 @@ const Card = ({type, classes, img, text, element, removeMovieFromList, removeLis
         setDeletePopupVisible(false);
     };
 
-    const popupBody = <div><input
-        type="text"
-        placeholder="Titolo"
-        value={listTitle}
-        onChange={(e) => setListTitle(e.target.value)}
-        className="w-full p-2 mb-2 border rounded"
-    />
-        <Button onClick={() => createNewList(element)}
-                classes={"bg-blue-500 text-white rounded-full py-1 px-2 hover:bg-blue-600"} label={"Send"}/>
-        <Button onClick={closeCreateListPopup} variant={'cancel'}
-                classes={" rounded-full py-1 px-2 ml-2 hover:bg-gray-300"} label={"Cancel"}/>
-    </div>
+    const handleWriting = (title) => {
+        setListTitle(title);
+        setErrorVisibility("hidden")
+    };
+
+    const popupBody =
+        <>
+            <div className={"w-full p-2 mb-2"}>
+                <input
+                    type="text"
+                    placeholder="Titolo"
+                    value={listTitle}
+                    onChange={(e) => handleWriting(e.target.value)}
+                    className="w-full p-2 mb-2 border rounded"
+                />
+                <p className={"text-red-600 " + errorVisibility}>Write a title</p>
+            </div>
+            <Button onClick={() => createNewList(element)}
+                    classes={"bg-blue-500 text-white rounded-full py-1 px-2 hover:bg-blue-600"} label={"Send"}/>
+            <Button onClick={closeCreateListPopup} variant={'cancel'}
+                    classes={" rounded-full py-1 px-2 ml-2 hover:bg-gray-300"} label={"Cancel"}/>
+        </>
 
     const deletePopupButtons = <div>
         <Button onClick={closeDeletePopup} variant={'cancel'}

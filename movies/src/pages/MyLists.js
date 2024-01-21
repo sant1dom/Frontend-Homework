@@ -12,6 +12,8 @@ const MyLists = () => {
     const [DBLists, setDBLists] = useState([]);
     const token = Cookies.get("access-token");
     const [popupVisible, setPopupVisible] = useState(false);
+    const [showError, setShowError] = useState(false);
+    const [errorVisibility, setErrorVisibility] = useState("hidden");
     const [listTitle, setListTitle] = useState('');
     const authState = useSelector((state) => state.auth);
 
@@ -33,6 +35,7 @@ const MyLists = () => {
 
     const openCreateListPopup = () => {
         setPopupVisible(true);
+        setErrorVisibility("hidden")
     };
 
     const closeCreateListPopup = () => {
@@ -47,9 +50,14 @@ const MyLists = () => {
     const removeList = (listId) => {
         setDBLists((prevLists) => prevLists.filter((list) => list.id !== listId));
     };
+    const handleWriting = (title) => {
+        setListTitle(title);
+        setErrorVisibility("hidden")
+    };
 
     const createNewList = async () => {
         if (listTitle.trim() === '') {
+            setErrorVisibility("")
             return;
         }
 
@@ -82,18 +90,23 @@ const MyLists = () => {
         }
     };
 
-    const popupBody = <><input
-        type="text"
-        placeholder="Titolo"
-        value={listTitle}
-        onChange={(e) => setListTitle(e.target.value)}
-        className="w-full p-2 mb-2 border rounded"
-    />
-        <Button onClick={createNewList} classes={"bg-blue-500 text-white rounded-full py-1 px-2 hover:bg-blue-600"}
-                label={"Create"}/>
-        <Button onClick={closeCreateListPopup}
-                classes={"bg-gray-200 text-black rounded-full py-1 px-2 ml-2 hover:bg-gray-300"} label={"Cancel"}/>
-    </>
+    const popupBody =
+        <>
+            <div className={"w-full p-2 mb-2"}>
+                <input
+                    type="text"
+                    placeholder="Title"
+                    value={listTitle}
+                    onChange={(e) => handleWriting(e.target.value)}
+                    className="w-full p-2 mb-2 border rounded"
+                />
+                <p className={"text-red-600 " + errorVisibility}>Write a title</p>
+            </div>
+            <Button onClick={createNewList} classes={"bg-blue-500 text-white rounded-full py-1 px-2 hover:bg-blue-600"}
+                    label={"Create"}/>
+            <Button onClick={closeCreateListPopup}
+                    classes={"bg-gray-200 text-black rounded-full py-1 px-2 ml-2 hover:bg-gray-300"} label={"Cancel"}/>
+        </>
 
     return (
         <div className="mx-auto">
