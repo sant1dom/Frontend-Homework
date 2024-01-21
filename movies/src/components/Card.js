@@ -343,7 +343,7 @@ const Card = ({type, classes, img, text, element, removeMovieFromList, removeLis
                                 </div>
                             </div>
                         ) : type === 'list' ? (
-                            <div>
+                            <>
                                 <Link to={`/mylists/${element.id}`} className="block">
                                     <div className="grid grid-cols-2 grid-rows-2 w-full h-48">
                                         {collageMovies.map((movie) => (
@@ -371,27 +371,41 @@ const Card = ({type, classes, img, text, element, removeMovieFromList, removeLis
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </>
                         ) : type === 'best-lists' ? (
-                            <div className="pb-2">
-                                <div className="flex flex-col items-center">
-                                    <div className="flex pb-2">
-                                        <img className="object-cover w-8 h-8 border-2 border-gray-300 rounded-full mr-1"
-                                            src={avatar}/>
-                                        <span className=''>{author}</span>
+                            <>
+                                <Link to={`/bestlists/${element.id}`} className="block">
+                                    <div className="grid grid-cols-2 grid-rows-2 w-full h-48">
+                                        {collageMovies.map((movie) => (
+                                            <img
+                                                key={movie.id}
+                                                src={movie.poster}
+                                                alt={movie.title}
+                                                className="collage-image object-cover w-full h-full"
+                                            />
+                                        ))}
                                     </div>
-                                    <div className="flex space-x-4">
-                                        <div className="flex items-center space-x-1">
-                                            <BiLike size={21}/>
-                                            <span className=''>{element.likes.length}</span>
+                                </Link>
+                                <div className="pb-2">
+                                    <div className="flex flex-col items-center">
+                                        <div className="flex pb-2">
+                                            <img className="object-cover w-8 h-8 border-2 border-gray-300 rounded-full mr-1"
+                                                src={avatar}/>
+                                            <span className=''>{author}</span>
                                         </div>
-                                        <div className="flex items-center space-x-1">
-                                            <FaRegComment size={21}/>
-                                            <span>{element.comments.length}</span>
+                                        <div className="flex space-x-4">
+                                            <div className="flex items-center space-x-1">
+                                                <BiLike size={21}/>
+                                                <span className=''>{element.likes.length}</span>
+                                            </div>
+                                            <div className="flex items-center space-x-1">
+                                                <FaRegComment size={21}/>
+                                                <span>{element.comments.length}</span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </>
                         ) : type === 'my-movie' ? (
                             <div className="p-4">
                                 <div className="grid grid-cols-2 gap-5 ml-5 mr-5 relative">

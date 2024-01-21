@@ -82,7 +82,7 @@ const MyLists = () => {
         }
     };
 
-    const popupBody = <div><input
+    const popupBody = <><input
         type="text"
         placeholder="Titolo"
         value={listTitle}
@@ -93,7 +93,7 @@ const MyLists = () => {
                 label={"Create"}/>
         <Button onClick={closeCreateListPopup}
                 classes={"bg-gray-200 text-black rounded-full py-1 px-2 ml-2 hover:bg-gray-300"} label={"Cancel"}/>
-    </div>
+    </>
 
     return (
         <div className="mx-auto">
@@ -140,7 +140,7 @@ const MyLists = () => {
                     </div>
                     </div>
 
-                    
+
 
                     {popupVisible && (
                         <Modal

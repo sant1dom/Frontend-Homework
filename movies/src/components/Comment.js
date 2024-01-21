@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import api from "../utils/api";
 import parse from "html-react-parser";
 import Cookies from 'js-cookie';
@@ -7,14 +7,20 @@ import Button from './Button';
 import {FaEdit, FaTrash} from "react-icons/fa";
 import popupStateUserDeleteComment from "../store/popupStateUserDeleteComment";
 import popupStateAdminDeleteComment from "../store/popupStateAdminDeleteComment";
+import Modal from "./Modal";
 
 const Comment = ({ content, onCommentDelete }) => {
     const [author, setAuthor] = useState('');
     const [avatar, setAvatar] = useState('');
+    const [popupVisible, setPopupVisible] = useState(false);
+    const [commentText, setCommentText] = useState('');
     const authState = useSelector((state) => state.auth);
     const dispatch = useDispatch();
+    const token = Cookies.get("access-token");
+
 
     useEffect(() => {
+        console.log("content" +content)
         const fetchAuthor = async () => {
             api.get('/users/' + content.user_id).then((response) => {
                 setAuthor(response.data.email);
@@ -44,8 +50,29 @@ const Comment = ({ content, onCommentDelete }) => {
         }
       };
 
-    const handleEditComment = async () => {
-        //TODO: Open popup and edit comment
+    const openPopup = () => {
+        setCommentText(content.comment)
+        console.log("Commenttext" +commentText);
+        setPopupVisible(true);
+    };
+
+    const closePopup = () => {
+        setPopupVisible(false);
+    };
+
+    const handleEditComment = async (comment) => {
+        if (token) {
+            console.log("comment "+content.id)
+            content.comment = commentText;
+            await api.put('/comment/' + content.id, content,
+                {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                    }
+                });
+            closePopup()
+            //setRefresh(!refresh);
+        }
     };
 
       const handleDeleteComment = async () => {
@@ -59,6 +86,18 @@ const Comment = ({ content, onCommentDelete }) => {
           }
     };
 
+    const popupBody = <><textarea
+        placeholder="Insert Text"
+        value={commentText}
+        onChange={(e) => setCommentText(e.target.value)}
+        className="w-full p-2 mb-2 border rounded"
+    />
+        <Button onClick={handleEditComment} classes={"bg-blue-500 text-white rounded-full py-1 px-2 hover:bg-blue-600"}
+                label={"Edit"}/>
+        <Button onClick={closePopup}
+                classes={"bg-gray-200 text-black rounded-full py-1 px-2 ml-2 hover:bg-gray-300"} label={"Cancel"}/>
+    </>
+
 
     return(
         <>
@@ -68,10 +107,10 @@ const Comment = ({ content, onCommentDelete }) => {
                         <div className="text-center">
                             <img className="mx-auto object-cover w-12 h-12 border-2 border-gray-300 rounded-full mb-3"
                                 src={avatar} alt="Avatar"/>
-                            <div className="mx-auto">
+                            <div className="mx-auto flex justify-center">
                                 {(content.user_id === authState.userId) || authState.is_superuser? (
                                     <>
-                                        <Button label={<FaEdit/>} variant="hover-nobg" size="small" onClick={handleEditComment}/>
+                                        <Button label={<FaEdit/>} variant="hover-nobg" size="small" onClick={openPopup}/>
                                         <Button label={<FaTrash/>} variant="hover-nobg" size="small" onClick={handleDeleteComment}/>
                                     </>
                                 ): null}
@@ -89,6 +128,15 @@ const Comment = ({ content, onCommentDelete }) => {
                     </div>
                 </div>
             </div>
+            {popupVisible && (
+                <Modal
+                    title="Edit Comment"
+                    body={popupBody}
+                    onClose={() => {
+                        closePopup();
+                    }}
+                />
+            )}
         </>
     )
 }

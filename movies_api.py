@@ -349,6 +349,29 @@ async def comment_movie_list(movie_list_id: int, comment: str, user: user_depend
     db.refresh(db_comment)
     return {"message": "Movie list commented successfully"}
 
+@app.put("/comment/{comment_id}")
+async def update_comment(comment_id: int, updated_comment: dict, user: user_dependency, db: Session = Depends(get_db)):
+    # Verifica se il commento esiste nel database
+    db_comment = db.query(DBComment).filter(DBComment.id == comment_id).first()
+    if db_comment is None:
+        raise HTTPException(status_code=404, detail="Commento non trovato")
+
+    # Verifica se l'utente autenticato è l'autore del commento
+    if db_comment.user_id != user["id"]:
+        raise HTTPException(status_code=403, detail="Non sei autorizzato a modificare questo commento")
+
+    # Effettua l'aggiornamento del commento
+    if "comment" in updated_comment:
+        db_comment.comment = updated_comment["comment"]
+    if "updated_at" in updated_comment:
+        db_comment.updated_at = updated_comment["updated_at"]
+
+    db.commit()
+    db.refresh(db_comment)
+
+    return {"message": "Commento aggiornato con successo"}
+
+
 
 @app.get("/comments/{movie_list_id}")
 async def get_comments(movie_list_id: int, db: Session = Depends(get_db)):
