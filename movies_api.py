@@ -192,7 +192,12 @@ async def get_languages(db: Session = Depends(get_db)):
 
 @app.get("/mylists")
 async def get_my_lists(user: user_dependency, db: Session = Depends(get_db)):
-    movie_lists = db.query(DBMovieList).filter(DBMovieList.user_id == user["id"]).all()
+    db_movie_lists = db.query(DBMovieList).filter(DBMovieList.user_id == user["id"]).all()
+    movie_lists = [MovieList(**movie_list.__dict__) for movie_list in db_movie_lists]
+    for zip_list in zip(movie_lists, db_movie_lists):
+        zip_list[0].movies = [Movie(**movie.__dict__) for movie in zip_list[1].movies]
+        zip_list[0].comments = [Comment(**comment.__dict__) for comment in zip_list[1].comments]
+        zip_list[0].likes = [Like(**like.__dict__) for like in zip_list[1].likes]
     return movie_lists
 
 
