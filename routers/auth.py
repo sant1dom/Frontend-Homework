@@ -62,8 +62,8 @@ async def create_user(user: UserCreate, db: db_dependency):
                      profile_image="static/profile_images/base_avatar.jpg")
     db_user.hashed_password = bcrypt_context.hash(db_user.hashed_password)
     db_user.movie_lists = []
-    db_user.movie_lists.append(DBMovieList(name="Watchlist", user=db_user, movies=[], comments=[], likes=[]))
-    db_user.movie_lists.append(DBMovieList(name="Favourites", user=db_user, movies=[], comments=[], likes=[]))
+    db_user.movie_lists.append(DBMovieList(name="Watchlist", user=db_user, movies=[], comments=[], likes=[], private=True))
+    db_user.movie_lists.append(DBMovieList(name="Favourites", user=db_user, movies=[], comments=[], likes=[], private=True))
     db.add(db_user)
     db.commit()
     db.refresh(db_user)

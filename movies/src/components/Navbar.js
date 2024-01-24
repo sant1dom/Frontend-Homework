@@ -51,7 +51,7 @@ const Navbar = ({title, links, links_admin, backgroundColor, loading}) => {
     );
 
     const ProfileImageLink = React.memo(({authState}) => {
-        const profileImageUrl = `${process.env.REACT_APP_BASE_URL + "/" + authState.photo}`;
+        const profileImageUrl = `${process.env.REACT_APP_BASE_URL + authState.photo}`;
         return (
             <Link to={`/profile`}
                   onClick={() => {
@@ -186,7 +186,7 @@ const Navbar = ({title, links, links_admin, backgroundColor, loading}) => {
                                     <Link to={`/profile`}>
                                         <img
                                             className="inline-block h-10 w-10 rounded-full text-white"
-                                            src={process.env.REACT_APP_BASE_URL + "/" + authState.photo}
+                                            src={process.env.REACT_APP_BASE_URL + authState.photo}
                                             alt="Profile"
                                         />
                                     </Link>

@@ -44,7 +44,7 @@ const SearchBar = ({placeholder = 'Search...', setShowMobileMenu}) => {
     );
 
     const fetchMovieData = async (movieId) => {
-        const response = await axios.get(`http://omdbapi.com/?apikey=${OMDB_API_KEY}&i=${movieId}`);
+        const response = await axios.get(`https://omdbapi.com/?apikey=${OMDB_API_KEY}&i=${movieId}`);
         return response.data.Poster;
     };
     const [results, setResults] = useState([]);

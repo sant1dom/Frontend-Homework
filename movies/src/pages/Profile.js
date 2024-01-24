@@ -1,6 +1,6 @@
 import {useDispatch, useSelector} from "react-redux";
 import Button from "../components/Button";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {GoPencil} from "react-icons/go";
 import Modal from "../components/Modal";
 import {createPortal} from "react-dom";
@@ -56,6 +56,9 @@ const Profile = () => {
     const imageUploader = <FileUploader text="Upload a new profile image." extensions={['jpg', 'jpeg', 'png']}
                                         uploadAction={uploadAction} file={file} setFile={setFile} error={error}
                                         setError={setError}/>
+    useEffect(() => {
+        console.log(authState);
+    }, []);
 
     return (
         <div className="container mx-auto">
@@ -73,7 +76,7 @@ const Profile = () => {
                         onClick={() => { if (!isHovered) setShowModal(true) }}
                     >
                         <img
-                            src={process.env.REACT_APP_BASE_URL + "/" + authState.photo}
+                            src={process.env.REACT_APP_BASE_URL + authState.photo}
                             alt="Profile"
                             className="w-full h-full hover:opacity-75 hover:transition-opacity duration-150"
                         />

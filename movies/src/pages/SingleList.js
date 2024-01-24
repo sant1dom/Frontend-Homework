@@ -55,7 +55,7 @@ const SingleList = ({url}) => {
     });
 
     const fetchMoviePoster = async (IMDBId) => {
-        const response = await axios.get(`http://omdbapi.com/?apikey=${OMDB_API_KEY}&i=${IMDBId}`);
+        const response = await axios.get(`https://omdbapi.com/?apikey=${OMDB_API_KEY}&i=${IMDBId}`);
         return response.data.Poster;
     };
 
@@ -223,7 +223,7 @@ const SingleList = ({url}) => {
                 <CommentList id={id} refresh={refresh} onCommentDelete={handleCommentDelete}/>
 
                 <h1 className="mt-5 mb-5 text-2xl">Add a comment</h1>
-                <div className="container px-0 mx-auto sm:px-5 mb-5 w-1/2">
+                <div className="container px-0 mx-auto mb-5 w-1/2">
                     <EditorComment onSubmit={handleCommentSubmit}/>
                 </div>
                 </>

@@ -34,7 +34,7 @@ const AdminRowList = ({list}) => {
     useEffect(() => {
         api.get('/users/' + list.user_id, config).then((response) => {
             setAuthor(response.data.email);
-            setAvatar(process.env.REACT_APP_BASE_URL + "/" + response.data.image);
+            setAvatar(process.env.REACT_APP_BASE_URL + response.data.image);
         });
     });
 

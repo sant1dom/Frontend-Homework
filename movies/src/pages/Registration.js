@@ -30,7 +30,7 @@ const Registration = () => {
         if (!validateForm()) {
             return;
         }
-        api.post('http://localhost:8000/auth/register', JSON.stringify({
+        api.post('/auth/register', JSON.stringify({
             email: email,
             password: password
         })).then((response) => {

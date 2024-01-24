@@ -183,7 +183,7 @@ const AdvancedSearch = () => {
     }, [searchParams]);
 
     const fetchMoviePoster = async (IMDBId) => {
-        const response = await axios.get(`http://omdbapi.com/?apikey=${OMDB_API_KEY}&i=${IMDBId}`);
+        const response = await axios.get(`https://omdbapi.com/?apikey=${OMDB_API_KEY}&i=${IMDBId}`);
         return response.data.Poster;
     };
 

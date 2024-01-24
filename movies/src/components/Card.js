@@ -42,7 +42,7 @@ const Card = ({type, classes, img, text, element, removeMovieFromList, removeLis
                 const fetchAuthor = async () => {
                     api.get('/users/' + element.user_id).then((response) => {
                         setAuthor(response.data.email);
-                        setAvatar(process.env.REACT_APP_BASE_URL + "/" + response.data.image);
+                        setAvatar(process.env.REACT_APP_BASE_URL + response.data.image);
                     });
                 };
                 fetchAuthor();
@@ -74,7 +74,7 @@ const Card = ({type, classes, img, text, element, removeMovieFromList, removeLis
     }, [element.id]);
 
     const fetchMoviePoster = async (IMDBId) => {
-        const response = await axios.get(`http://omdbapi.com/?apikey=${OMDB_API_KEY}&i=${IMDBId}`);
+        const response = await axios.get(`https://omdbapi.com/?apikey=${OMDB_API_KEY}&i=${IMDBId}`);
         return response.data.Poster;
     };
 

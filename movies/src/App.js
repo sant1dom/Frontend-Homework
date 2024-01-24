@@ -98,8 +98,8 @@ function App() {
                 <Routes>
                     <Route path="/" element={<Layout loading={loading}/>}>
                         {!loading && <><Route index element={<Home/>}/>
-                            <Route path="/login" element={<Login/>}/>
-                            <Route path="/register" element={<Registration/>}/>
+                            {!authState.isAuth && <><Route path="/login" element={<Login/>}/>
+                                <Route path="/register" element={<Registration/>}/></>}
                             <Route path="/movie/:id" element={<Movie/>}/>
                             <Route path="/advanced-search" element={<AdvancedSearch/>}/>
                             {authState.isAuth && <>
