@@ -8,21 +8,20 @@ import api from "../utils/api";
 /* eslint import/no-webpack-loader-syntax: off */
 import contentCss from '!!raw-loader!tinymce/skins/content/default/content.min.css';
 import contentUiCss from '!!raw-loader!tinymce/skins/ui/oxide/content.min.css';
+import PropTypes from "prop-types";
 
-const EditorComment = ({ onSubmit }) => {
+const EditorComment = ({ onSubmit, label, initialContent }) => {
     const editorRef = useRef(null);
     const token = Cookies.get("access-token");
     const [comment, setComment] = useState('');
 
     const handleEditorChange = (content) => {
         setComment(content);
-        console.log(content)
     };
 
     const handleSubmit = async () => {
         onSubmit(comment)
         setComment('');
-        
     }
 
     return (
@@ -31,7 +30,7 @@ const EditorComment = ({ onSubmit }) => {
             <Editor
                 tinymceScriptSrc={process.env.PUBLIC_URL + '/tinymce/tinymce.min.js'}
                 onInit={(evt, editor) => editorRef.current = editor}
-                initialValue=""
+                initialValue={initialContent}
                 init={{
                     height: 250,
                     menubar: false,
@@ -52,9 +51,20 @@ const EditorComment = ({ onSubmit }) => {
             />
             </div>
             <br />
-            <Button onClick={handleSubmit} label={'Add Comment'} rounded={true} />
+            <Button onClick={handleSubmit} label={label} rounded={true} />
         </>
     );
 }
+
+EditorComment.defaultProps = {
+    label: 'Add Comment',
+    initialContent: '',
+};
+
+EditorComment.propTypes = {
+    label: PropTypes.string,
+    onSubmit: PropTypes.func.isRequired,
+    initialContent: PropTypes.string,
+};
 
 export default EditorComment;

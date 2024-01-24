@@ -90,3 +90,12 @@ export const validateFormWithPassword = (password, confirmPassword) => {
 
     return errors;
 };
+
+export const validateFormWithOldPassword = (password, confirmPassword, oldPassword) => {
+    let errors = {
+        ...validatePassword(password),
+        ...validatePasswordConfirmation(password, confirmPassword),
+    };
+
+    return errors;
+};

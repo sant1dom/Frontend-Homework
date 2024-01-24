@@ -162,7 +162,7 @@ const Navbar = ({title, links, links_admin, backgroundColor, loading}) => {
                     <div className="text-sm lg:flex-grow">
                         {linkElements}
 
-                        {links_admin.length &&
+                        {links_admin.length > 0 &&
                             <div
                                 className="mt-4 text-gray-200 hover:text-white mr-4 block lg:inline-block cursor-pointer"
                                 onMouseEnter={() => setIsHoveredAdmin(true)}

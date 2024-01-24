@@ -33,6 +33,8 @@ const Home = () => {
             }
         };
         fetchData();
+        // Avoid scrolling to the bottom of the page when landing from react router navigation
+        window.scrollTo(0, 0);
     }, []);
 
     return (

@@ -3,17 +3,17 @@ import {GoX} from "react-icons/go";
 import {useEffect} from "react";
 
 const Modal = ({title, body, footer, onClose}) => {
-    const handleEscape = (event) => {
-        if (event.keyCode === 27) {
-            onClose();
-        }
-    }
     useEffect(() => {
+        const handleEscape = (event) => {
+            if (event.keyCode === 27) {
+                onClose();
+            }
+        }
         document.addEventListener("keydown", handleEscape, false);
         return () => {
             document.removeEventListener("keydown", handleEscape, false);
         };
-    }, [handleEscape])
+    }, [])
 
     function handleCloseButtonClick(event) {
         onClose();

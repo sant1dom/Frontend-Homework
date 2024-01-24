@@ -9,6 +9,7 @@ from jose import JWTError, jwt
 from fastapi import APIRouter, HTTPException, Depends, UploadFile
 from passlib.context import CryptContext
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from pydantic import BaseModel
 from starlette.responses import Response
 
 from database import db_dependency, DBUser, DBMovieList
@@ -28,6 +29,11 @@ bcrypt_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_bearer = OAuth2PasswordBearer(tokenUrl="/auth/login")
 
 
+class PasswordChange(BaseModel):
+    old_password: str
+    new_password: str
+
+
 def authenticate_user(email: str, password: str, db: db_dependency) -> bool | DBUser:
     user = db.query(DBUser).filter(DBUser.email == email).first()
     if user is None or not user.is_active or not bcrypt_context.verify(password, user.hashed_password):
@@ -43,15 +49,19 @@ def create_access_token(id: int, email: str, is_superuser: bool, profile_image: 
     return encoded_jwt
 
 
-async def get_current_user(token: Annotated[str, Depends(oauth2_bearer)]):
+async def get_current_user(token: Annotated[str, Depends(oauth2_bearer)], db_dependency: db_dependency):
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         email: str = payload.get("email")
         user_id: int = payload.get("id")
         if email is None or user_id is None:
             raise HTTPException(status_code=401, detail="Invalid credentials")
-        return {"email": email, "id": user_id, "is_superuser": payload.get("is_superuser"),
-                "profile_image": payload.get("profile_image")}
+        user = db_dependency.query(DBUser).filter(DBUser.id == user_id).first()
+        print(user)
+        if user is None:
+            raise HTTPException(status_code=401, detail="Invalid credentials")
+        return {"email": user.email, "id": user.id, "is_superuser": user.is_superuser,
+                "profile_image": user.profile_image}
     except JWTError:
         raise HTTPException(status_code=401, detail="Invalid credentials")
 
@@ -62,8 +72,10 @@ async def create_user(user: UserCreate, db: db_dependency):
                      profile_image="static/profile_images/base_avatar.jpg")
     db_user.hashed_password = bcrypt_context.hash(db_user.hashed_password)
     db_user.movie_lists = []
-    db_user.movie_lists.append(DBMovieList(name="Watchlist", user=db_user, movies=[], comments=[], likes=[], private=True))
-    db_user.movie_lists.append(DBMovieList(name="Favourites", user=db_user, movies=[], comments=[], likes=[], private=True))
+    db_user.movie_lists.append(
+        DBMovieList(name="Watchlist", user=db_user, movies=[], comments=[], likes=[], private=True))
+    db_user.movie_lists.append(
+        DBMovieList(name="Favourites", user=db_user, movies=[], comments=[], likes=[], private=True))
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
@@ -118,9 +130,22 @@ async def update_profile_image(user: Annotated[dict, Depends(get_current_user)],
 @router.post("/refresh_token")
 async def refresh_token(user: Annotated[dict, Depends(get_current_user)], response: Response, db: db_dependency):
     user = db.query(DBUser).filter(DBUser.id == user["id"]).first()
-    token = create_access_token(user.id, user.email, user.is_superuser, user.profile_image, timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES))
+    print(user)
+    token = create_access_token(user.id, user.email, user.is_superuser, user.profile_image,
+                                timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES))
     response.set_cookie(key="access_token", value=f"{token}", httponly=True)
     return {"access_token": token, "expiration": ACCESS_TOKEN_EXPIRE_MINUTES}
+
+
+@router.post("/change_password")
+async def change_password(user: Annotated[dict, Depends(get_current_user)], db: db_dependency, password: PasswordChange):
+    user = db.query(DBUser).filter(DBUser.id == user["id"]).first()
+    if not bcrypt_context.verify(password.old_password, user.hashed_password):
+        raise HTTPException(status_code=400, detail="Old password is incorrect")
+    user.hashed_password = bcrypt_context.hash(password.new_password)
+    db.commit()
+    db.refresh(user)
+    return {"message": "Password changed successfully"}
 
 
 user_dependency = Annotated[dict, Depends(get_current_user)]

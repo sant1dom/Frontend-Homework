@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import api from "../utils/api";
 import parse from "html-react-parser";
 import Cookies from 'js-cookie';
@@ -8,8 +8,9 @@ import {FaEdit, FaTrash} from "react-icons/fa";
 import popupStateUserDeleteComment from "../store/popupStateUserDeleteComment";
 import popupStateAdminDeleteComment from "../store/popupStateAdminDeleteComment";
 import Modal from "./Modal";
+import EditorComment from "./EditorComment";
 
-const Comment = ({ content, onCommentDelete }) => {
+const Comment = ({content, onCommentDelete}) => {
     const [author, setAuthor] = useState('');
     const [avatar, setAvatar] = useState('');
     const [popupVisible, setPopupVisible] = useState(false);
@@ -20,7 +21,7 @@ const Comment = ({ content, onCommentDelete }) => {
 
 
     useEffect(() => {
-        console.log("content" +content)
+        console.log("content" + content)
         const fetchAuthor = async () => {
             api.get('/users/' + content.user_id).then((response) => {
                 setAuthor(response.data.email);
@@ -35,24 +36,24 @@ const Comment = ({ content, onCommentDelete }) => {
         const currentDate = new Date();
         const millisecondsPeriod = currentDate - lastDate;
         const seconds = Math.floor(millisecondsPeriod / 1000);
-      
+
         if (seconds < 60) {
-          return "few seconds ago";
+            return "few seconds ago";
         } else if (seconds < 3600) {
-          const minutes = Math.floor(seconds / 60);
-          return `${minutes} ${minutes === 1 ? "minute" : "minutes"} ago`;
+            const minutes = Math.floor(seconds / 60);
+            return `${minutes} ${minutes === 1 ? "minute" : "minutes"} ago`;
         } else if (seconds < 86400) {
-          const hours = Math.floor(seconds / 3600);
-          return `${hours} ${hours === 1 ? "hour" : "hours"} ago`;
+            const hours = Math.floor(seconds / 3600);
+            return `${hours} ${hours === 1 ? "hour" : "hours"} ago`;
         } else {
-          const days = Math.floor(seconds / 86400);
-          return `${days} ${days === 1 ? "day" : "days"} ago`;
+            const days = Math.floor(seconds / 86400);
+            return `${days} ${days === 1 ? "day" : "days"} ago`;
         }
-      };
+    };
 
     const openPopup = () => {
         setCommentText(content.comment)
-        console.log("Commenttext" +commentText);
+        console.log("Commenttext" + commentText);
         setPopupVisible(true);
     };
 
@@ -62,8 +63,7 @@ const Comment = ({ content, onCommentDelete }) => {
 
     const handleEditComment = async (comment) => {
         if (token) {
-            console.log("comment "+content.id)
-            content.comment = commentText;
+            content.comment = comment;
             await api.put('/comment/' + content.id, content,
                 {
                     headers: {
@@ -75,51 +75,46 @@ const Comment = ({ content, onCommentDelete }) => {
         }
     };
 
-      const handleDeleteComment = async () => {
-          const title = content.comment.replace(new RegExp('"', 'g'), "&quot;").replace(new RegExp("'", 'g'), "’");
+    const handleDeleteComment = async () => {
+        const title = content.comment.replace(new RegExp('"', 'g'), "&quot;").replace(new RegExp("'", 'g'), "’");
 
-          if (content.user_id === authState.userId) {
-              dispatch(popupStateUserDeleteComment(content.id, title, onCommentDelete));
-          }
-          else if(authState.is_superuser){
-                dispatch(popupStateAdminDeleteComment(content.id, title));
-          }
+        if (content.user_id === authState.userId) {
+            dispatch(popupStateUserDeleteComment(content.id, title, onCommentDelete));
+        } else if (authState.is_superuser) {
+            dispatch(popupStateAdminDeleteComment(content.id, title));
+        }
     };
 
-    const popupBody = <><textarea
-        placeholder="Insert Text"
-        value={commentText}
-        onChange={(e) => setCommentText(e.target.value)}
-        className="w-full p-2 mb-2 border rounded"
-    />
-        <Button onClick={handleEditComment} classes={"bg-blue-500 text-white rounded-full py-1 px-2 hover:bg-blue-600"}
-                label={"Edit"}/>
-        <Button onClick={closePopup}
-                classes={"bg-gray-200 text-black rounded-full py-1 px-2 ml-2 hover:bg-gray-300"} label={"Cancel"}/>
-    </>
+    const popupBody = <div className="container px-0 mx-auto mb-5">
+        <EditorComment onSubmit={handleEditComment} label={"Edit Comment"} initialContent={commentText}/>
+    </div>
 
 
-    return(
+    return (
         <>
             <div className="container px-0 mx-auto sm:px-5 mb-5 w-2/3">
-                <div className="flex-col py-4 bg-white border-b-2 border-r-2 border-gray-200 sm:px-4 sm:py-4 md:px-4 sm:rounded-lg shadow-2xl">
+                <div
+                    className="flex-col py-4 bg-white border-b-2 border-r-2 border-gray-200 sm:px-4 sm:py-4 md:px-4 sm:rounded-lg shadow-2xl">
                     <div className="flex flex-row">
                         <div className="text-center">
                             <img className="mx-auto object-cover w-12 h-12 border-2 border-gray-300 rounded-full mb-3"
-                                src={avatar} alt="Avatar"/>
+                                 src={avatar} alt="Avatar"/>
                             <div className="mx-auto flex justify-center">
-                                {(content.user_id === authState.userId) || authState.is_superuser? (
+                                {(content.user_id === authState.userId) || authState.is_superuser ? (
                                     <>
-                                        <Button label={<FaEdit/>} variant="hover-nobg" size="small" onClick={openPopup}/>
-                                        <Button label={<FaTrash/>} variant="hover-nobg" size="small" onClick={handleDeleteComment}/>
+                                        <Button label={<FaEdit/>} variant="hover-nobg" size="small"
+                                                onClick={openPopup}/>
+                                        <Button label={<FaTrash/>} variant="hover-nobg" size="small"
+                                                onClick={handleDeleteComment}/>
                                     </>
-                                ): null}
+                                ) : null}
                             </div>
                         </div>
                         <div className="flex-col mt-1">
                             <div className="flex items-center flex-1 px-4 font-bold leading-tight">
                                 {author}
-                                <span className="ml-2 text-xs font-normal text-gray-500">{formatTimeAgo(content.updated_at)}</span>
+                                <span
+                                    className="ml-2 text-xs font-normal text-gray-500">{formatTimeAgo(content.updated_at)}</span>
                             </div>
                             <div className="flex-1 px-2 ml-2 font-medium leading-loose text-gray-600 text-left">
                                 {parse(content.comment)}
