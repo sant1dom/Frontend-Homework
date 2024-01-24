@@ -13,3 +13,5 @@ logs.log.5
 movies/.env
 static/profile_images
 !static/profile_images/base_avatar.jpg
+# Local Netlify folder
+.netlify
