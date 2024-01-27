@@ -35,8 +35,6 @@ const AdminUpdateMovie = () => {
     };
 
     useEffect(() => {
-        console.log("Faccio partire Operation");
-
         if (method == "create") {
             setPageTitle("Create a new movie");
         } else if (method == "update") {
