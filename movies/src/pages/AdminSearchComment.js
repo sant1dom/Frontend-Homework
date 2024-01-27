@@ -27,8 +27,6 @@ const AdminSearchComment = () => {
     };
 
     useEffect(() => {
-        console.log("Faccio partire la ricerca");
-
         api.get('/all_comments', config).then((response) => {
 
             dispatch({

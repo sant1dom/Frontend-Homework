@@ -27,8 +27,6 @@ const AdminSearchMovie = () => {
     };
 
     useEffect(() => {
-        console.log("Faccio partire la ricerca");
-
         api.get('/movies', config).then((response) => {
 
             dispatch({

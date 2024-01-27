@@ -27,8 +27,6 @@ const AdminSearchList = () => {
     };
 
     useEffect(() => {
-        console.log("Faccio partire la ricerca");
-
         api.get('/all_lists', config).then((response) => {
 
             dispatch({
