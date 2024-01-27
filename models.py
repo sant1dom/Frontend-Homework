@@ -99,3 +99,4 @@ class MovieList(BaseModel):
 
 class MovieListCreate(BaseModel):
     name: str
+    movies: List[Movie] = []
