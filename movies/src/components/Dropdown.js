@@ -11,10 +11,7 @@ import FeedbackMessage from "./FeedbackMessage";
 
 const Dropdown = ({elements, movie, toggleDropdown, showAndHideFeedbackMessage, openCreateListPopup}) => {
 
-    const [errorVisibility, setErrorVisibility] = useState("hidden");
     const [showDropdown, setShowDropdown] = useState(true);
-    const [listTitle, setListTitle] = useState('');
-
 
 
 
@@ -45,12 +42,6 @@ const Dropdown = ({elements, movie, toggleDropdown, showAndHideFeedbackMessage, 
                 console.error('Errore nel salvataggio del film nella lista:', error);
             }
         }
-    };
-
-
-    const handleWriting = (title) => {
-        setListTitle(title);
-        setErrorVisibility("hidden")
     };
 
 

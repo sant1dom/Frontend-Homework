@@ -69,7 +69,8 @@ const AdminUpdateMovie = () => {
 
             api.get('/movies/' + movieId, config).then((response) => {
                 setInputs([
-                    <Input key={"title_" + movieId} field="title" showError={clickedSave} value={response.data.title}
+                    <Input key={"title_" + movieId} field="title" showError={clickedSave}
+                           value={response.data.title}
                            label="Title" type="text"/>,
                     <Input key={"release_year_" + movieId} field="release_year" showError={clickedSave}
                            value={response.data.release_year}
@@ -94,7 +95,7 @@ const AdminUpdateMovie = () => {
             });
         }
 
-    }, [method, movieId]);
+    }, [method, movieId, clickedSave]);
 
     if (!authState.is_superuser) {
         return (<></>);
