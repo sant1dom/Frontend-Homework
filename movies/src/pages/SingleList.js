@@ -12,6 +12,9 @@ import PropTypes from 'prop-types';
 import {BiLike, BiSolidLike} from "react-icons/bi";
 import Button from '../components/Button';
 import Card from '../components/Card';
+import Spinner from '../components/Spinner';
+import FeedbackMessage from '../components/FeedbackMessage';
+import { createPortal } from 'react-dom';
 
 const OMDB_API_KEY = process.env.REACT_APP_OMDB_API_KEY;
 
@@ -37,13 +40,15 @@ const SingleList = ({url}) => {
     const [listName, setListName] = useState('')
     const [likes, setLikes] = useState([])
     const [isLiked, setIsLiked] = useState(false)
-    const [isPrivate, setIsPrivate] = useState(false)
+    const [isPrivate, setIsPrivate] = useState(true)
+    const [uid, setUID] = useState(0)
+    const [cardType, setCardType] = useState('')
+    const [feedbackMessage, setFeedbackMessage] = useState('')
+    const [showFeedback, setShowFeedback] = useState(false)
     const navigate = useNavigate();
 
     const genres = [...new Set(movies.map((movie) => movie.genre))];
     const languages = [...new Set(movies.map((movie) => movie.language))];
-
-    const cardType = url === "/mylists/" ? "my-movie" : "movie";
 
     const filteredMovies = movies.filter((movie) => {
         const genreCondition = !selectedGenre || movie.genre === selectedGenre;
@@ -86,6 +91,7 @@ const SingleList = ({url}) => {
             } catch (error) {
                 console.error(error);
             }
+            setUID(res.data.user_id);
             setListName(res.data.name);
             setLikes(res.data.likes);
             setIsPrivate(res.data.private);
@@ -97,6 +103,20 @@ const SingleList = ({url}) => {
         setIsLiked(likes.some(like => like.user_id === authState.userId));
     }, [likes])
 
+    useEffect(() => {
+        setCardType(authState.userId === uid ? "my-movie" : "movie");
+    }, [uid])
+
+    const showAndHideFeedbackMessage = (message, duration) => {
+        setFeedbackMessage(message);
+        setShowFeedback(true);
+
+        setTimeout(() => {
+            setShowFeedback(false);
+            setFeedbackMessage('');
+        }, duration);
+    };
+
     const handleCommentSubmit = async (comment) => {
         if (token) {
             await api.post('/comment/' + id, null,
@@ -107,8 +127,8 @@ const SingleList = ({url}) => {
                     }
                 });
             setRefresh(!refresh);
+            showAndHideFeedbackMessage('Comment correctly published!', 2000)
         }
-
     }
 
     const handleLike = async () => {
@@ -153,17 +173,19 @@ const SingleList = ({url}) => {
                 console.error('Errore nella rimozione del film dalla lista:', error);
             }
         }
+        showAndHideFeedbackMessage('Movie correctly deleted from the list!', 2000)
     };
 
     const handleCommentDelete = () => {
         // Aggiornare lo stato refresh per forzare il render della CommentList
         setRefresh(!refresh);
     };
-    
+
 
     return (
         <div className="mx-auto">
-            <h1 className="mt-5 mb-5 text-4xl">{listName}</h1>
+
+            {loading ? <div className='flex justify-center mt-4'><Spinner /></div> : ( <h1 className="mt-5 mb-5 text-4xl">{listName}</h1>)}           
 
             { !isPrivate ? (
                 <div className="flex space-x-4 justify-center items-center">
@@ -228,6 +250,12 @@ const SingleList = ({url}) => {
                 </div>
                 </>
             ) : null }
+
+            {showFeedback && createPortal (
+                            <FeedbackMessage
+                                message={feedbackMessage}
+                            />, document.body
+            )}
 
         </div>
     );
