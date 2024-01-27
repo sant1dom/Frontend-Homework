@@ -29,8 +29,9 @@ const Layout = ({loading}) => {
         <>
             <Navbar title="Movies" links={links} links_admin={links_admin} backgroundColor="bg-gray-800"
                     loading={loading}/>
-            {!loading ? <Outlet/> : <Spinner/>}
+            {!loading ? <Outlet/> : <div className={"flex justify-center items-center h-screen "}><Spinner/></div>}
             <div className="h-20"/>
+
         </>
     );
 }

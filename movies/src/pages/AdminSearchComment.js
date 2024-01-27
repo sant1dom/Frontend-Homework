@@ -68,7 +68,7 @@ const AdminSearchComment = () => {
                     No comment found
                 </p>
             }
-            <div className="max-h-[650px] overflow-y-scroll">
+            <div className="max-h-[650px] overflow-y-scroll no-scrollbar">
                 {comments}
             </div>
         </div>

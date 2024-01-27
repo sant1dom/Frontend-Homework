@@ -44,7 +44,7 @@ const AdminRowList = ({list}) => {
 
     return (
         <div id={`list_row_${list.id}`}
-             className="mb-3 w-screen-sm mx-auto border-2 border-solid border-blue-700 rounded-xl p-2 max-w-fit">
+             className="mb-3 bg-white w-screen-sm mx-auto border-1 rounded-xl p-2 max-w-fit shadow-md">
 
             <div className="inline-flex text-left text-lg font-normal w-64 h-30 text-ellipsis"
                  style={{overflow: "hidden"}}>

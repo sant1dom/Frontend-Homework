@@ -76,7 +76,7 @@ const AdminSearchMovie = () => {
                     No movie found
                 </p>
             }
-            <div className="max-h-[650px] overflow-y-scroll  max-w-fit mx-auto">
+            <div className="max-h-[650px] overflow-y-scroll  max-w-fit mx-auto no-scrollbar">
                 {movies}
             </div>
         </div>

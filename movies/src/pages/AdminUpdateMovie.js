@@ -156,10 +156,8 @@ const AdminUpdateMovie = () => {
             api.post('/movies/', JSON.stringify(formData), config)
                 .then((response) => {
                     console.log(response.data.id);
-
                     navigate("/admin/movies");
                     dispatch(popupStateMsg("Movie created", "Redirected to Edit Movies"));
-
                 }).catch((error) => {
                 handleError(error);
             });

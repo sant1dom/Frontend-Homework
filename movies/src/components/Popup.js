@@ -30,7 +30,6 @@ const Popup = () => {
         if (url != null) {
             api[method](url, config)
                 .then(response => {
-
                     //Questa parte serve per lo più nella parte admin
                     dispatch({
                         type: "hiddenState/add",
