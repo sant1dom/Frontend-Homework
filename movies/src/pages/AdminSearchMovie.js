@@ -3,8 +3,8 @@ import React, {useEffect, useRef, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {Link, useNavigate} from "react-router-dom";
 import AdminRowMovie from "../components/AdminRowMovie";
-import ButtonLink from "../components/ButtonLink";
 import Cookies from "js-cookie";
+import Button from "../components/Button";
 
 const AdminSearchMovie = () => {
 
@@ -61,19 +61,19 @@ const AdminSearchMovie = () => {
             <h1 className="text-4xl font-bold">Edit and delete all movies</h1>
             <div className="h-4"/>
 
-            <ButtonLink
-                rounded={true}
-                key='admin/movie/create'
-                to='/admin/movie/create'
-                label="Add a new movie"
-            />
+            <Link to={`/admin/movie/create`}>
+                <Button
+                    rounded={true}
+                    label="Add a new movie"
+                />
+            </Link>
             <div className="h-4"/>
 
             <input type="text" ref={refSearch} onChange={onchangeSearch}
                    className="border-2 border-gray-300 rounded-md w-64 p-2"/>
             <div className="h-5"/>
 
-            {movies.length == 0 &&
+            {movies.length === 0 &&
                 <p className="text-3xl font-normal">
                     No movie found
                 </p>

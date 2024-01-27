@@ -14,7 +14,6 @@ import Registration from "./pages/Registration";
 import api from "./utils/api";
 import AdminSearchMovie from "./pages/AdminSearchMovie";
 import AdminUpdateMovie from "./pages/AdminUpdateMovie";
-import Popup from "./components/Popup";
 import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
 import MyLists from "./pages/MyLists";
@@ -22,6 +21,7 @@ import AdminSearchList from "./pages/AdminSearchList";
 import AdminSearchComment from "./pages/AdminSearchComment";
 import AdvancedSearch from "./pages/AdvancedSearch";
 import BestLists from "./pages/BestLists";
+import Popup from "./components/Popup";
 
 function App() {
     const dispatch = useDispatch();

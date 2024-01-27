@@ -1,8 +1,8 @@
 import {useDispatch, useSelector} from "react-redux";
 import Button from "./Button";
-import ButtonLink from "./ButtonLink";
 import React from "react";
 import popupStateAdminDeleteMovie from "../store/popupStateAdminDeleteMovie";
+import {Link} from "react-router-dom";
 
 const AdminRowMovie = ({movie}) => {
 
@@ -30,13 +30,12 @@ const AdminRowMovie = ({movie}) => {
             </div>
 
             <div className="inline-flex">
-                <ButtonLink
-                    rounded={true}
-                    key={`/admin/movie/update/${movie.id}`}
-                    to={`/admin/movie/update/${movie.id}`}
-                    label="Edit"
-                    classes={""}
-                />
+                <Link to={`/admin/movie/update/${movie.id}`}>
+                    <Button
+                        rounded={true}
+                        label="Edit"
+                    />
+                </Link>
 
                 <Button
                     onClick={handleDeletePopup}
