@@ -258,9 +258,7 @@ async def update_list(movie_list_id: int, movie_list: MovieListCreate, user: use
     for key, value in movie_list.model_dump().items():
         setattr(db_movie_list, key, value)
     db_movie_list.name = movie_list.name
-    if movie_list.movies is not None:
-        db_movie_list.movies = [db.query(DBMovie).filter(DBMovie.id == movie_id).first() for movie_id in
-                                movie_list.movies]
+
     db.commit()
     db.refresh(db_movie_list)
     return MovieList(**db_movie_list.__dict__)
