@@ -56,8 +56,8 @@ class DBMovieList(Base):
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
     user: Mapped[DBUser] = relationship(back_populates="movie_lists")
     movies: Mapped[List[DBMovie]] = relationship(secondary="movie_movie_list", back_populates="movie_lists")
-    comments: Mapped[List[DBComment]] = relationship(back_populates="movie_list")
-    likes: Mapped[List[DBLike]] = relationship(back_populates="movie_list")
+    comments: Mapped[List[DBComment]] = relationship(back_populates="movie_list", cascade="all, delete")
+    likes: Mapped[List[DBLike]] = relationship(back_populates="movie_list", cascade="all, delete")
     private: Mapped[bool] = mapped_column(Boolean, nullable=False)
 
 

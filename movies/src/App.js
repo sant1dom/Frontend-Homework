@@ -17,7 +17,6 @@ import AdminUpdateMovie from "./pages/AdminUpdateMovie";
 import Popup from "./components/Popup";
 import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
-import Spinner from "./components/Spinner";
 import MyLists from "./pages/MyLists";
 import AdminSearchList from "./pages/AdminSearchList";
 import AdminSearchComment from "./pages/AdminSearchComment";
@@ -92,31 +91,38 @@ function App() {
         }
     }, []);
 
-    return (
-        <BrowserRouter>
+    return (<BrowserRouter>
             <div className="App">
                 <Routes>
                     <Route path="/" element={<Layout loading={loading}/>}>
-                        {!loading && <><Route index element={<Home/>}/>
-                            {!authState.isAuth && <><Route path="/login" element={<Login/>}/>
-                                <Route path="/register" element={<Registration/>}/></>}
-                            <Route path="/movie/:id" element={<Movie/>}/>
-                            <Route path="/advanced-search" element={<AdvancedSearch/>}/>
-                            {authState.isAuth && <>
+                        <Route index element={<Home/>}/>
+                        {!authState.isAuth &&
+                            <>
+                                <Route path="/login" element={<Login/>}/>
+                                <Route path="/register" element={<Registration/>}/>
+                            </>
+                        }
+                        <Route path="/movie/:id" element={<Movie/>}/>
+                        <Route path="/advanced-search" element={<AdvancedSearch/>}/>
+                        {authState.isAuth &&
+                            <>
                                 <Route path="/mylists" element={<MyLists/>}/>
                                 <Route path="/profile" element={<Profile/>}/>
                                 <Route path="/mylists/:id" element={<SingleList url='/mylists/'/>}/>
                                 <Route path="/bestlists" element={<BestLists/>}/>
                                 <Route path="/bestlists/:id" element={<SingleList url='/bestlists/'/>}/>
-                                {authState.is_superuser && <>
-                                    <Route path="/admin/movies" element={<AdminSearchMovie/>}/>
-                                    <Route path="/admin/movie/create" element={<AdminUpdateMovie/>}/>
-                                    <Route path="/admin/movie/update/:id" element={<AdminUpdateMovie/>}/>
-                                    <Route path="/admin/lists" element={<AdminSearchList/>}/>
-                                    <Route path="/admin/comments" element={<AdminSearchComment/>}/>
-                                </>}
-                            </>}
-                            <Route path="*" element={<NotFound/>}/></>}
+                                {authState.is_superuser &&
+                                    <>
+                                        <Route path="/admin/movies" element={<AdminSearchMovie/>}/>
+                                        <Route path="/admin/movie/create" element={<AdminUpdateMovie/>}/>
+                                        <Route path="/admin/movie/update/:id" element={<AdminUpdateMovie/>}/>
+                                        <Route path="/admin/lists" element={<AdminSearchList/>}/>
+                                        <Route path="/admin/comments" element={<AdminSearchComment/>}/>
+                                    </>
+                                }
+                            </>
+                        }
+                        <Route path="*" element={<NotFound/>}/>
                     </Route>
                 </Routes>
             </div>

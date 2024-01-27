@@ -1,6 +1,7 @@
 import Navbar from "../components/Navbar";
 import {Outlet} from "react-router-dom";
 import {useSelector} from "react-redux";
+import Spinner from "../components/Spinner";
 
 const Layout = ({loading}) => {
     const authState = useSelector((state) => state.auth);
@@ -28,7 +29,7 @@ const Layout = ({loading}) => {
         <>
             <Navbar title="Movies" links={links} links_admin={links_admin} backgroundColor="bg-gray-800"
                     loading={loading}/>
-            <Outlet/>
+            {!loading ? <Outlet/> : <Spinner/>}
             <div className="h-20"/>
         </>
     );
