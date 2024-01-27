@@ -11,6 +11,10 @@ import axios from "axios";
 import {Link} from "react-router-dom";
 import FeedbackMessage from "./FeedbackMessage";
 import Dropdown from "./Dropdown";
+import MovieCard from "./cards/MovieCard";
+import ListCard from "./cards/ListCard";
+import BestListCard from "./cards/BestListCard";
+import MyMovieCard from "./cards/MyMovieCard";
 
 const OMDB_API_KEY = process.env.REACT_APP_OMDB_API_KEY;
 
@@ -32,26 +36,20 @@ const Card = ({type, classes, img, text, element, removeMovieFromList, removeLis
     const [isDeleted, setIsDeleted] = useState(false);
     const [errorVisibility, setErrorVisibility] = useState("hidden");
     const token = Cookies.get("access-token");
-    const [author, setAuthor] = useState('');
-    const [avatar, setAvatar] = useState('');
 
 
     useEffect(() => {
         if (token) {
-            if (type === 'best-lists') {
-                const fetchAuthor = async () => {
-                    api.get('/users/' + element.user_id).then((response) => {
-                        setAuthor(response.data.email);
-                        setAvatar(process.env.REACT_APP_BASE_URL + response.data.image);
-                    });
-                };
-                fetchAuthor();
-            }
-            if (type === 'list') {
+            if (type === 'list' || type === 'best-lists') {
+                let url;
+                if (type === 'list')
+                    url = '/mylists/';
+                if (type === 'best-lists')
+                    url = '/bestlists/';
                 if (element.id) {
                     const fetchData = async () => {
                         try {
-                            const response = await api.get(`/mylists/${element.id}`, {
+                            const response = await api.get(`${url + element.id}`, {
                                 headers: {
                                     'Authorization': `Bearer ${token}`,
                                 }
@@ -250,6 +248,36 @@ const Card = ({type, classes, img, text, element, removeMovieFromList, removeLis
         setErrorVisibility("hidden")
     };
 
+    const handleCardType = (type) => {
+        switch (type) {
+            case 'movie': return (<MovieCard showDropdown={showDropdown}
+                                    toggleDropdown={toggleDropdown}
+                                    movie={element}
+                                    elements={userLists}
+                                    openCreateListPopup={openCreateListPopup}></MovieCard>
+            );
+            case 'list': return (<ListCard list={element}
+                                    collageMovies={collageMovies}
+                                    editList={editList}
+                                    showDeletePopup={showDeletePopup}></ListCard>
+            );
+            case 'best-lists': return (<BestListCard list={element}
+                                                     collageMovies={collageMovies}
+                                                     ></BestListCard>
+
+            );
+            case 'my-movie': return (<MyMovieCard toggleDropdown={toggleDropdown}
+                                                  showDropdown={showDropdown}
+                                                  movie={element}
+                                                  removeMovieFromList={removeMovieFromList}
+                                                  userLists={userLists}
+                                                  showAndHideFeedbackMessage={showAndHideFeedbackMessage}></MyMovieCard>
+
+            );
+
+        }
+    };
+
     const popupBody =
         <>
             <div className={"w-full p-2 mb-2"}>
@@ -285,105 +313,11 @@ const Card = ({type, classes, img, text, element, removeMovieFromList, removeLis
                 <div key={element.id} className={color + classes}>
                     {img}
                     {initialState ? <div>{text}</div> : <h2
-                        className="text-xl mb-2 overflow-hidden whitespace-nowrap overflow-ellipsis">{cardTitle}</h2>}
-
+                        className="text-xl mb-2 overflow-hidden whitespace-nowrap overflow-ellipsis">{cardTitle}</h2>
+                    }
                     {authState.isAuth && (
-                        type === 'movie' ? (
-                            <div className="p-4">
-                                <div className="mt-2 flex flex-col items-center">
-                                    <div className="group inline-block relative">
-                                        <Button label={<FaPlus/>} rounded={true}
-                                                onClick={() => toggleDropdown(element.id)}/>
-                                        {showDropdown && (
-                                            <Dropdown movie={element}
-                                                      elements={userLists}
-                                                      toggleDropdown={toggleDropdown}
-                                                      showAndHideFeedbackMessage={showAndHideFeedbackMessage}
-                                                      openCreateListPopup={openCreateListPopup}
-                                            />
-                                        )}
-                                    </div>
-                                </div>
-                            </div>
-                        ) : type === 'list' ? (
-                            <>
-                                <Link to={`/mylists/${element.id}`} className="block">
-                                    <div className="grid grid-cols-2 grid-rows-2 w-full h-48">
-                                        {collageMovies.map((movie) => (
-                                            <img
-                                                key={movie.id}
-                                                src={movie.poster}
-                                                alt={movie.title}
-                                                className="collage-image object-cover w-full h-full"
-                                            />
-                                        ))}
-                                    </div>
-                                </Link>
-                                <div className="p-2">
-                                    <div className="flex flex-col items-center">
-                                        <div className="flex space-x-2"
-                                            style={{visibility: element.private ? 'hidden' : 'visible'}}>
-                                            <Button label={<FaEdit/>} rounded={true}
-                                                    onClick={() => editList(element)} size={'small'}
-                                                    disabled={element.private}
-                                                    variant={element.private ? 'nobg' : 'secondary'}/>
-                                            <Button label={<FaTrash/>} rounded={true}
-                                                    onClick={() => showDeletePopup(element.id)} size={'small'}
-                                                    disabled={element.private}
-                                                    variant={element.private ? 'nobg' : 'secondary'} />
-                                        </div>
-                                    </div>
-                                </div>
-                            </>
-                        ) : type === 'best-lists' ? (
-                            <>
-                                <Link to={`/bestlists/${element.id}`} className="block">
-                                    <div className="grid grid-cols-2 grid-rows-2 w-full h-48">
-                                        {collageMovies.map((movie) => (
-                                            <img
-                                                key={movie.id}
-                                                src={movie.poster}
-                                                alt={movie.title}
-                                                className="collage-image object-cover w-full h-full"
-                                            />
-                                        ))}
-                                    </div>
-                                </Link>
-                                <div className="pb-2">
-                                    <div className="flex flex-col items-center">
-                                        <div className="flex pb-2">
-                                            <img className="object-cover w-8 h-8 border-2 border-gray-300 rounded-full mr-1"
-                                                src={avatar}/>
-                                            <span className=''>{author}</span>
-                                        </div>
-                                        <div className="flex space-x-4">
-                                            <div className="flex items-center space-x-1">
-                                                <BiLike size={21}/>
-                                                <span className=''>{element.likes.length}</span>
-                                            </div>
-                                            <div className="flex items-center space-x-1">
-                                                <FaRegComment size={21}/>
-                                                <span>{element.comments.length}</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </>
-                        ) : type === 'my-movie' ? (
-                            <div className="p-4">
-                                <div className="grid grid-cols-2 gap-5 ml-5 mr-5 relative">
-                                    <Button label={<FaPlus/>} rounded={true}
-                                            onClick={() => toggleDropdown(element.id)}/>
-                                    {showDropdown && (
-                                        <Dropdown movie={element} elements={userLists} toggleDropdown={toggleDropdown} showAndHideFeedbackMessage={showAndHideFeedbackMessage}/>
-                                    )}
-                                    <Button label={<FaTrash/>} rounded={true} variant="cancel"
-                                            onClick={() => removeMovieFromList(element.id)}/>
-                                </div>
-                            </div>
-                        ) : null
+                         handleCardType(type)
                     )}
-
                 </div>
             )}
             {createPopupVisible && (

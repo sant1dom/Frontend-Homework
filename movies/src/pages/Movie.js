@@ -76,7 +76,6 @@ const Movie = () => {
         const storedWatchlist = JSON.parse(localStorage.getItem("watchlist")) || [];
         setWatchlist(storedWatchlist);
         if (selectedList) {
-            //TODO: Esegui l'azione di salvataggio del film nella lista selezionata
             console.log(`Salva il film nella lista: ${selectedList.name}`);
         }
     }, [id], [selectedList]);
