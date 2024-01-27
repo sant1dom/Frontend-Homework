@@ -94,7 +94,7 @@ const AdminUpdateMovie = () => {
             });
         }
 
-    }, [method, movieId]);
+    }, [method, movieId, clickedSave]);
 
     if (!authState.is_superuser) {
         return (<></>);
