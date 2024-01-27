@@ -125,7 +125,7 @@ const AdminUpdateMovie = () => {
         }
 
         if (count_error > 0) {
-            //return;
+            return;
         }
 
         console.log(formData);
