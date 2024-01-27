@@ -50,28 +50,33 @@ const Card = ({type, classes, img, text, element, removeMovieFromList, removeLis
             if (type === 'list') {
                 if (element.id) {
                     const fetchData = async () => {
-                        api.get(`/mylists/${element.id}`,
-                            {
+                        try {
+                            const response = await api.get(`/mylists/${element.id}`, {
                                 headers: {
                                     'Authorization': `Bearer ${token}`,
                                 }
-                            }).then((response) => {
-                                console.log(response.data)
-                                setMovies(response.data.movies.slice(0, 4)); // Prendi i primi 4 film
-                            }
-                        )
-                        const moviesWithPosters = await Promise.all(movies.map(async (movie) => {
-                            movie.poster = await fetchMoviePoster(movie.imdb_url.split('/')[4]);
-                            return movie;
-                        }));
-                        setMovies(moviesWithPosters);
-                        setCollageMovies(moviesWithPosters.slice(0, 4));
+                            });
+
+                            const moviesData = response.data.movies.slice(0, 4);
+
+                            const moviePosterPromises = moviesData.map(async (movie) => {
+                                movie.poster = await fetchMoviePoster(movie.imdb_url.split('/')[4]);
+                                return movie;
+                            });
+
+                            const moviesWithPosters = await Promise.all(moviePosterPromises);
+
+                            setMovies(moviesWithPosters);
+                            setCollageMovies(moviesWithPosters.slice(0, 4));
+                        } catch (error) {
+                            console.error("Errore durante il recupero dei dati o delle immagini:", error);
+                        }
                     }
                     fetchData();
                 }
             }
         }
-    }, [element.id]);
+    }, []);
 
     const fetchMoviePoster = async (IMDBId) => {
         const response = await axios.get(`https://omdbapi.com/?apikey=${OMDB_API_KEY}&i=${IMDBId}`);
