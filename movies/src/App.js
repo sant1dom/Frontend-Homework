@@ -72,9 +72,11 @@ function App() {
                 }));
             }).catch((error) => {
                 console.log(error);
-            });
+            })
         }
-        setLoading(false);
+        setTimeout(() => {
+            setLoading(false);
+        }, 1000);
     }, [authState.isAuth, dispatch]);
 
     // Refresh token every 5 minutes

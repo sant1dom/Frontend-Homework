@@ -177,7 +177,7 @@ const Navbar = ({title, links, links_admin, backgroundColor, loading}) => {
                     <div className="flex justify-end items-center">
                         <SearchBar setShowMobileMenu={setShowMobileMenu}/>
 
-                        {authState.isAuth && (
+                        {loading ? <><div className={"w-2"}/><Spinner/></> : <>{authState.isAuth ? (
                             <>
                                 <div className="w-2" onMouseEnter={() => setIsHoveredProfile(true)}
                                      onMouseLeave={() => setIsHoveredProfile(false)}/>
@@ -190,16 +190,16 @@ const Navbar = ({title, links, links_admin, backgroundColor, loading}) => {
                                             alt="Profile"
                                         />
                                     </Link>
-
                                     {DropdownProfile}
                                 </div>
                             </>
-                        )}
-
-                        <div className="w-2"/>
-                        {loading && <Spinner/>}
-                        {!loading && !authState.isAuth &&
-                            <Button onClick={handleButtonClick} label="Login" rounded={true}/>}
+                        ) : (
+                            <>
+                                <div className={"w-2"}/>
+                                <Button onClick={handleButtonClick} label="Login" rounded={true}/>
+                            </>
+                        )}</>
+                        }
                     </div>
                 </div>
             </nav>
