@@ -4,24 +4,10 @@ const initialState = {
     show: false,
     text_title: null,
     text_msg: null,
-    text_yes: null,
-    text_no: null,
-    click_yes: {
-        url: null,
-        method: null,
-        hide_table: null,
-        hide_id: null,
-    },
-    click_no: {
-        url: null,
-        method: null,
-        hide_table: null,
-        hide_id: null,
-    },
 };
 
-const popupState = createSlice({
-    name: 'popupState',
+const redirectMsgState = createSlice({
+    name: 'redirectMsgState',
     initialState: initialState,
     reducers: {
         reset(state, action) {
@@ -36,4 +22,4 @@ const popupState = createSlice({
     },
 });
 
-export default popupState;
+export default redirectMsgState;

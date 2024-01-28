@@ -4,7 +4,7 @@ import api from "../utils/api";
 import {useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import Button from "../components/Button";
-import popupStateMsg from "../store/popupStateMsg";
+import redirectMsgDispatch from "../store/redirectMsgDispatch";
 import Cookies from "js-cookie";
 
 const AdminUpdateMovie = () => {
@@ -85,7 +85,7 @@ const AdminUpdateMovie = () => {
 					]);
 				} catch (error) {
 					navigate("/admin/movies");
-					dispatch(popupStateMsg("Movie does not exist", "Redirected to Edit Movies"));
+					dispatch(redirectMsgDispatch("Movie does not exist", "Redirected to Edit Movies"));
 				}
 			};
 			fetchData();
@@ -131,7 +131,7 @@ const AdminUpdateMovie = () => {
 				error_msg += detail.msg + ": " + detail.loc[1] + ". ";
 			}
 
-			dispatch(popupStateMsg("Errors occurred", error_msg));
+			dispatch(redirectMsgDispatch("Errors occurred", error_msg));
 		};
 
 		try {
@@ -140,7 +140,7 @@ const AdminUpdateMovie = () => {
 					.then((response) => {
 
 						navigate("/admin/movies");
-						dispatch(popupStateMsg("Movie updated", "Redirected to Edit Movies"));
+						dispatch(redirectMsgDispatch("Movie updated", "Redirected to Edit Movies"));
 
 					}).catch((error) => {
 					handleError(error);
@@ -151,7 +151,7 @@ const AdminUpdateMovie = () => {
 					.then((response) => {
 
 						navigate("/admin/movies");
-						dispatch(popupStateMsg("Movie created", "Redirected to Edit Movies"));
+						dispatch(redirectMsgDispatch("Movie created", "Redirected to Edit Movies"));
 
 					}).catch((error) => {
 					handleError(error);
@@ -159,7 +159,7 @@ const AdminUpdateMovie = () => {
 			}
 		} catch (error) {
 			navigate("/admin/movies");
-			dispatch(popupStateMsg("Movie does not exist", "Redirected to Edit Movies"));
+			dispatch(redirectMsgDispatch("Movie does not exist", "Redirected to Edit Movies"));
 		}
 	}
 
