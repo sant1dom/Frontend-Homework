@@ -21,16 +21,13 @@ const AdminRowMovie = ({movie}) => {
 
 
 	const executeDelete = async (movie) => {
-		const token = Cookies.get("access-token");
-		if (token) {
-			try {
-				await api.delete('/movies/' + movie.id, config);
-				setShowItem(false);
-				setshowPopupDelete(true);
-			} catch (error) {
-				console.log(error);
-				return [];
-			}
+		try {
+			await api.delete('/movies/' + movie.id, config);
+			setShowItem(false);
+			setshowPopupDelete(true);
+		} catch (error) {
+			console.log(error);
+			return [];
 		}
 		return [];
 	};
