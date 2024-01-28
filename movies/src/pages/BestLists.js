@@ -1,5 +1,4 @@
 import {useState, useEffect} from 'react';
-import {Link} from 'react-router-dom';
 import Card from "../components/Card";
 import Cookies from 'js-cookie';
 import api from '../utils/api';
