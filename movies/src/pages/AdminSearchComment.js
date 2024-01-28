@@ -1,16 +1,10 @@
 import api from "../utils/api";
 import React, {useEffect, useRef, useState} from "react";
-import {useDispatch, useSelector} from "react-redux";
-import {useNavigate} from "react-router-dom";
 import Cookies from "js-cookie";
 import Comment from "../components/Comment";
 
 const AdminSearchComment = () => {
-
-	const navigate = useNavigate();
-	const authState = useSelector((state) => state.auth);
 	const [comments, setComments] = useState([]);
-	const dispatch = useDispatch();
 
 	const [search, setSearch] = useState('');
 	const refSearch = useRef();
@@ -31,29 +25,25 @@ const AdminSearchComment = () => {
 	};
 
 	useEffect(() => {
-		api.get('/all_comments', config).then((response) => {
+		const fetchData = async () => {
+			try {
+				const response = await api.get('/all_comments', config);
 
-			dispatch({
-				type: "hiddenState/clear",
-				payload:
-					{
-						table: "comment",
-					}
-			});
+				const sl = search.toLowerCase();
+				const tempComments = response.data
+					.filter((comment) => {
+						return comment.comment.toLowerCase().includes(sl);
+					})
+					.map((comment) => {
+						return <Comment key={comment.id} content={comment} onCommentDelete={handleCommentDelete}/>
+					});
 
-			let tempComments = response.data;
-			tempComments = tempComments.filter((comment) => {
-				return comment.comment.toLowerCase().includes(search.toLowerCase());
-			});
-			tempComments = tempComments.map((comment) => {
-				return <Comment key={comment.id} content={comment} onCommentDelete={handleCommentDelete}/>
-			});
-			setComments(tempComments);
-
-		}).catch((error) => {
-			console.log(error);
-		});
-
+				setComments(tempComments);
+			} catch (error) {
+				console.log(error);
+			}
+		};
+		fetchData();
 	}, [search, refresh]);
 
 	return (

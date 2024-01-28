@@ -1,26 +1,15 @@
 import api from "../utils/api";
 import React, {useEffect, useRef, useState} from "react";
-import {useDispatch, useSelector} from "react-redux";
-import {useNavigate} from "react-router-dom";
 import AdminRowList from "../components/AdminRowList";
 import Cookies from "js-cookie";
 
 const AdminSearchList = () => {
-
-	const navigate = useNavigate();
-	const authState = useSelector((state) => state.auth);
 	const [lists, setLists] = useState([]);
-	const dispatch = useDispatch();
 
 	const [search, setSearch] = useState('');
 	const refSearch = useRef();
 	const onchangeSearch = () => {
 		setSearch(refSearch.current.value);
-	};
-
-	const [refresh, setRefresh] = useState(true)
-	const handleCommentDelete = () => {
-		setRefresh(!refresh);
 	};
 
 	const token = Cookies.get("access-token");
@@ -31,31 +20,26 @@ const AdminSearchList = () => {
 	};
 
 	useEffect(() => {
-		api.get('/all_lists', config).then((response) => {
+		const fetchData = async () => {
+			try {
+				const response = await api.get('/all_lists', config);
 
-			dispatch({
-				type: "hiddenState/clear",
-				payload:
-					{
-						table: "list",
-					}
-			});
+				const sl = search.toLowerCase();
+				const tempLists = response.data
+					.filter((list) => {
+						return !list.private && list.name.toLowerCase().includes(sl);
+					})
+					.map((list) => {
+						return <AdminRowList list={list} key={list.id}/>
+					});
 
-
-			const tempLists = response.data.map((list) => {
-				if (!list.private && list.name.toLowerCase().includes(search.toLowerCase())) {
-					return <AdminRowList list={list} key={list.id}/>
-				} else {
-					return <div key={list.id}></div>;
-				}
-			});
-			setLists(tempLists);
-
-		}).catch((error) => {
-			console.log(error);
-		});
-
-	}, [search, refresh]);
+				setLists(tempLists);
+			} catch (error) {
+				console.log(error);
+			}
+		};
+		fetchData();
+	}, [search]);
 
 	return (
 		<div className="container mx-auto items-center justify-center">

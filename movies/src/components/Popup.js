@@ -23,23 +23,11 @@ const Popup = () => {
 
         const url = popupState.click_yes.url;
         const method = popupState.click_yes.method;
-        const hide_table = popupState.click_yes.hide_table;
-        const hide_id = popupState.click_yes.hide_id;
         const function_success = popupState.click_yes.function_success;
 
         if (url != null) {
             api[method](url, config)
                 .then(response => {
-                    //Questa parte serve per lo più nella parte admin
-                    dispatch({
-                        type: "hiddenState/add",
-                        payload:
-                            {
-                                table: hide_table,
-                                key: hide_id,
-                                value: hide_id,
-                            }
-                    });
 
                     //Questa parte per lo più nella parte user
                     if (function_success != null) {
