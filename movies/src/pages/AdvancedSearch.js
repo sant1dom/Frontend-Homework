@@ -256,7 +256,7 @@ const AdvancedSearch = () => {
                                               <h2 className="px-4 py-2 text-xl mb-2 overflow-hidden whitespace-nowrap overflow-ellipsis">{movie.title}</h2>
                                           </Link>
                                           <p className="text-base">{movie.release_year}</p></div>}
-                                      element={`${movie}`}/>
+                                      element={movie}/>
                             ))
                         )
                         }
