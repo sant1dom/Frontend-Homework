@@ -92,7 +92,7 @@ const Navbar = ({title, links, links_admin, backgroundColor, loading}) => {
     )), [links]);
 
     const linkElementsAdmin = useMemo(() => links_admin.map((link) => (
-        <>
+        <div key={link.url}>
             <MenuItem
                 key={link.url}
                 to={link.url}
@@ -101,7 +101,7 @@ const Navbar = ({title, links, links_admin, backgroundColor, loading}) => {
             >
             </MenuItem>
             <br/>
-        </>
+        </div>
     )), [links_admin]);
 
     const linkElementsMobile = useMemo(() => links.concat(links_admin).map((link) => (
@@ -130,7 +130,7 @@ const Navbar = ({title, links, links_admin, backgroundColor, loading}) => {
         isHoveredAdmin &&
         <div
             className="absolute py-1 z-10 mt-1 w-40 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none group-hover:block"
-            style={{"margin-left": "45%"}}
+            style={{"marginLeft": "45%"}}
             onMouseEnter={() => setIsHoveredAdmin(true)}
             onMouseLeave={() => setIsHoveredAdmin(false)}
         >

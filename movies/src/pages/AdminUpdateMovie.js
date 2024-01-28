@@ -62,7 +62,7 @@ const AdminUpdateMovie = () => {
 
 			const fetchData = async () => {
 				try {
-					const response = await api.get('/movies', config);
+					const response = await api.get('/movies/' + movieId, config);
 
 					setInputs([
 						<Input key={"title_" + movieId} field="title" showError={clickedSave}
