@@ -74,6 +74,9 @@ const AdminSearchMovie = () => {
             {movies.length === 0 &&
                 <p className="text-3xl font-normal">
                     No movie found
+                    {search != "" &&
+						<span> for <i>"{search}"</i></span>
+					}
                 </p>
             }
             <div className="max-h-[650px] overflow-y-scroll  max-w-fit mx-auto no-scrollbar">
