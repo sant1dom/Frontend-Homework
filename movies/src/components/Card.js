@@ -1,20 +1,18 @@
 import propTypes from 'prop-types';
 import React, {useEffect, useState} from "react";
 import Button from "./Button";
-import {FaEdit, FaPlus, FaRegComment, FaTrash} from "react-icons/fa";
-import {BiLike} from "react-icons/bi";
 import Cookies from "js-cookie";
 import api from "../utils/api";
 import Modal from "./Modal";
 import {useSelector} from "react-redux";
 import axios from "axios";
-import {Link} from "react-router-dom";
 import FeedbackMessage from "./FeedbackMessage";
-import Dropdown from "./Dropdown";
 import MovieCard from "./cards/MovieCard";
 import ListCard from "./cards/ListCard";
 import BestListCard from "./cards/BestListCard";
 import MyMovieCard from "./cards/MyMovieCard";
+import {createPortal} from "react-dom";
+import classNames from "classnames";
 
 const OMDB_API_KEY = process.env.REACT_APP_OMDB_API_KEY;
 
@@ -37,16 +35,20 @@ const Card = ({type, classes, img, text, element, removeMovieFromList, removeLis
     const [errorVisibility, setErrorVisibility] = useState("hidden");
     const token = Cookies.get("access-token");
 
+    const getClasses = () => {
+        const color = type === 'movie' || type === 'my-movie' ? 'rounded-lg bg-sky-100 shadow-2xl max-w-72' : 'rounded-lg bg-amber-300 shadow-2xl max-w-72';
+        return classNames(
+            color,
+            classes
+        );
+    };
+
 
     useEffect(() => {
         if (token) {
             if (type === 'list' || type === 'best-lists') {
-                let url;
-                if (type === 'list')
-                    url = '/mylists/';
-                if (type === 'best-lists')
-                    url = '/bestlists/';
-                if (element.id) {
+                let url = type === 'list' ? '/mylists/' : '/bestlists/';
+                if (element.id !== undefined) {
                     const fetchData = async () => {
                         try {
                             const response = await api.get(`${url + element.id}`, {
@@ -67,7 +69,7 @@ const Card = ({type, classes, img, text, element, removeMovieFromList, removeLis
                             setMovies(moviesWithPosters);
                             setCollageMovies(moviesWithPosters.slice(0, 4));
                         } catch (error) {
-                            console.error("Errore durante il recupero dei dati o delle immagini:", error);
+                            console.error("Errore durante il recupero dei dati:", error);
                         }
                     }
                     fetchData();
@@ -77,8 +79,12 @@ const Card = ({type, classes, img, text, element, removeMovieFromList, removeLis
     }, []);
 
     const fetchMoviePoster = async (IMDBId) => {
-        const response = await axios.get(`https://omdbapi.com/?apikey=${OMDB_API_KEY}&i=${IMDBId}`);
-        return response.data.Poster;
+        try {
+            const response = await axios.get(`https://omdbapi.com/?apikey=${OMDB_API_KEY}&i=${IMDBId}`);
+            return response.data.Poster;
+        } catch (error) {
+            console.error("Errore durante il recupero delle immagini:", error);
+        }
     };
 
     const fetchUserLists = async (movie_id) => {
@@ -100,10 +106,13 @@ const Card = ({type, classes, img, text, element, removeMovieFromList, removeLis
     }
 
     const toggleDropdown = async (movie_id) => {
-
-        const userLists = await fetchUserLists(movie_id);
+        let userLists;
+        try {
+            userLists  = await fetchUserLists(movie_id);
+        } catch(error) {
+            console.error("Errore durante il recupero dei dati: "+error);
+        }
         setUserLists(userLists);
-
         setShowDropdown(!showDropdown);
     };
 
@@ -155,7 +164,6 @@ const Card = ({type, classes, img, text, element, removeMovieFromList, removeLis
                         }
                     });
 
-                    // Gestisci la risposta, ad esempio aggiornando lo stato o mostrando un messaggio
                     console.log('Lista creata con successo:', response.data);
 
                     closeCreateListPopup();
@@ -163,7 +171,6 @@ const Card = ({type, classes, img, text, element, removeMovieFromList, removeLis
                     showAndHideFeedbackMessage("Movie added to the new list!", 2000);
 
                 } catch (error) {
-                    // Gestisci gli errori qui
                     console.error('Errore nella creazione della lista:', error);
                 }
 
@@ -176,7 +183,6 @@ const Card = ({type, classes, img, text, element, removeMovieFromList, removeLis
                     const updateList = {
                         name: listTitle,
                         movies: movies,
-                        //movies: [movies.map(movie => movie.id)],
                     };
                     console.log("movies" + list.movies)
                     const response = await api.put(`/mylists/${list.id}`, updateList, {
@@ -185,7 +191,6 @@ const Card = ({type, classes, img, text, element, removeMovieFromList, removeLis
                         }
                     });
 
-                    // Gestisci la risposta, ad esempio aggiornando lo stato o mostrando un messaggio
                     console.log('Lista modificata con successo:', response.data);
 
                     closeCreateListPopup();
@@ -231,8 +236,6 @@ const Card = ({type, classes, img, text, element, removeMovieFromList, removeLis
             }
         }
         return [];
-
-
     };
 
     const showDeletePopup = (id) => {
@@ -254,7 +257,8 @@ const Card = ({type, classes, img, text, element, removeMovieFromList, removeLis
                                     toggleDropdown={toggleDropdown}
                                     movie={element}
                                     elements={userLists}
-                                    openCreateListPopup={openCreateListPopup}></MovieCard>
+                                    openCreateListPopup={openCreateListPopup}
+                                    showAndHideFeedbackMessage={showAndHideFeedbackMessage}></MovieCard>
             );
             case 'list': return (<ListCard list={element}
                                     collageMovies={collageMovies}
@@ -274,7 +278,6 @@ const Card = ({type, classes, img, text, element, removeMovieFromList, removeLis
                                                   showAndHideFeedbackMessage={showAndHideFeedbackMessage}></MyMovieCard>
 
             );
-
         }
     };
 
@@ -304,13 +307,10 @@ const Card = ({type, classes, img, text, element, removeMovieFromList, removeLis
                     classes={"bg-red-500 text-white rounded-full py-1 px-2 hover:bg-red-600 ml-2"} label={"Delete"}/>
         </div>;
 
-    const color = type === 'movie' || type === 'my-movie' ? 'rounded-lg bg-sky-100 shadow-2xl max-w-72' : 'rounded-lg bg-amber-300 shadow-2xl max-w-72';
-
-
     return (
         <>
             {!isDeleted && (
-                <div key={element.id} className={color + classes}>
+                <div key={element.id} className={getClasses()}>
                     {img}
                     {initialState ? <div>{text}</div> : <h2
                         className="text-xl mb-2 overflow-hidden whitespace-nowrap overflow-ellipsis">{cardTitle}</h2>
@@ -320,28 +320,31 @@ const Card = ({type, classes, img, text, element, removeMovieFromList, removeLis
                     )}
                 </div>
             )}
-            {createPopupVisible && (
+            {createPopupVisible && createPortal(
                 <Modal
                     title={popupTitle}
                     body={popupBody}
                     onClose={() => {
                         closeCreateListPopup();
                     }}
-                />
+                />,
+                document.body
             )}
-            {deletePopupVisible && (
+            {deletePopupVisible && createPortal(
                 <Modal
                     title="Are you sure you want to delete this list?"
                     body={deletePopupButtons}
                     onClose={() => {
                         closeDeletePopup();
                     }}
-                />
+                />,
+                document.body
             )}
-            {showFeedback && (
+            {showFeedback && createPortal(
                 <FeedbackMessage
                     message={feedbackMessage}
-                />
+                />,
+                document.body
             )}
         </>
     );

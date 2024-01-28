@@ -46,8 +46,13 @@ const Movie = () => {
     };
 
     const fetchIMDBData = async (IMDBId) => {
-        const response = await axios.get(`https://omdbapi.com/?apikey=${OMDB_API_KEY}&i=${IMDBId}`);
-        return response.data;
+        try {
+            const response = await axios.get(`https://omdbapi.com/?apikey=${OMDB_API_KEY}&i=${IMDBId}`);
+            return response.data;
+        } catch(error) {
+            console.error("Errore durante il recupero dei dati da IMDB: "+error)
+        }
+
     };
 
     const fetchUserLists = async () => {

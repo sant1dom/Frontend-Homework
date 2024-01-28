@@ -64,14 +64,17 @@ const Comment = ({content, onCommentDelete}) => {
     const handleEditComment = async (comment) => {
         if (token) {
             content.comment = comment;
-            await api.put('/comment/' + content.id, content,
-                {
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                    }
-                });
+            try {
+                await api.put('/comment/' + content.id, content,
+                    {
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                        }
+                    });
+            } catch(error) {
+                console.error("Errore durante la modifica del commento: "+error)
+            }
             closePopup()
-            //setRefresh(!refresh);
         }
     };
 

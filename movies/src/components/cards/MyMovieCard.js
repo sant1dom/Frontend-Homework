@@ -24,7 +24,7 @@ const MyMovieCard = ({movie, showDropdown, toggleDropdown, removeMovieFromList, 
 
 
 MyMovieCard.propTypes = {
-    movie: propTypes.array.isRequired,
+    movie: propTypes.object.isRequired,
     showDropdown: propTypes.bool.isRequired,
     toggleDropdown: propTypes.func.isRequired,
     removeMovieFromList: propTypes.func.isRequired,

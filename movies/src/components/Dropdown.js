@@ -29,7 +29,6 @@ const Dropdown = ({elements, movie, toggleDropdown, showAndHideFeedbackMessage, 
                     },
                 });
 
-                // Gestisci la risposta, ad esempio aggiornando lo stato o mostrando un messaggio
                 console.log('Film salvato nella lista con successo:', response.data);
 
                 setShowDropdown(false);
@@ -38,7 +37,6 @@ const Dropdown = ({elements, movie, toggleDropdown, showAndHideFeedbackMessage, 
                 toggleDropdown(movie_id);
 
             } catch (error) {
-                // Gestisci gli errori qui
                 console.error('Errore nel salvataggio del film nella lista:', error);
             }
         }

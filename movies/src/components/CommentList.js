@@ -8,9 +8,14 @@ const CommentList = ({id, refresh, onCommentDelete}) => {
 
     useEffect(() => {
         const fetchComments = async () => {
-            const response = await api.get('/comments/' + id);
-            const reversedComments = response.data.reverse();
-            setComments(reversedComments);
+            try {
+                const response = await api.get('/comments/' + id);
+                const reversedComments = response.data.reverse();
+                setComments(reversedComments);
+            } catch(error) {
+                console.error("Errore durante il recupero dei commenti: "+error)
+            }
+
         };
         fetchComments();
     }, [refresh]);

@@ -44,8 +44,13 @@ const SearchBar = ({placeholder = 'Search...', setShowMobileMenu}) => {
     );
 
     const fetchMovieData = async (movieId) => {
-        const response = await axios.get(`https://omdbapi.com/?apikey=${OMDB_API_KEY}&i=${movieId}`);
-        return response.data.Poster;
+        try {
+            const response = await axios.get(`https://omdbapi.com/?apikey=${OMDB_API_KEY}&i=${movieId}`);
+            return response.data.Poster;
+        } catch (error) {
+            console.error("Errore durante il recupero delle immagini: "+error)
+        }
+
     };
     const [results, setResults] = useState([]);
     const [noResults, setNoResults] = useState(false);

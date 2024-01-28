@@ -27,7 +27,6 @@ const MyLists = () => {
                     }
                 }).then((response) => {
                     setDBLists(response.data);
-                    console.log(DBLists)
                 }
             )
         }

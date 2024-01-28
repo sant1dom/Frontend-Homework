@@ -12,8 +12,13 @@ const Home = () => {
     const [loading, setLoading] = useState(true);
 
     const fetchMoviePoster = async (IMDBId) => {
-        const response = await axios.get(`https://omdbapi.com/?apikey=${OMDB_API_KEY}&i=${IMDBId}`);
-        return response.data.Poster;
+        try {
+            const response = await axios.get(`https://omdbapi.com/?apikey=${OMDB_API_KEY}&i=${IMDBId}`);
+            return response.data.Poster;
+        } catch(error) {
+            console.error("Errore durante il recupero delle immagini: "+error)
+        }
+
     };
 
     useEffect(() => {
