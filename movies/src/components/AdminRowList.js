@@ -9,7 +9,7 @@ import Modal from "./Modal";
 
 const AdminRowList = ({list}) => {
 	const [showItem, setShowItem] = useState(true);
-	const [showPopup, setShowPopup] = useState(false);
+	const [showPopupDelete, setshowPopupDelete] = useState(false);
 
 	const [author, setAuthor] = useState('');
 	const [avatar, setAvatar] = useState('');
@@ -26,9 +26,9 @@ const AdminRowList = ({list}) => {
 	const executeDelete = async (list) => {
 		if (token) {
 			try {
-				await api.delete(`/all_lists/${list.id}`, config);
+				await api.delete('/all_lists/' + list.id, config);
 				setShowItem(false);
-				setShowPopup(true);
+				setshowPopupDelete(true);
 			} catch (error) {
 				console.log(error);
 				return [];
@@ -43,7 +43,7 @@ const AdminRowList = ({list}) => {
 				Do you want to delete {title}?
 			</p>
 			<br/>
-			<Button onClick={() => setShowPopup(false)} variant={'cancel'}
+			<Button onClick={() => setshowPopupDelete(false)} variant={'cancel'}
 			        classes={"bg-gray-200 text-black rounded-full py-1 px-2 hover:bg-gray-300"} label={"Cancel"}/>
 			<Button onClick={() => executeDelete(list)}
 			        classes={"bg-red-500 text-white rounded-full py-1 px-2 hover:bg-red-600 ml-2"} label={"Delete"}/>
@@ -93,16 +93,16 @@ const AdminRowList = ({list}) => {
 
 			<div className="inline-flex">
 				<Button
-					onClick={() => setShowPopup(true)}
+					onClick={() => setshowPopupDelete(true)}
 					rounded={true}
 					label="Delete"
 					classes={"bg-red-500 hover:bg-red-600 ml-2"}
 				/>
 			</div>
-			{showPopup &&
+			{showPopupDelete &&
 				createPortal(
 					<Modal
-						onClose={() => setShowPopup(false)}
+						onClose={() => setshowPopupDelete(false)}
 						title={"Delete?"}
 						body={deletePopupButtons}/>,
 					document.body

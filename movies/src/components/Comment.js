@@ -5,19 +5,25 @@ import Cookies from 'js-cookie';
 import {useDispatch, useSelector} from "react-redux";
 import Button from './Button';
 import {FaEdit, FaTrash} from "react-icons/fa";
-import popupStateUserDeleteComment from "../store/popupStateUserDeleteComment";
-import popupStateAdminDeleteComment from "../store/popupStateAdminDeleteComment";
 import Modal from "./Modal";
 import EditorComment from "./EditorComment";
+import {createPortal} from "react-dom";
 
 const Comment = ({content, onCommentDelete}) => {
 	const [author, setAuthor] = useState('');
 	const [avatar, setAvatar] = useState('');
+	const [showItem, setShowItem] = useState(true);
+	const [showPopupDelete, setshowPopupDelete] = useState(false);
 	const [popupVisible, setPopupVisible] = useState(false);
 	const [commentText, setCommentText] = useState('');
 	const authState = useSelector((state) => state.auth);
 	const dispatch = useDispatch();
 	const token = Cookies.get("access-token");
+	const config = {
+		headers: {
+			'Authorization': `Bearer ${token}`,
+		}
+	};
 
 
 	useEffect(() => {
@@ -76,15 +82,39 @@ const Comment = ({content, onCommentDelete}) => {
 		}
 	};
 
-	const handleDeleteComment = async () => {
-		const title = content.comment.replace(new RegExp('"', 'g'), "&quot;").replace(new RegExp("'", 'g'), "’");
+	const executeDelete = async (comment) => {
+		try {
+			if (content.user_id === authState.userId) {
+				await api.delete('comment/' + comment.id, config);
+			} else if (authState.is_superuser) {
+				await api.delete('all_comments/' + comment.id, config);
+			}
+			else {
+				return;
+			}
 
-		if (content.user_id === authState.userId) {
-			dispatch(popupStateUserDeleteComment(content.id, title, onCommentDelete));
-		} else if (authState.is_superuser) {
-			dispatch(popupStateAdminDeleteComment(content.id, title));
+			setShowItem(false);
+			setshowPopupDelete(true);
+
+			onCommentDelete();
+		} catch (error) {
+			console.log(error);
+			return [];
 		}
+		return [];
 	};
+
+	const deletePopupButtons =
+		<div>
+			<p className="text-2xl">
+				Do you want to delete this comment?
+			</p>
+			<br/>
+			<Button onClick={() => setshowPopupDelete(false)} variant={'cancel'}
+			        classes={"bg-gray-200 text-black rounded-full py-1 px-2 hover:bg-gray-300"} label={"Cancel"}/>
+			<Button onClick={() => executeDelete(content)}
+			        classes={"bg-red-500 text-white rounded-full py-1 px-2 hover:bg-red-600 ml-2"} label={"Delete"}/>
+		</div>;
 
 	const popupBody = <div className="container px-0 mx-auto mb-5">
 		<EditorComment onSubmit={handleEditComment} label={"Edit Comment"} initialContent={commentText}/>
@@ -92,6 +122,7 @@ const Comment = ({content, onCommentDelete}) => {
 
 
 	return (
+		showItem &&
 		<>
 			<div className="container px-0 mx-auto sm:px-5 mb-5 w-2/3">
 				<div
@@ -107,7 +138,7 @@ const Comment = ({content, onCommentDelete}) => {
 								}
 								{((content.user_id === authState.userId) || authState.is_superuser) &&
 									<Button label={<FaTrash/>} variant="hover-nobg" size="small"
-									        onClick={handleDeleteComment}/>
+									        onClick={() => setshowPopupDelete(true)}/>
 								}
 							</div>
 						</div>
@@ -133,6 +164,15 @@ const Comment = ({content, onCommentDelete}) => {
 					}}
 				/>
 			)}
+			{showPopupDelete &&
+				createPortal(
+					<Modal
+						onClose={() => setshowPopupDelete(false)}
+						title={"Delete?"}
+						body={deletePopupButtons}/>,
+					document.body
+				)
+			}
 		</>
 	)
 }
