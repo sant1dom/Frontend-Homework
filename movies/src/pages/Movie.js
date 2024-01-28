@@ -75,7 +75,6 @@ const Movie = () => {
 
     useEffect(() => {
         fetchMovieData();
-        console.log(authState)
         const storedFavourites = JSON.parse(localStorage.getItem("favourites")) || [];
         setFavourites(storedFavourites);
         const storedWatchlist = JSON.parse(localStorage.getItem("watchlist")) || [];

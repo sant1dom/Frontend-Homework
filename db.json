@@ -335,6 +335,30 @@
       "genre": "Animazione",
       "language": "Italiano",
       "imdb_url": "https://www.imdb.com/title/tt3606752/"
+    },
+    {
+      "title": "Quei Bravi Ragazzi",
+      "release_year": 1990,
+      "movie_length": 145,
+      "genre": "Crime",
+      "language": "Italiano",
+      "imdb_url": "https://www.imdb.com/title/tt0099685/"
+    },
+    {
+      "title": "Casinò",
+      "release_year": 1995,
+      "movie_length": 178,
+      "genre": "Crime",
+      "language": "Italiano",
+      "imdb_url": "https://www.imdb.com/title/tt0112641/"
+    },
+    {
+      "title": "Scarface",
+      "release_year": 1983,
+      "movie_length": 170,
+      "genre": "Crime",
+      "language": "Italiano",
+      "imdb_url": "https://www.imdb.com/title/tt0086250/"
     }
   ],
   "users": [
@@ -411,6 +435,18 @@
     {
       "name": "Watchlist",
       "user_id": 4
+    },
+    {
+      "name": "Animation Movies",
+      "user_id": 1
+    },
+    {
+      "name": "Harry Potter Saga",
+      "user_id": 1
+    },
+    {
+      "name": "Gangster Movies",
+      "user_id": 1
     }
   ],
   "movies_movies_lists": [
@@ -445,6 +481,118 @@
     {
       "movie_id": 12,
       "movie_list_id": 3
+    },
+    {
+      "movie_id": 29,
+      "movie_list_id": 12
+    },
+    {
+      "movie_id": 30,
+      "movie_list_id": 12
+    },
+    {
+      "movie_id": 31,
+      "movie_list_id": 12
+    },
+    {
+      "movie_id": 32,
+      "movie_list_id": 12
+    },
+    {
+      "movie_id": 33,
+      "movie_list_id": 12
+    },
+    {
+      "movie_id": 34,
+      "movie_list_id": 12
+    },
+    {
+      "movie_id": 35,
+      "movie_list_id": 12
+    },
+    {
+      "movie_id": 36,
+      "movie_list_id": 12
+    },
+    {
+      "movie_id": 37,
+      "movie_list_id": 12
+    },
+    {
+      "movie_id": 38,
+      "movie_list_id": 12
+    },
+    {
+      "movie_id": 39,
+      "movie_list_id": 12
+    },
+    {
+      "movie_id": 40,
+      "movie_list_id": 12
+    },
+    {
+      "movie_id": 41,
+      "movie_list_id": 12
+    },
+    {
+      "movie_id": 42,
+      "movie_list_id": 12
+    },
+    {
+      "movie_id": 21,
+      "movie_list_id": 13
+    },
+    {
+      "movie_id": 22,
+      "movie_list_id": 13
+    },
+    {
+      "movie_id": 23,
+      "movie_list_id": 13
+    },
+    {
+      "movie_id": 24,
+      "movie_list_id": 13
+    },
+    {
+      "movie_id": 25,
+      "movie_list_id": 13
+    },
+    {
+      "movie_id": 26,
+      "movie_list_id": 13
+    },
+    {
+      "movie_id": 27,
+      "movie_list_id": 13
+    },
+    {
+      "movie_id": 28,
+      "movie_list_id": 13
+    },
+    {
+      "movie_id": 2,
+      "movie_list_id": 14
+    },
+    {
+      "movie_id": 4,
+      "movie_list_id": 14
+    },
+    {
+      "movie_id": 16,
+      "movie_list_id": 14
+    },
+    {
+      "movie_id": 43,
+      "movie_list_id": 14
+    },
+    {
+      "movie_id": 44,
+      "movie_list_id": 14
+    },
+    {
+      "movie_id": 45,
+      "movie_list_id": 14
     }
   ],
   "comments": [
@@ -506,6 +654,18 @@
     {
       "user_id": 3,
       "movie_list_id": 3
+    },
+    {
+      "user_id": 1,
+      "movie_list_id": 12
+    },
+    {
+      "user_id": 1,
+      "movie_list_id": 13
+    },
+    {
+      "user_id": 1,
+      "movie_list_id": 14
     }
   ]
 }

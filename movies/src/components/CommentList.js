@@ -22,9 +22,12 @@ const CommentList = ({id, refresh, onCommentDelete}) => {
 
     if (comments.length === 0) {
         return (
-            <div className=" rounded-lg bg-sky-100 shadow-2xl p-4 text-center mx-96 gap-8 mb-5">
-                <p>No comments for this list.</p>
+            <div className="flex items-center justify-center">
+                <div className="rounded-lg bg-sky-100 shadow-2xl p-4 text-center">
+                    <p className="text-base">No comments for this list.</p>
+                </div>
             </div>
+
         );
     }
 

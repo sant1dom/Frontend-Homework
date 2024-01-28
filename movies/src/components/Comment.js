@@ -21,7 +21,6 @@ const Comment = ({content, onCommentDelete}) => {
 
 
     useEffect(() => {
-        console.log("content" + content)
         const fetchAuthor = async () => {
             api.get('/users/' + content.user_id).then((response) => {
                 setAuthor(response.data.email);
@@ -53,7 +52,6 @@ const Comment = ({content, onCommentDelete}) => {
 
     const openPopup = () => {
         setCommentText(content.comment)
-        console.log("Commenttext" + commentText);
         setPopupVisible(true);
     };
 
