@@ -2,6 +2,7 @@ import api from "../utils/api";
 import React, {useEffect, useRef, useState} from "react";
 import Cookies from "js-cookie";
 import Comment from "../components/Comment";
+import AdminRowComment from "../components/AdminRowComment";
 
 const AdminSearchComment = () => {
 	const [comments, setComments] = useState([]);
@@ -35,7 +36,7 @@ const AdminSearchComment = () => {
 						return comment.comment.toLowerCase().includes(sl);
 					})
 					.map((comment) => {
-						return <Comment key={comment.id} content={comment} onCommentDelete={handleCommentDelete}/>
+						return <AdminRowComment key={comment.id} comment={comment} onCommentDelete={handleCommentDelete}/>
 					});
 
 				setComments(tempComments);

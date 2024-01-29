@@ -99,9 +99,9 @@ const Comment = ({content, onCommentDelete}) => {
 	const executeDelete = async (comment) => {
 		try {
 			if (content.user_id === authState.userId) {
-				await api.delete('comment/' + comment.id, config);
+				await api.delete('/comment/' + comment.id, config);
 			} else if (authState.is_superuser) {
-				await api.delete('all_comments/' + comment.id, config);
+				await api.delete('/all_comments/' + comment.id, config);
 			}
 			else {
 				return;
