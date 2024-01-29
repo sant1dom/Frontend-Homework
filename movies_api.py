@@ -11,7 +11,7 @@ from slowapi import Limiter
 from slowapi.errors import RateLimitExceeded
 from slowapi.util import get_remote_address
 from sqlalchemy import and_, func, not_
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from starlette.requests import Request
 from starlette.staticfiles import StaticFiles
 
@@ -90,7 +90,7 @@ async def logging_middleware(request: Request, call_next):
         raise e
 
 
-@app.get("/movies", response_model=list[Movie])
+@app.get("/movies", response_model=list[Movie], tags=["movies"])
 @limiter.limit("5/second")
 async def get_movies(request: Request, db: Session = Depends(get_db)) -> list[Movie]:
     movies = db.query(DBMovie).all()
@@ -98,7 +98,7 @@ async def get_movies(request: Request, db: Session = Depends(get_db)) -> list[Mo
     return movies
 
 
-@app.put("/movies/{movie_id}", response_model=Movie)
+@app.put("/movies/{movie_id}", response_model=Movie, tags=["movies"])
 async def update_movie(movie_id: int, movie: MovieUpdate, db: Session = Depends(get_db)) -> Movie:
     db_movie = db.query(DBMovie).filter(DBMovie.id == movie_id).first()
     if db_movie is None:
@@ -110,7 +110,7 @@ async def update_movie(movie_id: int, movie: MovieUpdate, db: Session = Depends(
     return Movie(**db_movie.__dict__)
 
 
-@app.post("/movies", response_model=Movie)
+@app.post("/movies", response_model=Movie, tags=["movies"])
 async def create_movie(user: user_dependency, movie: MovieCreate, db: Session = Depends(get_db)) -> Movie:
     if not user["is_superuser"]:
         raise HTTPException(status_code=403, detail="You are not allowed to view this resource")
@@ -121,7 +121,7 @@ async def create_movie(user: user_dependency, movie: MovieCreate, db: Session = 
     return Movie(**db_movie.__dict__)
 
 
-@app.delete("/movies/{movie_id}")
+@app.delete("/movies/{movie_id}", tags=["movies"])
 async def delete_movie(user: user_dependency, movie_id: int, db: Session = Depends(get_db)):
     if not user["is_superuser"]:
         raise HTTPException(status_code=403, detail="You are not allowed to view this resource")
@@ -134,7 +134,7 @@ async def delete_movie(user: user_dependency, movie_id: int, db: Session = Depen
     return {"message": "Movie deleted successfully"}
 
 
-@app.get("/movies/search", response_model=list[Movie])
+@app.get("/movies/search", response_model=list[Movie], tags=["movies"])
 async def search_movies(
         title: str | None = None,
         release_year_min: int | None = None,
@@ -170,7 +170,7 @@ async def search_movies(
     return [Movie(**movie.__dict__) for movie in movies]
 
 
-@app.get("/movies/{movie_id}", response_model=Movie)
+@app.get("/movies/{movie_id}", response_model=Movie, tags=["movies"])
 async def get_movie_by_id(movie_id: int, db: Session = Depends(get_db)) -> Movie:
     db_movie = db.query(DBMovie).filter(DBMovie.id == movie_id).first()
     if db_movie is None:
@@ -179,21 +179,21 @@ async def get_movie_by_id(movie_id: int, db: Session = Depends(get_db)) -> Movie
     return movie
 
 
-@app.get("/genres", response_model=list[str])
+@app.get("/genres", response_model=list[str], tags=["genres"])
 async def get_genres(db: Session = Depends(get_db)) -> list[str]:
     genres = db.query(DBMovie.genre).distinct().all()
     genres = [genre[0] for genre in genres]
     return genres
 
 
-@app.get("/languages", response_model=list[str])
+@app.get("/languages", response_model=list[str], tags=["languages"])
 async def get_languages(db: Session = Depends(get_db)):
     languages = db.query(DBMovie.language).distinct().all()
     languages = [language[0] for language in languages]
     return languages
 
 
-@app.get("/mylists")
+@app.get("/mylists", response_model=list[MovieList], tags=["lists"])
 async def get_my_lists(user: user_dependency, db: Session = Depends(get_db)):
     db_movie_lists = db.query(DBMovieList).filter(DBMovieList.user_id == user["id"]).all()
     movie_lists = [MovieList(**movie_list.__dict__) for movie_list in db_movie_lists]
@@ -204,7 +204,7 @@ async def get_my_lists(user: user_dependency, db: Session = Depends(get_db)):
     return movie_lists
 
 
-@app.post("/mylists")
+@app.post("/mylists", response_model=MovieList, tags=["lists"])
 async def create_list(movie_list: MovieListCreate, user: user_dependency, db: Session = Depends(get_db)):
     db_movie_list = DBMovieList()
     db_movie_list.name = movie_list.name
@@ -224,7 +224,7 @@ async def create_list(movie_list: MovieListCreate, user: user_dependency, db: Se
     return return_list
 
 
-@app.delete("/mylists/{movie_list_id}")
+@app.delete("/mylists/{movie_list_id}", tags=["lists"])
 async def delete_list(movie_list_id: int, user: user_dependency, db: Session = Depends(get_db)):
     db_movie_list = db.query(DBMovieList).filter(
         and_(DBMovieList.id == movie_list_id, DBMovieList.user_id == user["id"])).first()
@@ -237,7 +237,7 @@ async def delete_list(movie_list_id: int, user: user_dependency, db: Session = D
     return {"message": "Movie list deleted successfully"}
 
 
-@app.get("/mylists/{movie_list_id}")
+@app.get("/mylists/{movie_list_id}", response_model=MovieList, tags=["lists"])
 async def get_list_by_id(movie_list_id: int, user: user_dependency, db: Session = Depends(get_db)):
     db_movie_list = db.query(DBMovieList).filter(
         and_(DBMovieList.id == movie_list_id, DBMovieList.user_id == user["id"])).first()
@@ -251,7 +251,7 @@ async def get_list_by_id(movie_list_id: int, user: user_dependency, db: Session 
     return movie_list
 
 
-@app.put("/mylists/{movie_list_id}")
+@app.put("/mylists/{movie_list_id}", response_model=MovieList, tags=["lists"])
 async def update_list(movie_list_id: int, movie_list: MovieListCreate, user: user_dependency,
                       db: Session = Depends(get_db)):
     db_movie_list = db.query(DBMovieList).filter(
@@ -269,7 +269,7 @@ async def update_list(movie_list_id: int, movie_list: MovieListCreate, user: use
     return MovieList(**db_movie_list.__dict__)
 
 
-@app.post("/mylists/{movie_list_id}")
+@app.post("/mylists/{movie_list_id}", response_model=MovieList, tags=["lists"])
 async def add_movie_to_list(movie_list_id: int, movie_id: int, user: user_dependency, db: Session = Depends(get_db)):
     db_movie_list = db.query(DBMovieList).filter(
         and_(DBMovieList.id == movie_list_id, DBMovieList.user_id == user["id"])).first()
@@ -281,7 +281,7 @@ async def add_movie_to_list(movie_list_id: int, movie_id: int, user: user_depend
     return MovieList(**db_movie_list.__dict__)
 
 
-@app.delete("/mylists/{movie_list_id}/{movie_id}")
+@app.delete("/mylists/{movie_list_id}/{movie_id}", tags=["lists"])
 async def delete_movie_from_list(movie_list_id: int, movie_id: int, user: user_dependency,
                                  db: Session = Depends(get_db)):
     db_movie_list = db.query(DBMovieList).filter(
@@ -294,7 +294,7 @@ async def delete_movie_from_list(movie_list_id: int, movie_id: int, user: user_d
     return MovieList(**db_movie_list.__dict__)
 
 
-@app.get("/most_liked_lists")
+@app.get("/most_liked_lists", response_model=list[MovieList], tags=["lists"])
 async def get_most_liked_lists(db: Session = Depends(get_db)):
     most_liked_lists = db.query(DBLike.movie_list_id, func.count(DBLike.movie_list_id)).group_by(
         DBLike.movie_list_id).order_by(func.count(DBLike.movie_list_id).desc()).all()
@@ -309,9 +309,10 @@ async def get_most_liked_lists(db: Session = Depends(get_db)):
     return most_liked_lists
 
 
-@app.get("/bestlists/{movie_list_id}")
+@app.get("/bestlists/{movie_list_id}", response_model=MovieList, tags=["lists"])
 async def get_list_by_id(movie_list_id: int, db: Session = Depends(get_db)):
-    db_movie_list = db.query(DBMovieList).filter(DBMovieList.id == movie_list_id).filter(DBMovieList.private == False).first()
+    db_movie_list = db.query(DBMovieList).filter(DBMovieList.id == movie_list_id).filter(
+        DBMovieList.private == False).first()
     if db_movie_list is None:
         raise HTTPException(status_code=404, detail="Movie list not found")
     movie_list = MovieList(**db_movie_list.__dict__)
@@ -322,7 +323,7 @@ async def get_list_by_id(movie_list_id: int, db: Session = Depends(get_db)):
     return movie_list
 
 
-@app.post("/like/{movie_list_id}")
+@app.post("/like/{movie_list_id}", response_model=dict, tags=["likes"])
 async def like_movie_list(movie_list_id: int, user: user_dependency, db: Session = Depends(get_db)):
     # Check if the user has already liked the movie list
     db_like = db.query(DBLike).filter(and_(DBLike.movie_list_id == movie_list_id, DBLike.user_id == user["id"])).first()
@@ -335,7 +336,7 @@ async def like_movie_list(movie_list_id: int, user: user_dependency, db: Session
     raise HTTPException(status_code=400, detail="You have already liked this movie list")
 
 
-@app.delete("/like/{movie_list_id}")
+@app.delete("/like/{movie_list_id}", tags=["likes"])
 async def unlike_movie_list(movie_list_id: int, user: user_dependency, db: Session = Depends(get_db)):
     db_like = db.query(DBLike).filter(and_(DBLike.movie_list_id == movie_list_id, DBLike.user_id == user["id"])).first()
     if db_like is None:
@@ -345,7 +346,7 @@ async def unlike_movie_list(movie_list_id: int, user: user_dependency, db: Sessi
     return {"message": "Movie list unliked successfully"}
 
 
-@app.post("/comment/{movie_list_id}")
+@app.post("/comment/{movie_list_id}", response_model=dict, tags=["comments"])
 async def comment_movie_list(movie_list_id: int, comment: str, user: user_dependency, db: Session = Depends(get_db)):
     db_comment = DBComment(movie_list_id=movie_list_id,
                            user_id=user["id"],
@@ -357,7 +358,8 @@ async def comment_movie_list(movie_list_id: int, comment: str, user: user_depend
     db.refresh(db_comment)
     return {"message": "Movie list commented successfully"}
 
-@app.put("/comment/{comment_id}")
+
+@app.put("/comment/{comment_id}", response_model=dict, tags=["comments"])
 async def update_comment(comment_id: int, updated_comment: dict, user: user_dependency, db: Session = Depends(get_db)):
     # Verifica se il commento esiste nel database
     db_comment = db.query(DBComment).filter(DBComment.id == comment_id).first()
@@ -380,14 +382,13 @@ async def update_comment(comment_id: int, updated_comment: dict, user: user_depe
     return {"message": "Commento aggiornato con successo"}
 
 
-
-@app.get("/comments/{movie_list_id}")
+@app.get("/comments/{movie_list_id}", response_model=list[Comment], tags=["comments"])
 async def get_comments(movie_list_id: int, db: Session = Depends(get_db)):
     comments = db.query(DBComment).filter(DBComment.movie_list_id == movie_list_id).all()
     return comments
 
 
-@app.delete("/comment/{comment_id}")
+@app.delete("/comment/{comment_id}", tags=["comments"])
 async def delete_comment(comment_id: int, user: user_dependency, db: Session = Depends(get_db)):
     db_comment = db.query(DBComment).filter(and_(DBComment.id == comment_id, DBComment.user_id == user["id"])).first()
     if db_comment is None:
@@ -397,7 +398,7 @@ async def delete_comment(comment_id: int, user: user_dependency, db: Session = D
     return {"message": "Comment deleted successfully"}
 
 
-@app.get("/most_commented_lists")
+@app.get("/most_commented_lists", response_model=list[MovieList], tags=["lists"])
 async def get_most_commented_lists(db: Session = Depends(get_db)):
     most_commented_lists = db.query(DBComment.movie_list_id, func.count(DBComment.movie_list_id)).group_by(
         DBComment.movie_list_id).order_by(func.count(DBComment.movie_list_id).desc()).all()
@@ -407,7 +408,7 @@ async def get_most_commented_lists(db: Session = Depends(get_db)):
     return most_commented_lists
 
 
-@app.get("/users/{user_id}", response_model=dict)
+@app.get("/users/{user_id}", response_model=dict, tags=["users"])
 async def get_user_details_by_id(user_id: int, db: Session = Depends(get_db)):
     db_user = db.query(DBUser).filter(DBUser.id == user_id).first()
     if db_user is None:
@@ -419,10 +420,7 @@ async def get_user_details_by_id(user_id: int, db: Session = Depends(get_db)):
     return user_details
 
 
-from sqlalchemy.orm import joinedload
-
-
-@app.post("/get_lists_for_movie")
+@app.post("/get_lists_for_movie", response_model=list[MovieList], tags=["lists"])
 async def get_lists_for_movie(movie_id: int, user: user_dependency, db: Session = Depends(get_db)):
     user_id = user["id"]
 
@@ -449,7 +447,7 @@ async def get_lists_for_movie(movie_id: int, user: user_dependency, db: Session 
     return return_list
 
 
-@app.post("/get_not_lists_for_movie")
+@app.post("/get_not_lists_for_movie", response_model=list[MovieList], tags=["lists"])
 async def get_not_lists_for_movie(movie_id: int, user: user_dependency, db: Session = Depends(get_db)):
     user_id = user["id"]
 
@@ -474,6 +472,54 @@ async def get_not_lists_for_movie(movie_id: int, user: user_dependency, db: Sess
     ]
 
     return return_list
+
+
+@app.get("/lists/search", response_model=list[MovieList], tags=["lists"])
+async def search_lists(
+        name: str | None = None,
+        db: Session = Depends(get_db)
+) -> list[MovieList]:
+    if name is None:
+        raise HTTPException(status_code=400, detail="Name parameter is required")
+    if name is not None:
+        name = name.lower()
+    name = f"%{name}%" if name is not None else None
+
+    query_parameters = {
+        'name': DBMovieList.name.like,
+    }
+    filters = []
+    for key, value in query_parameters.items():
+        if locals()[key] is not None:
+            filters.append(value(locals()[key]))
+    print(filters)
+    print(str(db.query(DBMovieList).filter(and_(*filters)).statement))
+    movie_lists = db.query(DBMovieList)\
+                    .options(joinedload(DBMovieList.movies), joinedload(DBMovieList.comments), joinedload(DBMovieList.likes))\
+                    .filter(and_(*filters))\
+                    .all()
+
+    if not movie_lists:
+        raise HTTPException(status_code=404, detail="No movie lists found with the given criteria")
+
+    return_list = [
+        MovieList(
+            id=movie_list.id,
+            name=movie_list.name,
+            user_id=movie_list.user_id,
+            movies=[Movie(**movie.__dict__) for movie in movie_list.movies],
+            comments=[Comment(**comment.__dict__) for comment in movie_list.comments],
+            likes=[Like(**like.__dict__) for like in movie_list.likes],
+        )
+        for movie_list in movie_lists
+    ]
+
+    return return_list
+
+
+@app.get("/")
+async def root():
+    return {"message": "Hello From Movies API"}
 
 
 if __name__ == "__main__":

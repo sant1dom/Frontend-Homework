@@ -9,11 +9,18 @@ const OMDB_API_KEY = process.env.REACT_APP_OMDB_API_KEY;
 
 
 const SearchBar = ({placeholder = 'Search...', setShowMobileMenu}) => {
-    const SearchResult = ({result}) => (
+    const [results, setResults] = useState([]);
+    const [noResults, setNoResults] = useState(false);
+    const [searchTerm, setSearchTerm] = useState('');
+
+    const SearchResultMovie = ({result}) => (
         <Link to={`/movie/${result.id}`} key={result.id}>
             <div
                 className="flex items-center p-2 hover:bg-gray-200 cursor-pointer transition ease-in-out duration-150 border z-50"
-                onClick={() => {results.length = 0; setShowMobileMenu(false);}}
+                onClick={() => {
+                    results.length = 0;
+                    setShowMobileMenu(false);
+                }}
             >
                 <img
                     src={result.poster || 'https://via.placeholder.com/50'}
@@ -27,6 +34,20 @@ const SearchBar = ({placeholder = 'Search...', setShowMobileMenu}) => {
         </Link>
     );
 
+    const SearchResultList = ({result}) => (
+        <Link to={`/list/${result.id}`} key={result.id}>
+            <div
+                className="flex items-center p-2 hover:bg-gray-200 cursor-pointer transition ease-in-out duration-150 border z-50"
+                onClick={() => {
+                    results.length = 0;
+                    setShowMobileMenu(false);
+                }}
+            >
+                <span>{result.name}</span>
+            </div>
+        </Link>
+    );
+
     const NoResults = () => (
         <div className="flex items-center p-2 border">
             <span>No results</span>
@@ -34,27 +55,47 @@ const SearchBar = ({placeholder = 'Search...', setShowMobileMenu}) => {
     );
 
 
-    const SearchResults = ({results, noResults, error}) => (
-        <div className="absolute z-50 bg-white w-full mt-1">
-            {results.map((result) => (
-                <SearchResult key={result.id} result={result}/>
-            ))}
-            {noResults && <NoResults/>}
-        </div>
-    );
+    const SearchResults = ({results, noResults, error}) => {
+        const movieResults = results.filter((result) => result.poster);
+        const listResults = results.filter((result) => !result.poster);
+        return (
+            <div className="absolute z-50 bg-white w-full mt-1">
+                {movieResults.length > 0 && (
+                    <div className="flex flex-col">
+                        <div className="px-4 py-2 border-b">
+                            <span className="text-gray-800 font-bold">Movies</span>
+                        </div>
+                        {movieResults.map((result) => (
+                            <SearchResultMovie result={result} key={result.id}/>
+                        ))}
+                    </div>
+                )}
+
+                {listResults.length > 0 && (
+                    <div className="flex flex-col">
+                        <div className="px-4 py-2 border-b">
+                            <span className="text-gray-800 font-bold">Lists</span>
+                        </div>
+                        {listResults.map((result) => (
+                            <SearchResultList result={result} key={result.id}/>
+                        ))}
+                    </div>
+                )}
+
+                {noResults && <NoResults/>}
+            </div>
+        );
+    }
 
     const fetchMovieData = async (movieId) => {
         try {
             const response = await axios.get(`https://omdbapi.com/?apikey=${OMDB_API_KEY}&i=${movieId}`);
             return response.data.Poster;
         } catch (error) {
-            console.error("Errore durante il recupero delle immagini: "+error)
+            console.error("Errore durante il recupero delle immagini: " + error)
         }
 
     };
-    const [results, setResults] = useState([]);
-    const [noResults, setNoResults] = useState(false);
-    const [searchTerm, setSearchTerm] = useState('');
 
     const handleSearch = useCallback(
         debounce(async (term) => {
@@ -64,21 +105,46 @@ const SearchBar = ({placeholder = 'Search...', setShowMobileMenu}) => {
                 setNoResults(false);
                 return;
             }
+
+            let movieResults = [];
+            let listResults = [];
+
             try {
                 const response = await api.get(`/movies/search?title=${term}`);
-                await Promise.all(response.data.map(async (movie) => {
-                    movie.poster = await fetchMovieData(movie.imdb_url.split('/')[4]);
-                    return movie;
-                }));
-                setResults(response.data);
-                setNoResults(false);
-            } catch (e) {
-                console.error(e);
+                if (response.data && response.data.length !== 0) {
+                    response.data = response.data.slice(0, 3);
+                    await Promise.all(response.data.map(async (movie) => {
+                        movie.poster = await fetchMovieData(movie.imdb_url.split('/')[4]);
+                        return movie;
+                    }));
+                    movieResults = response.data;
+                }
+            } catch (error) {
+                console.error("Errore durante la ricerca dei film: " + error);
+            }
+
+            try {
+                const response2 = await api.get(`/lists/search?name=${term}`);
+
+                if (response2.data && response2.data.length !== 0) {
+                    response2.data = response2.data.slice(0, 3);
+                    listResults = response2.data;
+                }
+            } catch (error) {
+                console.error("Errore durante la ricerca delle liste: " + error);
+            }
+
+            // Check both results and update state accordingly
+            if (movieResults.length === 0 && listResults.length === 0) {
                 setNoResults(true);
+            } else {
+                setNoResults(false);
+                setResults([...movieResults, ...listResults]);
             }
         }, 500),
-        []
+        [setSearchTerm, setResults, setNoResults]
     );
+
 
     useEffect(() => {
         handleSearch(searchTerm);

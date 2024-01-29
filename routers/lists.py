@@ -4,7 +4,10 @@ from database import get_db, DBMovieList
 from models import MovieList, Movie, Like, Comment
 from routers.auth import user_dependency
 
-router = APIRouter()
+router = APIRouter(
+    tags=["lists"],
+    responses={404: {"description": "Not found"}},
+)
 
 
 @router.get("/all_lists", response_model=list[MovieList])
