@@ -216,7 +216,7 @@ const SingleList = ({url}) => {
             />
 
             <div
-                className={`${loading ? 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6' : (filteredMovies.length === 0 ? 'flex justify-center items-center' : 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6')} mx-8 gap-8 mb-5`}>
+                className={`${loading ? 'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5' : (filteredMovies.length === 0 ? 'flex justify-center items-center' : 'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5')} mx-8 gap-8 mb-5`}>
                 {loading ? (cardLoading()) : (
                     filteredMovies.length === 0 ? (
                         <div className="rounded-lg bg-sky-100 shadow-2xl p-4 text-center">
@@ -224,12 +224,12 @@ const SingleList = ({url}) => {
                         </div>
                     ) : (
                         filteredMovies.map((movie) => (
-                            <div key={Math.random()}>
+                            <div key={Math.random()} className='flex justify-center'>
                                 <Card key={movie.id}
-                                    classes={" flex flex-col justify-between hover:shadow-2xl transition duration-300 ease-in-out hover:scale-105 cursor-pointer"}
+                                    classes={"flex flex-col justify-between hover:shadow-2xl transition duration-300 ease-in-out hover:scale-105 cursor-pointer w-52"}
                                     type={cardType}
                                     img={<Link to={`/movie/${movie.id}`} className="block">
-                                        <img className="w-full h-80 object-cover rounded-t-lg -z-20" src={movie.poster}
+                                        <img className="h-80 object-cover rounded-t-lg -z-20" src={movie.poster}
                                             alt="Film"/>
                                     </Link>}
                                     text={<div>
