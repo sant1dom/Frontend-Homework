@@ -5,7 +5,6 @@ from models import Comment
 from routers.auth import user_dependency
 
 router = APIRouter(
-    prefix="/comments",
     tags=["comments"],
     responses={404: {"description": "Not found"}},
 )
