@@ -115,6 +115,7 @@ function App() {
                                 <Route path="/mylists/:id" element={<SingleList url='/mylists/'/>}/>
                                 <Route path="/bestlists" element={<BestLists/>}/>
                                 <Route path="/bestlists/:id" element={<SingleList url='/bestlists/'/>}/>
+                                <Route path="/list/:id" element={<SingleList url='/bestlists/'/>} />
                                 {authState.is_superuser &&
                                     <>
                                         <Route path="/admin/movies" element={<AdminSearchMovie/>}/>
