@@ -1,16 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { FaHeart, FaClock, FaPlus } from 'react-icons/fa';
 import api from "../utils/api";
-import Button from '../components/Button';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import {useSelector} from "react-redux";
-import {IoMdHeart, IoMdHeartEmpty} from "react-icons/io";
-import {GoClockFill} from "react-icons/go";
-import {FiClock} from "react-icons/fi";
-import FileUploader from "../components/FileUploader";
 import Cookies from "js-cookie";
-import {login} from "../store/store";
 import Card from "../components/Card";
 import Spinner from "../components/Spinner";
 
