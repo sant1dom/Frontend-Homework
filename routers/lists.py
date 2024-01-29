@@ -6,12 +6,13 @@ from routers.auth import user_dependency
 
 router = APIRouter()
 
+
 @router.get("/all_lists", response_model=list[MovieList])
 async def get_all_lists(user: user_dependency, db: Session = Depends(get_db)) -> list[MovieList]:
     if not user["is_superuser"]:
         raise HTTPException(status_code=403, detail="You are not allowed to view this resource")
 
-    db_movie_lists =  db.query(DBMovieList).all()
+    db_movie_lists = db.query(DBMovieList).all()
 
     for db_movie_list in db_movie_lists:
         movie_list = MovieList(**db_movie_list.__dict__)
@@ -20,6 +21,7 @@ async def get_all_lists(user: user_dependency, db: Session = Depends(get_db)) ->
         movie_list.likes = [Like(**like.__dict__) for like in db_movie_list.likes]
 
     return db_movie_lists
+
 
 @router.delete("/all_lists/{movie_list_id}")
 async def delete_all_lists(movie_list_id: int, user: user_dependency, db: Session = Depends(get_db)):
@@ -30,11 +32,14 @@ async def delete_all_lists(movie_list_id: int, user: user_dependency, db: Sessio
 
     if db_movie_list is None:
         raise HTTPException(status_code=404, detail="Movie list not found")
+    if db_movie_list.name == "Watchlist" or db_movie_list.name == "Favorites":
+        raise HTTPException(status_code=403, detail="You are not allowed to delete this list")
 
     db.delete(db_movie_list)
     db.commit()
 
     return {"message": "Movie list deleted successfully"}
+
 
 @router.get("/all_lists/{movie_list_id}")
 async def get_list_by_id(movie_list_id: int, user: user_dependency, db: Session = Depends(get_db)):

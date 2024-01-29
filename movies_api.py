@@ -4,6 +4,7 @@ import time
 from contextlib import asynccontextmanager
 from logging.config import dictConfig
 
+import uvicorn
 from fastapi import FastAPI, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from slowapi import Limiter
@@ -20,6 +21,8 @@ from exceptions_handlers import rate_limit_exceeded_handler
 from models import Movie, MovieUpdate, MovieCreate, MovieList, MovieListCreate, Comment, Like
 from routers import auth, lists, comments
 from routers.auth import user_dependency
+
+import argparse
 
 dictConfig(LogConfig().model_dump())
 logger = logging.getLogger(__name__)
@@ -227,6 +230,8 @@ async def delete_list(movie_list_id: int, user: user_dependency, db: Session = D
         and_(DBMovieList.id == movie_list_id, DBMovieList.user_id == user["id"])).first()
     if db_movie_list is None:
         raise HTTPException(status_code=404, detail="Movie list not found")
+    if db_movie_list.name == "Watchlist" or db_movie_list.name == "Favourites":
+        raise HTTPException(status_code=400, detail="You are not allowed to delete this list")
     db.delete(db_movie_list)
     db.commit()
     return {"message": "Movie list deleted successfully"}
@@ -469,3 +474,22 @@ async def get_not_lists_for_movie(movie_id: int, user: user_dependency, db: Sess
     ]
 
     return return_list
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--reload", action="store_true", help="Reload the server on code changes")
+    parser.add_argument("--host", type=str, default="localhost", help="Host to run the server on")
+    parser.add_argument("--port", type=int, default=8000, help="Port to run the server on")
+    parser.add_argument("--workers", type=int, default=1, help="Number of workers to run")
+    parser.add_argument("--log-level", type=str, default="info", help="Log level")
+    arguments = parser.parse_args()
+
+    uvicorn.run(
+        "movies_api:app",
+        host=arguments.host,
+        port=arguments.port,
+        reload=arguments.reload,
+        workers=arguments.workers,
+        log_level=arguments.log_level,
+    )
