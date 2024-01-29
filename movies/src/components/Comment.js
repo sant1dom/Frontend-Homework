@@ -8,6 +8,7 @@ import {FaEdit, FaTrash} from "react-icons/fa";
 import Modal from "./Modal";
 import EditorComment from "./EditorComment";
 import {createPortal} from "react-dom";
+import FeedbackMessage from './FeedbackMessage';
 
 const Comment = ({content, onCommentDelete}) => {
 	const [author, setAuthor] = useState('');
@@ -18,6 +19,8 @@ const Comment = ({content, onCommentDelete}) => {
 	const [commentText, setCommentText] = useState('');
 	const authState = useSelector((state) => state.auth);
 	const dispatch = useDispatch();
+	const [feedbackMessage, setFeedbackMessage] = useState('')
+    const [showFeedback, setShowFeedback] = useState(false)
 	const token = Cookies.get("access-token");
 	const config = {
 		headers: {
@@ -65,6 +68,16 @@ const Comment = ({content, onCommentDelete}) => {
 		setPopupVisible(false);
 	};
 
+	const showAndHideFeedbackMessage = (message, duration) => {
+        setFeedbackMessage(message);
+        setShowFeedback(true);
+
+        setTimeout(() => {
+            setShowFeedback(false);
+            setFeedbackMessage('');
+        }, duration);
+    };
+
 	const handleEditComment = async (comment) => {
 		if (token) {
 			content.comment = comment;
@@ -80,6 +93,7 @@ const Comment = ({content, onCommentDelete}) => {
 			}
 			closePopup()
 		}
+		showAndHideFeedbackMessage('Comment correctly edited!', 2000)
 	};
 
 	const executeDelete = async (comment) => {
@@ -173,6 +187,11 @@ const Comment = ({content, onCommentDelete}) => {
 					document.body
 				)
 			}
+			{showFeedback && createPortal (
+                            <FeedbackMessage
+                                message={feedbackMessage}
+                            />, document.body
+            )}
 		</>
 	)
 }
