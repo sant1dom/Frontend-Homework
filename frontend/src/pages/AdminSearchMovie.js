@@ -52,6 +52,7 @@ const AdminSearchMovie = () => {
 
 			<Link to={`/admin/movie/create`}>
 				<Button
+					onClick={() => {}}
 					rounded={true}
 					label="Add a new movie"
 				/>

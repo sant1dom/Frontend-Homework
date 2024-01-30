@@ -56,6 +56,7 @@ const AdminRowMovie = ({movie}) => {
 			<div className="inline-flex">
 				<Link to={'/admin/movie/update/' + movie.id}>
 					<Button
+						onClick={() => {}}
 						rounded={true}
 						label="Edit"
 					/>
