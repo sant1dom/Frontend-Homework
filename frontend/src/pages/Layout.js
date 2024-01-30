@@ -31,7 +31,6 @@ const Layout = ({loading}) => {
                     loading={loading}/>
             {!loading ? <Outlet/> : <div className={"flex justify-center items-center h-screen "}><Spinner/></div>}
             <div className="h-20"/>
-
         </>
     );
 }

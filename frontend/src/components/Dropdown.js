@@ -47,19 +47,19 @@ const Dropdown = ({elements, movie, toggleDropdown, showAndHideFeedbackMessage, 
     return (<>
             {showDropdown && (
                 <div
-                    className="absolute left-0 bottom-[112%] w-36 bg-white border rounded-lg shadow-lg">
+                    className="absolute left-0 bottom-[112%] w-36 bg-white bg-opacity-50 backdrop-blur-lg border rounded-lg shadow-lg">
                     <ul className="p-2">
                         {elements.map((element) => (
                             <li
                                 key={element.id}
-                                className="cursor-pointer py-1 px-2 hover:bg-gray-100"
+                                className="cursor-pointer py-1 px-2 hover:scale-105 transform transition ease-in-out duration-150"
                                 onClick={() => handleSaveToExistingList(element, movie.id)}
                             >
                                 {element.name}
                             </li>
                         ))}
                         <li
-                            className="cursor-pointer py-1 px-2 hover:bg-gray-100"
+                            className="cursor-pointer py-1 px-2 hover:scale-105 transform transition ease-in-out duration-150"
                             onClick={openCreateListPopup}
                         >
                             <FaPlus className="mr-2 inline"/>New List
