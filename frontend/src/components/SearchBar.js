@@ -120,7 +120,7 @@ const SearchBar = ({placeholder = 'Search...', setShowMobileMenu}) => {
                     movieResults = response.data;
                 }
             } catch (error) {
-                console.error("Errore durante la ricerca dei film: " + error);
+                //console.error("Errore durante la ricerca dei film: " + error);
             }
 
             try {
