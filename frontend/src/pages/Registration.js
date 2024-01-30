@@ -37,7 +37,7 @@ const Registration = () => {
             const data = response.data;
             dispatch(login({
                 token: data.access_token,
-                userId: data.userId,
+                userId: data.id,
                 email: data.email,
                 photo: data.profile_image,
                 is_superuser: data.is_superuser,

@@ -68,17 +68,17 @@ const Navbar = ({title, links, links_admin, backgroundColor, loading}) => {
     });
 
 
-    const handleButtonClick = useCallback(() => {
+    const handleButtonClick = useCallback(async () => {
         if (authState.isAuth) {
-            dispatch(logout());
-            Cookies.remove('access-token');
-            Cookies.remove('expiration');
-            navigate('/');
+            await dispatch(logout());
+            await Cookies.remove('access-token');
+            await Cookies.remove('expiration');
+            setShowMobileMenu(false);
+            navigate('/login');
         } else {
             navigate('/login');
             setShowMobileMenu(false);
         }
-        setShowMobileMenu(false);
     }, [authState.isAuth, dispatch, navigate]);
 
     const linkElements = useMemo(() => links.map((link) => (
