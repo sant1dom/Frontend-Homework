@@ -55,7 +55,7 @@ const Home = () => {
                     movies.map((movie) => (
                         <div key={movie.id} className='flex justify-center'>
                         <Card key={movie.id}
-                              classes={" flex flex-col justify-between hover:shadow-2xl transition duration-300 ease-in-out hover:scale-105 cursor-pointer w-52"}
+                              classes={" flex flex-col justify-between w-52 hover:shadow-lg hover:scale-105 transform transition ease-in-out duration-150"}
                               type={'movie'}
                               img={<Link to={`/movie/${movie.id}`} className="block">
                                   <img className="h-80 object-cover rounded-t-lg -z-20" src={movie.poster} alt="Film" />

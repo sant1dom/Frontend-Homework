@@ -92,13 +92,12 @@ const AdvancedSearchForm = ({
                 </div>
                 <div className={"flex justify-center"}>
                     <button type="submit"
-                            className="mt-4 px-4 py-2 bg-blue-500 text-white font-bold rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300 disabled:opacity-50 disabled:cursor-not-allowed"
-                            disabled={title === ''}
+                            className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300 disabled:opacity-50 disabled:cursor-not-allowed"
                     > Search
                     </button>
                     <div className="w-4"/>
                     <button type="reset"
-                            className="mt-4 px-4 py-2 bg-gray-500 text-white font-bold rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-300"
+                            className="mt-4 px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-300"
                             disabled={title === '' && release_year_min === '' && release_year_max === '' && genre === '' && language === ''}
                             onClick={(e) => {
                                 setTitle('');
@@ -130,6 +129,7 @@ const AdvancedSearch = () => {
     const [showAdvancedSearch, setShowAdvancedSearch] = useState(searchParams.get('title') == null);
     const OMDB_API_KEY = process.env.REACT_APP_OMDB_API_KEY;
     const [loading, setLoading] = useState(false);
+    const [showNoResults, setShowNoResults] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -207,9 +207,13 @@ const AdvancedSearch = () => {
             }));
             setLoading(false);
             setSearchResults(moviesWithPosters);
+            setShowAdvancedSearch(false);
+            setShowNoResults(false);
         }).catch((error) => {
             console.log(error);
             setLoading(false);
+            setSearchResults([]);
+            setShowNoResults(true);
         });
     }
 
@@ -262,6 +266,12 @@ const AdvancedSearch = () => {
                         }
                     </div>
                 </>
+            }
+            {showNoResults &&
+                <div className="flex flex-col items-center justify-center">
+                    <h2 className="text-2xl font-semibold mb-4">No results found</h2>
+
+                </div>
             }
         </>
     );
