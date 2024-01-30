@@ -28,7 +28,7 @@ const AdvancedSearchForm = ({
             <form onSubmit={handleSearch} className="w-3/4">
                 <div className="space-y-4">
                     <div className="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-4">
-                        <label className="text-gray-700 text-sm font-bold" htmlFor="title">Title:</label>
+                        <label className="text-white-900 text-md font-bold" htmlFor="title">Title:</label>
                         <input
                             className="flex-1 border rounded-md border-gray-300 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring focus:border-blue-300"
                             id="title"
@@ -40,7 +40,7 @@ const AdvancedSearchForm = ({
                         />
                     </div>
                     <div className="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-4">
-                        <label className="text-gray-700 text-sm font-bold" htmlFor="release_year_min">From
+                        <label className="text-gray-700 text-md font-bold" htmlFor="release_year_min">From
                             year:</label>
                         <input
                             className="flex-1 border rounded-md border-gray-300 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring focus:border-blue-300"
@@ -51,7 +51,7 @@ const AdvancedSearchForm = ({
                             value={release_year_min}
                             onChange={(e) => setReleaseYearMin(e.target.value)}
                         />
-                        <label className="text-gray-700 text-sm font-bold" htmlFor="release_year_max">To
+                        <label className="text-gray-700 text-md font-bold" htmlFor="release_year_max">To
                             Year:</label>
                         <input
                             className="flex-1 border rounded-md border-gray-300 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring focus:border-blue-300"
@@ -64,7 +64,7 @@ const AdvancedSearchForm = ({
                         />
                     </div>
                     <div className="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-4">
-                        <label className="text-gray-700 text-sm font-bold" htmlFor="genre">Genre:</label>
+                        <label className="text-gray-700 text-md font-bold" htmlFor="genre">Genre:</label>
                         <select name="genre" id="genre"
                                 className="flex-1 border rounded-md border-gray-300 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring focus:border-blue-300"
                                 value={genre}
@@ -77,7 +77,7 @@ const AdvancedSearchForm = ({
                         </select>
                     </div>
                     <div className="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-4">
-                        <label className="text-gray-700 text-sm font-bold" htmlFor="language">Language:</label>
+                        <label className="text-gray-700 text-md font-bold" htmlFor="language">Language:</label>
                         <select name="language" id="language"
                                 className="flex-1 border rounded-md border-gray-300 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring focus:border-blue-300"
                                 value={language}

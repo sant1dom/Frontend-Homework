@@ -36,9 +36,10 @@ const Card = ({type, classes, img, text, element, removeMovieFromList, removeLis
     const token = Cookies.get("access-token");
 
     const getClasses = () => {
-        const color = type === 'movie' || type === 'my-movie' ? 'rounded-lg bg-sky-100 shadow-2xl max-w-72' : 'rounded-lg bg-amber-300 shadow-2xl max-w-72';
+        const color = type === 'movie' || type === 'my-movie' ? 'rounded-lg shadow-2xl bg-opacity-10 max-w-72' : 'rounded-lg bg-opacity-40 bg-amber-300 shadow-2xl max-w-72';
         return classNames(
             color,
+            "backdrop-filter backdrop-blur-md rounded-lg",
             classes
         );
     };

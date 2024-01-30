@@ -59,7 +59,7 @@ const SearchBar = ({placeholder = 'Search...', setShowMobileMenu}) => {
         const movieResults = results.filter((result) => result.poster);
         const listResults = results.filter((result) => !result.poster);
         return (
-            <div className="absolute z-50 bg-white w-full mt-1">
+            <div className="absolute z-50 bg-white bg-opacity-50 backdrop-blur-lg backdrop-filter w-full mt-1">
                 {movieResults.length > 0 && (
                     <div className="flex flex-col">
                         <div className="px-4 py-2 border-b">

@@ -8,7 +8,7 @@ const MovieCard = ({showDropdown, toggleDropdown, movie, elements, openCreateLis
 
     return (<>
                 <div className="p-4">
-                    <div className="mt-2 flex flex-col items-center">
+                    <div className="mt-2 flex flex-col items-center rounded-lg">
                         <div className="group inline-block relative">
                             <Button label={<FaPlus/>} rounded={true}
                                     onClick={() => toggleDropdown(movie.id)}/>

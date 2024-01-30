@@ -31,7 +31,7 @@ const Navbar = ({title, links, links_admin, backgroundColor, loading}) => {
 
     const MobileMenu = ({backgroundColor, linkElements, authState, handleButtonClick, loading}) => (
         <div
-            className={`absolute w-full z-10 flex flex-col ${backgroundColor} p-8 justify-evenly items-center gap-2 lg:hidden`}
+            className={`absolute w-full z-10 flex flex-col bg-white bg-opacity-50 backdrop-blur-lg backdrop-filter p-8 justify-evenly items-center gap-2 lg:hidden`}
         >
             <div className="text-sm" onClick={() => setShowMobileMenu(false)}>{linkElements}</div>
             <SearchBar setShowMobileMenu={setShowMobileMenu}/>
@@ -85,7 +85,7 @@ const Navbar = ({title, links, links_admin, backgroundColor, loading}) => {
         <Link
             key={link.url}
             to={link.url}
-            className="mt-4 text-gray-200 hover:text-white mr-4 block lg:inline-block"
+            className="mt-4 text-gray-800 hover:text-blue-500 mr-4 block lg:inline-block"
         >
             {link.text}
         </Link>
@@ -96,7 +96,7 @@ const Navbar = ({title, links, links_admin, backgroundColor, loading}) => {
             <MenuItem
                 key={link.url}
                 to={link.url}
-                className="mt-4 text-gray-200 hover:text-white mr-4 block lg:inline-block text-left "
+                className="mt-4 text-gray-800 hover:text-blue-500 mr-4 block lg:inline-block text-left "
                 label={link.text}
             >
             </MenuItem>
@@ -108,7 +108,7 @@ const Navbar = ({title, links, links_admin, backgroundColor, loading}) => {
         <Link
             key={link.url}
             to={link.url}
-            className="mt-4 text-gray-200 hover:text-white mr-4 block lg:inline-block"
+            className="mt-4 text-gray-800 hover:text-blue-500 mr-4 block lg:inline-block"
         >
             {link.text}
         </Link>
@@ -139,9 +139,9 @@ const Navbar = ({title, links, links_admin, backgroundColor, loading}) => {
     );
 
     return (
-        <div className={`sticky ${backgroundColor} top-0 z-50`}>
+        <div className={`sticky top-0 z-50`}>
             <nav
-                className={`sticky flex items-center justify-between ${backgroundColor} p-2 flex-no-wrap relative top-0`}>
+                className={`sticky flex items-center bg-opacity-50 justify-between bg-white p-2 flex-no-wrap relative top-0 backdrop-blur-lg backdrop-filter`}>
                 <Link to={`/`}>
                     <div className="flex items-center flex-shrink-0 text-white mr-6">
                         <img src={process.env.PUBLIC_URL + '/Screenshot_2024-01-10_195526.png'} alt="Logo"
@@ -151,7 +151,7 @@ const Navbar = ({title, links, links_admin, backgroundColor, loading}) => {
 
                 <div className="block lg:hidden">
                     <button
-                        className="flex items-center px-3 py-2 border rounded text-gray-200 border-gray-400 hover:text-white hover:border-white"
+                        className="flex items-center px-3 py-2 border rounded text-gray-800 border-gray-400 hover:border-white"
                         onClick={() => setShowMobileMenu(!showMobileMenu)}
                     >
                         <RxHamburgerMenu size={24}/>
@@ -164,7 +164,7 @@ const Navbar = ({title, links, links_admin, backgroundColor, loading}) => {
 
                         {links_admin.length > 0 &&
                             <div
-                                className="mt-4 text-gray-200 hover:text-white mr-4 block lg:inline-block cursor-pointer"
+                                className="mt-4 text-gray-800 hover:text-blue-500 mr-4 block lg:inline-block cursor-pointer"
                                 onMouseEnter={() => setIsHoveredAdmin(true)}
                                 onMouseLeave={() => setIsHoveredAdmin(false)}>
                                 Admin
