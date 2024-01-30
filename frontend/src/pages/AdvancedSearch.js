@@ -251,6 +251,7 @@ const AdvancedSearch = () => {
                         ) : (
                             searchResults.map((movie) => (
                                 <Card type={'movie'}
+                                      key={movie.id}
                                       img={<Link to={`/movie/${movie.id}`} className="block">
                                           <img className="w-full h-80 object-cover rounded-t-lg -z-20"
                                                src={movie.poster} alt="Film"/>
