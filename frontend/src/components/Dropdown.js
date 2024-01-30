@@ -28,9 +28,7 @@ const Dropdown = ({elements, movie, toggleDropdown, showAndHideFeedbackMessage, 
                         movie_id: movie_id,
                     },
                 });
-
-                console.log('Film salvato nella lista con successo:', response.data);
-
+                
                 setShowDropdown(false);
 
                 showAndHideFeedbackMessage("Movie added to the list!", 2000);

@@ -76,14 +76,10 @@ const MyLists = () => {
                     }
                 });
 
-                // Gestisci la risposta, ad esempio aggiornando lo stato o mostrando un messaggio
-                console.log('Lista creata con successo:', response.data);
-
                 handleAddCard(response.data);
                 closeCreateListPopup();
 
             } catch (error) {
-                // Gestisci gli errori qui
                 console.error('Errore nella creazione della lista:', error);
             }
         }
