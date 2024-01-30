@@ -165,8 +165,6 @@ const Card = ({type, classes, img, text, element, removeMovieFromList, removeLis
                         }
                     });
 
-                    console.log('Lista creata con successo:', response.data);
-
                     closeCreateListPopup();
 
                     showAndHideFeedbackMessage("Movie added to the new list!", 2000);
