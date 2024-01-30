@@ -47,7 +47,7 @@ Button.propTypes = {
         PropTypes.string.isRequired,
         PropTypes.object.isRequired
       ]),
-    variant: PropTypes.oneOf(['primary', 'secondary', 'cancel', 'nobg']),
+    variant: PropTypes.oneOf(['primary', 'secondary', 'cancel', 'nobg','hover-nobg']),
     size: PropTypes.oneOf(['small', 'medium', 'large', 'max']),
     disabled: PropTypes.bool,
     rounded: PropTypes.bool,
