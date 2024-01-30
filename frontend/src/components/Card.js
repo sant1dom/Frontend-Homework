@@ -190,8 +190,6 @@ const Card = ({type, classes, img, text, element, removeMovieFromList, removeLis
                         }
                     });
 
-                    console.log('Lista modificata con successo:', response.data);
-
                     closeCreateListPopup();
                     setCardTitle(updateList.name)
                     element = response.data;
