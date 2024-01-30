@@ -54,6 +54,7 @@ function App() {
         const token = Cookies.get("access-token");
         if (token && !authState.isAuth) {
             console.log("Token found, logging in")
+            console.log(token)
             api.get("/auth/current_user",
                 {
                     headers: {

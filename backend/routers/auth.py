@@ -92,7 +92,7 @@ async def login_user(response: Response, formData: Annotated[OAuth2PasswordReque
         raise HTTPException(status_code=401, detail="Invalid credentials")
     token = create_access_token(user.id, user.email, user.is_superuser, user.profile_image,
                                 timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES))
-    response.set_cookie("access_token", f"{token}", httponly=True)
+    #response.set_cookie("access_token", f"{token}", httponly=True)
     return {"id": user.id, "email": user.email, "is_superuser": user.is_superuser, "access_token": token,
             "profile_image": user.profile_image, "expiration": ACCESS_TOKEN_EXPIRE_MINUTES}
 
@@ -133,7 +133,7 @@ async def refresh_token(user: Annotated[dict, Depends(get_current_user)], respon
     print(user)
     token = create_access_token(user.id, user.email, user.is_superuser, user.profile_image,
                                 timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES))
-    response.set_cookie(key="access_token", value=f"{token}", httponly=True)
+    #response.set_cookie(key="access_token", value=f"{token}", httponly=True)
     return {"access_token": token, "expiration": ACCESS_TOKEN_EXPIRE_MINUTES}
 
 

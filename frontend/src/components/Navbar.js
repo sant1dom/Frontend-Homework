@@ -71,10 +71,14 @@ const Navbar = ({title, links, links_admin, backgroundColor, loading}) => {
     const handleButtonClick = useCallback(async () => {
         if (authState.isAuth) {
             await dispatch(logout());
-            await Cookies.remove('access-token');
-            await Cookies.remove('expiration');
+            await new Promise(resolve => {
+                Cookies.remove('access-token');
+                Cookies.remove('expiration');
+                // Wait for the cookies to be removed
+                setTimeout(resolve, 1000);
+            });
             setShowMobileMenu(false);
-            navigate('/login');
+            navigate('/', {replace: true});
         } else {
             navigate('/login');
             setShowMobileMenu(false);
@@ -177,7 +181,9 @@ const Navbar = ({title, links, links_admin, backgroundColor, loading}) => {
                     <div className="flex justify-end items-center">
                         <SearchBar setShowMobileMenu={setShowMobileMenu}/>
 
-                        {loading ? <><div className={"w-2"}/><Spinner/></> : <>{authState.isAuth ? (
+                        {loading ? <>
+                            <div className={"w-2"}/>
+                            <Spinner/></> : <>{authState.isAuth ? (
                             <>
                                 <div className="w-2" onMouseEnter={() => setIsHoveredProfile(true)}
                                      onMouseLeave={() => setIsHoveredProfile(false)}/>
