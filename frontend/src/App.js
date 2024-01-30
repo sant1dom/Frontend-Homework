@@ -2,7 +2,7 @@ import './App.css';
 import Home from "./pages/Home";
 import Movie from "./pages/Movie";
 import Login from "./pages/Login";
-import Layout from "./pages/Layout";
+import Layout from "./components/Layout";
 import SingleList from "./pages/SingleList";
 
 import {BrowserRouter, Route, Routes,} from "react-router-dom";

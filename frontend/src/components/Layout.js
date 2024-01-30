@@ -1,7 +1,7 @@
-import Navbar from "../components/Navbar";
+import Navbar from "./Navbar";
 import {Outlet} from "react-router-dom";
 import {useSelector} from "react-redux";
-import Spinner from "../components/Spinner";
+import Spinner from "./Spinner";
 
 const Layout = ({loading}) => {
     const authState = useSelector((state) => state.auth);
