@@ -95,7 +95,7 @@ const Registration = () => {
                     />
                     {validationErrors.password &&
                         validationErrors.password.split("$").map((error) => {
-                            return <p className="text-red-500 text-xs mt-1">{error}</p>
+                            return <p key={error} className="text-red-500 text-xs mt-1">{error}</p>
                         })}
                 </div>
 
