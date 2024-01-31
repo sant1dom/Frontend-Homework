@@ -164,7 +164,6 @@ const SearchBar = ({placeholder = 'Search...', setShowMobileMenu}) => {
                 onBlur={() => {
                     setResults([]);
                     setSearchTerm('');
-                    setShowMobileMenu(false);
                 }}
             />
             <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">

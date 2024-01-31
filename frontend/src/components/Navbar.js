@@ -31,7 +31,7 @@ const Navbar = ({title, links, links_admin, backgroundColor, loading}) => {
 
     const MobileMenu = ({backgroundColor, linkElements, authState, handleButtonClick, loading}) => (
         <div
-            className={`absolute w-full z-10 flex flex-col bg-white bg-opacity-50 backdrop-blur-lg backdrop-filter p-8 justify-evenly items-center gap-2 lg:hidden`}
+            className={`absolute w-full z-10 flex flex-col bg-white bg-opacity-70 backdrop-blur-lg backdrop-filter p-8 justify-evenly items-center gap-2 lg:hidden`}
         >
             <div className="text-sm" onClick={() => setShowMobileMenu(false)}>{linkElements}</div>
             <SearchBar setShowMobileMenu={setShowMobileMenu}/>

@@ -141,7 +141,7 @@ const MyLists = () => {
                         </div>
                     ))}
                     <div className='flex justify-center'>
-                    <div className="rounded-lg bg-amber-300 shadow-2xl  max-w-72">
+                    <div className="rounded-lg bg-amber-300 shadow-2xl  max-w-72 bg-opacity-50 backdrop-blur-lg backdrop-filter">
                         <div className="flex items-center justify-center h-full w-60">
                             <Button label={<FaPlus size="6rem"/>} variant="nobg" onClick={openCreateListPopup} size={'max'}/>
                         </div>
