@@ -3,8 +3,8 @@ import MultiRangeSlider from "./MultiRangeSlider";
 const Filter = ({ genres, languages, onGenreChange, onLanguageChange, onStartYearChange, onEndYearChange }) => {
 
   return (
-    <div className="ml-8 mb-8">
-      <div className="flex space-x-4">
+    <div className="mx-8 mb-8">
+      <div className="grid grid-cols-2 sm:flex space-x-4 md:flex space-x-4 xl:flex space-x-4">
         <div>
           <label htmlFor="genre" className="block text-sm font-medium text-gray-700">
             Genre
