@@ -51,7 +51,7 @@ const EditorComment = ({ onSubmit, label, initialContent }) => {
             />
             </div>
             <br />
-            <Button onClick={handleSubmit} label={label} rounded={true} />
+            <Button onClick={handleSubmit} label={label} rounded={true} disabled={comment === ''} />
         </>
     );
 }

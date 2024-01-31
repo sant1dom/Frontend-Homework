@@ -18,7 +18,8 @@ from starlette.staticfiles import StaticFiles
 from LogConfig import LogConfig
 from database import Base, engine, fill_db, get_db, DBMovie, DBMovieList, DBLike, DBComment, DBUser
 from exceptions_handlers import rate_limit_exceeded_handler
-from models import Movie, MovieUpdate, MovieCreate, MovieList, MovieListCreate, Comment, Like, MovieListUpdate
+from models import Movie, MovieUpdate, MovieCreate, MovieList, MovieListCreate, Comment, Like, MovieListUpdate, \
+    CommentCreate
 from routers import auth, lists, comments
 from routers.auth import user_dependency
 
@@ -345,10 +346,10 @@ async def unlike_movie_list(movie_list_id: int, user: user_dependency, db: Sessi
 
 
 @app.post("/comment/{movie_list_id}", response_model=dict, tags=["comments"])
-async def comment_movie_list(movie_list_id: int, comment: str, user: user_dependency, db: Session = Depends(get_db)):
+async def comment_movie_list(movie_list_id: int, comment: CommentCreate, user: user_dependency, db: Session = Depends(get_db)):
     db_comment = DBComment(movie_list_id=movie_list_id,
                            user_id=user["id"],
-                           comment=comment,
+                           comment=comment.comment,
                            created_at=datetime.datetime.now().isoformat(),
                            updated_at=datetime.datetime.now().isoformat())
     db.add(db_comment)
