@@ -58,7 +58,6 @@ const SearchBar = ({placeholder = 'Search...', setShowMobileMenu}) => {
     const SearchResults = ({results, noResults, error}) => {
         const movieResults = results.filter((result) => result.poster);
         const listResults = results.filter((result) => !result.poster);
-        console.log(listResults);
         return (
             <div className="absolute z-50 bg-white w-full mt-1">
                 {movieResults.length > 0 && (
