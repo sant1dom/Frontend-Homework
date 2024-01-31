@@ -251,7 +251,7 @@ const SingleList = ({url}) => {
                 <CommentList id={id} refresh={refresh} onCommentDelete={handleCommentDelete}/>
 
                 <h1 className="mt-5 mb-5 text-2xl">Add a comment</h1>
-                <div className="container px-0 mx-auto mb-5 w-1/2">
+                <div className="container px-0 mx-auto mb-5 w-3/4">
                     <EditorComment onSubmit={handleCommentSubmit}/>
                 </div>
                 </>

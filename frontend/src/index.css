@@ -113,3 +113,7 @@
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
 }
+
+p{
+  word-break: break-all;
+}

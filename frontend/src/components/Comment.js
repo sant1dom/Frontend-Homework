@@ -141,7 +141,7 @@ const Comment = ({content, onCommentDelete}) => {
 	return (
 		showItem &&
 		<>
-			<div className="container px-0 mx-auto sm:px-5 mb-5 w-2/3">
+			<div className="container px-0 mx-auto sm:px-5 mb-5 w-3/4 sm:w-1/2">
 				<div
 					className="flex-col py-4 bg-white border-b-2 border-r-2 border-gray-200 sm:px-4 sm:py-4 md:px-4 sm:rounded-lg shadow-2xl">
 					<div className="flex flex-row">
@@ -165,7 +165,7 @@ const Comment = ({content, onCommentDelete}) => {
 								<span
 									className="ml-2 text-xs font-normal text-gray-500">{formatTimeAgo(content.updated_at)}</span>
 							</div>
-							<div className="flex-1 px-2 ml-2 font-medium leading-loose text-gray-600 text-left">
+							<div className="flex-1 px-2 ml-2 font-medium leading-loose text-gray-600 text-left break-words overflow-y-scroll max-h-32 no-scrollbar">
 								{parse(content.comment)}
 							</div>
 						</div>
