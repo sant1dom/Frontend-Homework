@@ -6,13 +6,13 @@ import Cookies from 'js-cookie';
 import {useSelector} from "react-redux";
 import Modal from "../components/Modal";
 import Card from "../components/Card";
+import {createPortal} from "react-dom";
 
 
 const MyLists = () => {
     const [DBLists, setDBLists] = useState([]);
     const token = Cookies.get("access-token");
     const [popupVisible, setPopupVisible] = useState(false);
-    const [showError, setShowError] = useState(false);
     const [errorVisibility, setErrorVisibility] = useState("hidden");
     const [listTitle, setListTitle] = useState('');
     const authState = useSelector((state) => state.auth);
@@ -150,14 +150,15 @@ const MyLists = () => {
 
 
 
-                    {popupVisible && (
+                    {popupVisible && createPortal(
                         <Modal
                             title="Create new list"
                             body={popupBody}
                             onClose={() => {
                                 closeCreateListPopup();
                             }}
-                        />
+                        />,
+                        document.body
                     )}
                 </div>
             </div>

@@ -18,7 +18,6 @@ const Comment = ({content, onCommentDelete}) => {
 	const [popupVisible, setPopupVisible] = useState(false);
 	const [commentText, setCommentText] = useState('');
 	const authState = useSelector((state) => state.auth);
-	const dispatch = useDispatch();
 	const [feedbackMessage, setFeedbackMessage] = useState('')
     const [showFeedback, setShowFeedback] = useState(false)
 	const token = Cookies.get("access-token");
@@ -172,14 +171,15 @@ const Comment = ({content, onCommentDelete}) => {
 					</div>
 				</div>
 			</div>
-			{popupVisible && (
+			{popupVisible && createPortal(
 				<Modal
 					title="Edit Comment"
 					body={popupBody}
 					onClose={() => {
 						closePopup();
 					}}
-				/>
+				/>,
+				document.body
 			)}
 			{showPopupDelete &&
 				createPortal(
