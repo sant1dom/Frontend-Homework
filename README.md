@@ -1,10 +1,16 @@
 # Frontend-Homework
  Homework for the Frontend Engineering Course
 
+**Enter inside the 'backend' folder:**
+```bash
+ cd backend
+```
+
 **To start the backend first create a new virtual environment:**
 ```bash
  python -m venv <env_name>
 ```
+**Activate the virtual environment**
 
 **Then install the requirements:**
 ```bash
@@ -22,6 +28,11 @@ If you want to enable the real-time updates you need to launch the server with:
 
 The server will start on localhost on port 8000.
 Go to http://localhost:8000/docs to see the documentation.
+
+**Enter inside the 'frontend' folder:**
+```bash
+ cd frontend
+```
 
 **To start the frontend first install the requirements:**
 ```bash
