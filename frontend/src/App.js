@@ -51,7 +51,6 @@ function App() {
 
     // Check if the user is already logged in
     useEffect(() => {
-        const token = Cookies.get("access-token");
         if (token && !authState.isAuth) {
             console.log("Token found, logging in")
             console.log(token)
@@ -82,7 +81,6 @@ function App() {
 
     // Refresh token every 5 minutes
     useEffect(() => {
-        const token = Cookies.get("access-token");
         if (token) {
             const expiration = new Date(Cookies.get("expiration"));
             if (expiration.getTime() - new Date().getTime() < 5 * 60 * 1000) {

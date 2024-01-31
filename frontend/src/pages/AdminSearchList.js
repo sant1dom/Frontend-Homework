@@ -52,10 +52,10 @@ const AdminSearchList = () => {
 			       className="border-2 border-gray-300 rounded-md w-64 p-2"/>
 			<div className="h-5"/>
 
-			{lists.length == 0 &&
+			{lists.length === 0 &&
 				<p className="text-3xl font-normal">
 					No list found
-					{search != "" &&
+					{search !== "" &&
 						<span> for <i>"{search}"</i></span>
 					}
 				</p>

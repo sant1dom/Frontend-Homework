@@ -21,7 +21,7 @@ const AdminUpdateMovie = () => {
 	const method = path[3];
 
 	let movieId = null;
-	if (method == "update") {
+	if (method === "update") {
 		movieId = path[4];
 	}
 
@@ -33,13 +33,13 @@ const AdminUpdateMovie = () => {
 	};
 
 	useEffect(() => {
-		if (method == "create") {
+		if (method === "create") {
 			setPageTitle("Create a new movie");
-		} else if (method == "update") {
+		} else if (method === "update") {
 			setPageTitle("Edit an existing movie");
 		}
 
-		if (method == "create") {
+		if (method === "create") {
 			setInputs([
 				<Input key="title_0" field="title" showError={clickedSave} value=""
 				       label="Title" type="text"/>,
@@ -54,7 +54,7 @@ const AdminUpdateMovie = () => {
 				<Input key="imdb_url_0" field="imdb_url" showError={clickedSave} value=""
 				       label="IMDB's URL" type="text"/>,
 			]);
-		} else if (method == "update") {
+		} else if (method === "update") {
 			if (movieId == null) {
 				navigate('/admin/movies');
 				return;
@@ -105,13 +105,13 @@ const AdminUpdateMovie = () => {
 			const field = input.props.field;
 			const value = values[field];
 
-			if (field == "movie_length" || field == "release_year") {
+			if (field === "movie_length" || field === "release_year") {
 				formData[field] = parseInt(value);
 			} else {
 				formData[field] = value;
 			}
 
-			if (value.length == 0) {
+			if (value.length === 0) {
 				count_error++;
 			}
 		}
@@ -135,7 +135,7 @@ const AdminUpdateMovie = () => {
 		};
 
 		try {
-			if (method == "update") {
+			if (method === "update") {
 				api.put('/movies/' + movieId, JSON.stringify(formData), config)
 					.then((response) => {
 
@@ -146,7 +146,7 @@ const AdminUpdateMovie = () => {
 					handleError(error);
 				});
 
-			} else if (method == "create") {
+			} else if (method === "create") {
 				api.post('/movies/', JSON.stringify(formData), config)
 					.then((response) => {
 

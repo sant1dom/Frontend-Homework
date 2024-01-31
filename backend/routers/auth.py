@@ -57,7 +57,6 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_bearer)], db_dep
         if email is None or user_id is None:
             raise HTTPException(status_code=401, detail="Invalid credentials")
         user = db_dependency.query(DBUser).filter(DBUser.id == user_id).first()
-        print(user)
         if user is None:
             raise HTTPException(status_code=401, detail="Invalid credentials")
         return {"email": user.email, "id": user.id, "is_superuser": user.is_superuser,
@@ -130,7 +129,6 @@ async def update_profile_image(user: Annotated[dict, Depends(get_current_user)],
 @router.post("/refresh_token")
 async def refresh_token(user: Annotated[dict, Depends(get_current_user)], response: Response, db: db_dependency):
     user = db.query(DBUser).filter(DBUser.id == user["id"]).first()
-    print(user)
     token = create_access_token(user.id, user.email, user.is_superuser, user.profile_image,
                                 timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES))
     #response.set_cookie(key="access_token", value=f"{token}", httponly=True)

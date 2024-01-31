@@ -181,9 +181,7 @@ const Card = ({type, classes, img, text, element, removeMovieFromList, removeLis
                     }
                     const updateList = {
                         name: listTitle,
-                        movies: movies,
                     };
-                    console.log("movies" + list.movies)
                     const response = await api.put(`/mylists/${list.id}`, updateList, {
                         headers: {
                             'Authorization': `Bearer ${token}`,

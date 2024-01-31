@@ -40,7 +40,8 @@ const Navbar = ({title, links, links_admin, backgroundColor, loading}) => {
                 <>
                     <ProfileImageLink authState={authState}/>
                     <div className="h-4"/>
-                    <Button onClick={handleButtonClick} label={"Sign out"} rounded={true}/>
+                    <MenuItem to={`/profile`} label="Account settings"/>
+                    <MenuItem label="Sign out" onClick={handleButtonClick} to={'/'}/>
                 </>
             ) : (
                 <>
@@ -68,21 +69,16 @@ const Navbar = ({title, links, links_admin, backgroundColor, loading}) => {
     });
 
 
-    const handleButtonClick = useCallback(async () => {
+    const handleButtonClick = useCallback(() => {
         if (authState.isAuth) {
-            await dispatch(logout());
-            await new Promise(resolve => {
-                Cookies.remove('access-token');
-                Cookies.remove('expiration');
-                // Wait for the cookies to be removed
-                setTimeout(resolve, 1000);
-            });
-            setShowMobileMenu(false);
-            navigate('/', {replace: true});
+            dispatch(logout());
+            Cookies.remove('access-token');
+            Cookies.remove('expiration');
         } else {
             navigate('/login');
             setShowMobileMenu(false);
         }
+        setShowMobileMenu(false);
     }, [authState.isAuth, dispatch, navigate]);
 
     const linkElements = useMemo(() => links.map((link) => (
@@ -116,7 +112,7 @@ const Navbar = ({title, links, links_admin, backgroundColor, loading}) => {
         >
             {link.text}
         </Link>
-    )), [links]);
+    )), [links, links_admin]);
 
     const DropdownProfile = (
         isHoveredProfile &&
@@ -125,7 +121,7 @@ const Navbar = ({title, links, links_admin, backgroundColor, loading}) => {
         >
             <div className="py-1" role="none">
                 <MenuItem to={`/profile`} label="Account settings"/>
-                <MenuItem label="Sign out" onClick={handleButtonClick}/>
+                <MenuItem label="Sign out" onClick={handleButtonClick} to={'/'}/>
             </div>
         </div>
     );
@@ -181,9 +177,7 @@ const Navbar = ({title, links, links_admin, backgroundColor, loading}) => {
                     <div className="flex justify-end items-center">
                         <SearchBar setShowMobileMenu={setShowMobileMenu}/>
 
-                        {loading ? <>
-                            <div className={"w-2"}/>
-                            <Spinner/></> : <>{authState.isAuth ? (
+                        {loading ? <><div className={"w-2"}/><Spinner/></> : <>{authState.isAuth ? (
                             <>
                                 <div className="w-2" onMouseEnter={() => setIsHoveredProfile(true)}
                                      onMouseLeave={() => setIsHoveredProfile(false)}/>

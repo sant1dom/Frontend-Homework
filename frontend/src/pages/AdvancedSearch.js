@@ -186,8 +186,8 @@ const AdvancedSearch = () => {
         try {
             const response = await axios.get(`https://omdbapi.com/?apikey=${OMDB_API_KEY}&i=${IMDBId}`);
             return response.data.Poster;
-        } catch(error) {
-            console.error("Errore durante il recupero delle immagini: "+error)
+        } catch (error) {
+            console.error("Errore durante il recupero delle immagini: " + error)
         }
     };
 
@@ -201,12 +201,17 @@ const AdvancedSearch = () => {
         api.get('/movies/search', {
             params: data
         }).then(async (response) => {
-            const moviesWithPosters = await Promise.all(response.data.map(async (movie) => {
-                movie.poster = await fetchMoviePoster(movie.imdb_url.split('/')[4]);
-                return movie;
-            }));
+            try {
+                const moviesWithPosters = await Promise.all(response.data.map(async (movie) => {
+                    movie.poster = await fetchMoviePoster(movie.imdb_url.split('/')[4]);
+                    return movie;
+                }));
+                setSearchResults(moviesWithPosters);
+            } catch (error) {
+                console.error("Errore durante il recupero delle immagini: " + error)
+            }
+            setSearchResults(response.data);
             setLoading(false);
-            setSearchResults(moviesWithPosters);
             setShowAdvancedSearch(false);
             setShowNoResults(false);
         }).catch((error) => {

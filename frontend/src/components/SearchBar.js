@@ -16,7 +16,7 @@ const SearchBar = ({placeholder = 'Search...', setShowMobileMenu}) => {
     const SearchResultMovie = ({result}) => (
         <Link to={`/movie/${result.id}`} key={result.id}>
             <div
-                className="flex items-center p-2 hover:bg-gray-200 cursor-pointer transition ease-in-out duration-150 border z-50"
+                className="flex items-center p-2 hover:bg-gray-200 cursor-pointer transition ease-in-out duration-150 border z-50 rounded-md"
                 onClick={() => {
                     results.length = 0;
                     setShowMobileMenu(false);
@@ -58,8 +58,9 @@ const SearchBar = ({placeholder = 'Search...', setShowMobileMenu}) => {
     const SearchResults = ({results, noResults, error}) => {
         const movieResults = results.filter((result) => result.poster);
         const listResults = results.filter((result) => !result.poster);
+        console.log(listResults);
         return (
-            <div className="absolute z-50 bg-white bg-opacity-50 backdrop-blur-lg backdrop-filter w-full mt-1">
+            <div className="absolute z-50 bg-white w-full mt-1">
                 {movieResults.length > 0 && (
                     <div className="flex flex-col">
                         <div className="px-4 py-2 border-b">
@@ -88,13 +89,8 @@ const SearchBar = ({placeholder = 'Search...', setShowMobileMenu}) => {
     }
 
     const fetchMovieData = async (movieId) => {
-        try {
-            const response = await axios.get(`https://omdbapi.com/?apikey=${OMDB_API_KEY}&i=${movieId}`);
-            return response.data.Poster;
-        } catch (error) {
-            console.error("Errore durante il recupero delle immagini: " + error)
-        }
-
+        const response = await axios.get(`https://omdbapi.com/?apikey=${OMDB_API_KEY}&i=${movieId}`);
+        return response.data.Poster;
     };
 
     const handleSearch = useCallback(
@@ -113,10 +109,18 @@ const SearchBar = ({placeholder = 'Search...', setShowMobileMenu}) => {
                 const response = await api.get(`/movies/search?title=${term}`);
                 if (response.data && response.data.length !== 0) {
                     response.data = response.data.slice(0, 3);
-                    await Promise.all(response.data.map(async (movie) => {
-                        movie.poster = await fetchMovieData(movie.imdb_url.split('/')[4]);
-                        return movie;
-                    }));
+                    try {
+                        await Promise.all(response.data.map(async (movie) => {
+                            movie.poster = await fetchMovieData(movie.imdb_url.split('/')[4]);
+                            return movie;
+                        }));
+                    } catch (error) {
+                        console.error("Errore durante il recupero delle immagini: " + error);
+                        response.data.map((movie) => {
+                            movie.poster = 'https://via.placeholder.com/50';
+                        });
+                        //console.error("Errore durante il recupero delle immagini: " + error)
+                    }
                     movieResults = response.data;
                 }
             } catch (error) {

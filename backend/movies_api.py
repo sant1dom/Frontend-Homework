@@ -260,8 +260,6 @@ async def update_list(movie_list_id: int, movie_list: MovieListCreate, user: use
         raise HTTPException(status_code=404, detail="Movie list not found")
     if db_movie_list.name == "Watchlist" or db_movie_list.name == "Favourites":
         raise HTTPException(status_code=400, detail="You are not allowed to change the name of this list")
-    for key, value in movie_list.model_dump().items():
-        setattr(db_movie_list, key, value)
     db_movie_list.name = movie_list.name
 
     db.commit()
@@ -492,11 +490,10 @@ async def search_lists(
     for key, value in query_parameters.items():
         if locals()[key] is not None:
             filters.append(value(locals()[key]))
-    print(filters)
-    print(str(db.query(DBMovieList).filter(and_(*filters)).statement))
     movie_lists = db.query(DBMovieList)\
                     .options(joinedload(DBMovieList.movies), joinedload(DBMovieList.comments), joinedload(DBMovieList.likes))\
                     .filter(and_(*filters))\
+                    .filter(DBMovieList.private == False)\
                     .all()
 
     if not movie_lists:
