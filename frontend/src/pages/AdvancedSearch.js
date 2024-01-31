@@ -187,7 +187,7 @@ const AdvancedSearch = () => {
             const response = await axios.get(`https://omdbapi.com/?apikey=${OMDB_API_KEY}&i=${IMDBId}`);
             return response.data.Poster;
         } catch (error) {
-            console.error("Errore durante il recupero delle immagini: " + error)
+            console.error("Errore durante il recupero delle immagini")
         }
     };
 
@@ -208,7 +208,7 @@ const AdvancedSearch = () => {
                 }));
                 setSearchResults(moviesWithPosters);
             } catch (error) {
-                console.error("Errore durante il recupero delle immagini: " + error)
+                console.error("Errore durante il recupero delle immagini")
             }
             setSearchResults(response.data);
             setLoading(false);
