@@ -207,6 +207,7 @@ const SingleList = ({url}) => {
             ) : null }
 
             <Filter
+                key="Filter"
                 genres={genres}
                 languages={languages}
                 onGenreChange={setSelectedGenre}
