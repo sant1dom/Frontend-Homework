@@ -18,7 +18,7 @@ from starlette.staticfiles import StaticFiles
 from LogConfig import LogConfig
 from database import Base, engine, fill_db, get_db, DBMovie, DBMovieList, DBLike, DBComment, DBUser
 from exceptions_handlers import rate_limit_exceeded_handler
-from models import Movie, MovieUpdate, MovieCreate, MovieList, MovieListCreate, Comment, Like
+from models import Movie, MovieUpdate, MovieCreate, MovieList, MovieListCreate, Comment, Like, MovieListUpdate
 from routers import auth, lists, comments
 from routers.auth import user_dependency
 
@@ -252,7 +252,7 @@ async def get_list_by_id(movie_list_id: int, user: user_dependency, db: Session 
 
 
 @app.put("/mylists/{movie_list_id}", response_model=MovieList, tags=["lists"])
-async def update_list(movie_list_id: int, movie_list: MovieListCreate, user: user_dependency,
+async def update_list(movie_list_id: int, movie_list: MovieListUpdate, user: user_dependency,
                       db: Session = Depends(get_db)):
     db_movie_list = db.query(DBMovieList).filter(
         and_(DBMovieList.id == movie_list_id, DBMovieList.user_id == user["id"])).first()

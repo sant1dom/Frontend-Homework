@@ -99,3 +99,7 @@ class MovieList(BaseModel):
 
 class MovieListCreate(BaseModel):
     name: str
+    movies: Optional[List[int]] = []
+
+class MovieListUpdate(BaseModel):
+    name: str
