@@ -251,12 +251,13 @@ const AdvancedSearch = () => {
                         className="mx-8 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-8 mb-5">
                         {loading ? (
                             Array.from({length: 6}).map((_) => (
-                                <LoadingCardSkeleton/>
+                                <LoadingCardSkeleton key={Math.random()}/>
                             ))
                         ) : (
                             searchResults.map((movie) => (
                                 <Card type={'movie'}
                                       key={movie.id}
+                                      classes={" flex flex-col justify-between w-52 hover:shadow-lg hover:scale-105 transform transition ease-in-out duration-150"}
                                       img={<Link to={`/movie/${movie.id}`} className="block">
                                           <img className="w-full h-80 object-cover rounded-t-lg -z-20"
                                                src={movie.poster} alt="Film"/>

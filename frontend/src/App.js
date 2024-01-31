@@ -52,8 +52,6 @@ function App() {
     // Check if the user is already logged in
     useEffect(() => {
         if (token && !authState.isAuth) {
-            console.log("Token found, logging in")
-            console.log(token)
             api.get("/auth/current_user",
                 {
                     headers: {

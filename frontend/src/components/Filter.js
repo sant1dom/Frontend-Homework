@@ -5,7 +5,6 @@ const Filter = ({ genres, languages, onGenreChange, onLanguageChange, onStartYea
   return (
     <div className="ml-8 mb-8">
       <div className="flex space-x-4">
-
         <div>
           <label htmlFor="genre" className="block text-sm font-medium text-gray-700">
             Genre
@@ -16,7 +15,7 @@ const Filter = ({ genres, languages, onGenreChange, onLanguageChange, onStartYea
             onChange={(e) => onGenreChange(e.target.value)}
             className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:border-blue-300 sm:text-sm"
           >
-            <option value="">All Genres</option>
+            <option key="allgenres" value="">All Genres</option>
             {genres.map((genre) => (
               <option key={genre} value={genre}>
                 {genre}
@@ -35,7 +34,7 @@ const Filter = ({ genres, languages, onGenreChange, onLanguageChange, onStartYea
             onChange={(e) => onLanguageChange(e.target.value)}
             className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:border-blue-300 sm:text-sm"
           >
-            <option value="">All Languages</option>
+            <option key="alllanguages" value="">All Languages</option>
             {languages.map((language) => (
               <option key={language} value={language}>
                 {language}
