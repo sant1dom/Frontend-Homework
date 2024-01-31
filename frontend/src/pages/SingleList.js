@@ -20,8 +20,8 @@ const OMDB_API_KEY = process.env.REACT_APP_OMDB_API_KEY;
 
 const cardLoading = () => {
     return (
-        Array.from({length: 6}).map((_) => (
-            <LoadingCardSkeleton/>
+        Array.from({length: 6}).map(i => (
+            <LoadingCardSkeleton key={i}/>
         ))
     )
 }
