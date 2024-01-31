@@ -36,7 +36,7 @@ const MultiRangeSlider = ({ min, max, onMinYearChange, onMaxYearChange }) => {
   }, [maxVal, getPercent]);
 
   return (
-    <div>
+    <div className="col-span-2">
       <label htmlFor="yearRange" className="block text-sm font-medium text-gray-700 mr-8">
               Year Range
       </label>
