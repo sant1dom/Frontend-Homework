@@ -159,22 +159,7 @@ const Movie = () => {
         }
     };
 
-
-    const handleSaveToExistingList = (list) => {
-        //TODO: Implementa l'azione di salvataggio del film nella lista esistente
-        console.log(`Salva il film nella lista: ${list.name}`);
-        setSelectedList(list);
-    };
-
-    const clearSelectedList = () => {
-        setSelectedList(null);
-    };
-
-
     const img = <img className="rounded-t-lg w-70 h-90" src={imdbData.Poster} alt="Film"/>
-
-
-
 
     return (
         <div className="mx-auto">
