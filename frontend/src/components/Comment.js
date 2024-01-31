@@ -82,7 +82,10 @@ const Comment = ({content, onCommentDelete}) => {
 		if (token) {
 			content.comment = comment;
 			try {
-				await api.put('/comment/' + content.id, content,
+				await api.put('/comment/' + content.id,
+					{
+						comment: comment
+					},
 					{
 						headers: {
 							'Authorization': `Bearer ${token}`,

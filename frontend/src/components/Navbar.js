@@ -144,7 +144,7 @@ const Navbar = ({title, links, links_admin, backgroundColor, loading}) => {
                 className={`sticky flex items-center bg-opacity-50 justify-between bg-white p-2 flex-no-wrap relative top-0 backdrop-blur-lg backdrop-filter`}>
                 <Link to={`/`}>
                     <div className="flex items-center flex-shrink-0 text-white mr-6">
-                        <img src={process.env.PUBLIC_URL + '/Screenshot_2024-01-10_195526.png'} alt="Logo"
+                        <img src={process.env.PUBLIC_URL + '/logo_long.png'} alt="Logo"
                              className="h-10"/>
                     </div>
                 </Link>

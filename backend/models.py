@@ -80,6 +80,9 @@ class Comment(BaseModel):
     created_at: datetime
     updated_at: datetime
 
+class CommentCreate(BaseModel):
+    comment: str
+
 
 class Like(BaseModel):
     id: int

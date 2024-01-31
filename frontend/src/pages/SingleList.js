@@ -124,9 +124,10 @@ const SingleList = ({url}) => {
 
     const handleCommentSubmit = async (comment) => {
         if (token) {
-            await api.post('/comment/' + id, null,
+            await api.post('/comment/' + id, {
+                    comment: comment
+                },
                 {
-                    params: {comment},
                     headers: {
                         'Authorization': `Bearer ${token}`,
                     }
