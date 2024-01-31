@@ -134,7 +134,7 @@ const SearchBar = ({placeholder = 'Search...', setShowMobileMenu}) => {
                     listResults = response2.data;
                 }
             } catch (error) {
-                console.error("Errore durante la ricerca delle liste: " + error);
+                //console.error("Errore durante la ricerca delle liste: " + error);
             }
 
             // Check both results and update state accordingly
@@ -159,7 +159,13 @@ const SearchBar = ({placeholder = 'Search...', setShowMobileMenu}) => {
                 type="text"
                 placeholder={placeholder}
                 className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500"
+                tabIndex={0}
                 onChange={(e) => setSearchTerm(e.target.value)}
+                onBlur={() => {
+                    setResults([]);
+                    setSearchTerm('');
+                    setShowMobileMenu(false);
+                }}
             />
             <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
                 <GoSearch className="w-5 h-5 text-gray-400"/>
