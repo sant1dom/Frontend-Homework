@@ -134,7 +134,7 @@ const SearchBar = ({placeholder = 'Search...', setShowMobileMenu}) => {
                     listResults = response2.data;
                 }
             } catch (error) {
-                console.error("Errore durante la ricerca delle liste: " + error);
+                //console.error("Errore durante la ricerca delle liste: " + error);
             }
 
             // Check both results and update state accordingly
