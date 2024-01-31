@@ -18,13 +18,11 @@ const OMDB_API_KEY = process.env.REACT_APP_OMDB_API_KEY;
 
 const Card = ({type, classes, img, text, element, removeMovieFromList, removeList}) => {
 
-    const [movies, setMovies] = useState([]);
     const [collageMovies, setCollageMovies] = useState([]);
     const [showDropdown, setShowDropdown] = useState(false);
     const [userLists, setUserLists] = useState([]);
     const [createPopupVisible, setCreatePopupVisible] = useState(false);
     const [deletePopupVisible, setDeletePopupVisible] = useState(false);
-    const [listTitle, setListTitle] = useState('');
     const [cardTitle, setCardTitle] = useState('');
     const [initialState, setInitialState] = useState(true);
     const [popupTitle, setPopupTitle] = useState('Create new list');
@@ -57,7 +55,7 @@ const Card = ({type, classes, img, text, element, removeMovieFromList, removeLis
                                     'Authorization': `Bearer ${token}`,
                                 }
                             });
-
+                            setCardTitle(response.data.name)
                             const moviesData = response.data.movies.slice(0, 4);
 
                             const moviePosterPromises = moviesData.map(async (movie) => {
@@ -67,7 +65,6 @@ const Card = ({type, classes, img, text, element, removeMovieFromList, removeLis
 
                             const moviesWithPosters = await Promise.all(moviePosterPromises);
 
-                            setMovies(moviesWithPosters);
                             setCollageMovies(moviesWithPosters.slice(0, 4));
                         } catch (error) {
                             console.error("Errore durante il recupero dei dati:", error);
@@ -137,7 +134,7 @@ const Card = ({type, classes, img, text, element, removeMovieFromList, removeLis
 
     const closeCreateListPopup = () => {
         setCreatePopupVisible(false);
-        setListTitle('');
+        setCardTitle('');
     };
 
 
@@ -145,21 +142,21 @@ const Card = ({type, classes, img, text, element, removeMovieFromList, removeLis
         const token = Cookies.get("access-token");
         if (token) {
             if (popupTitle === "Create new list") { //Create list
-                if (listTitle.trim() === '') {
+                if (cardTitle.trim() === '') {
                     setErrorVisibility("")
                     return;
                 }
 
                 const newList = {
                     user_id: authState.userId,
-                    name: listTitle,
+                    name: cardTitle,
                     movies: [element.id],
                     comments: [],
                     likes: []
                 };
 
                 try {
-                    const response = await api.post('/mylists', newList, {
+                    await api.post('/mylists', newList, {
                         headers: {
                             'Authorization': `Bearer ${token}`,
                         }
@@ -175,12 +172,12 @@ const Card = ({type, classes, img, text, element, removeMovieFromList, removeLis
 
             } else if (popupTitle === "Edit list") { //Edit list
                 try {
-                    if (listTitle.trim() === '') {
+                    if (cardTitle.trim() === '') {
                         setErrorVisibility("")
                         return;
                     }
                     const updateList = {
-                        name: listTitle,
+                        name: cardTitle,
                     };
                     const response = await api.put(`/mylists/${list.id}`, updateList, {
                         headers: {
@@ -189,6 +186,7 @@ const Card = ({type, classes, img, text, element, removeMovieFromList, removeLis
                     });
 
                     closeCreateListPopup();
+                    setCardTitle(updateList.name)
                     setCardTitle(updateList.name)
                     element = response.data;
                     setInitialState(false)
@@ -206,7 +204,6 @@ const Card = ({type, classes, img, text, element, removeMovieFromList, removeLis
         }
         setPopupTitle("Edit list")
         setCreatePopupVisible(true);
-        setListTitle(list.name)
     };
 
     const deleteList = async (list) => {
@@ -242,7 +239,7 @@ const Card = ({type, classes, img, text, element, removeMovieFromList, removeLis
     };
 
     const handleWriting = (title) => {
-        setListTitle(title);
+        setCardTitle(title);
         setErrorVisibility("hidden")
     };
 
@@ -282,7 +279,7 @@ const Card = ({type, classes, img, text, element, removeMovieFromList, removeLis
                 <input
                     type="text"
                     placeholder="Titolo"
-                    value={listTitle}
+                    value={cardTitle}
                     onChange={(e) => handleWriting(e.target.value)}
                     className="w-full p-2 mb-2 border rounded"
                 />
