@@ -134,7 +134,6 @@ const Card = ({type, classes, img, text, element, removeMovieFromList, removeLis
 
     const closeCreateListPopup = () => {
         setCreatePopupVisible(false);
-        setCardTitle('');
     };
 
 
@@ -186,7 +185,6 @@ const Card = ({type, classes, img, text, element, removeMovieFromList, removeLis
                     });
 
                     closeCreateListPopup();
-                    setCardTitle(updateList.name)
                     setCardTitle(updateList.name)
                     element = response.data;
                     setInitialState(false)

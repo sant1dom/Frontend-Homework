@@ -20,8 +20,8 @@ const OMDB_API_KEY = process.env.REACT_APP_OMDB_API_KEY;
 
 const cardLoading = () => {
     return (
-        Array.from({length: 6}).map(i => (
-            <LoadingCardSkeleton key={i}/>
+        Array.from({length: 5}).map((_) => (
+            <LoadingCardSkeleton key={Math.random()}/>
         ))
     )
 }
@@ -208,7 +208,6 @@ const SingleList = ({url}) => {
             ) : null }
 
             <Filter
-                key="Filter"
                 genres={genres}
                 languages={languages}
                 onGenreChange={setSelectedGenre}
