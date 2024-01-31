@@ -6,7 +6,7 @@
 
 body {
     background-image: url("https://static.vecteezy.com/system/resources/previews/011/426/060/original/abstract-white-background-with-organic-shapes-abstract-design-background-with-white-color-and-pastel-color-organic-shapes-background-art-background-with-liquid-element-and-blobs-free-vector.jpg");
-    background-position: bottom;
+    background-position: fixed;
     backface-visibility: hidden;
 }
 
