@@ -2,8 +2,6 @@ import React, { useEffect, useState } from 'react';
 import api from "../utils/api";
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
-import {useSelector} from "react-redux";
-import Cookies from "js-cookie";
 import Card from "../components/Card";
 import Spinner from "../components/Spinner";
 
@@ -13,18 +11,6 @@ const Movie = () => {
     const { id } = useParams();
     const [movie, setMovie] = useState(null);
     const [imdbData, setIMDBData] = useState(null);
-    const [favourites, setFavourites] = useState([]);
-    const [isFavourite, setIsFavourite] = useState(false);
-    const [watchlist, setWatchlist] = useState([]);
-    const [isWatchlist, setIsWatchlist] = useState(false);
-    const [newListName, setNewListName] = useState('');
-    const [selectedList, setSelectedList] = useState(null);
-    const [popupVisible, setPopupVisible] = useState(false);
-    const [userLists, setUserLists] = useState([]);
-    const [listTitle, setListTitle] = useState('');
-    const [listDescription, setListDescription] = useState('');
-    //const watchlist = JSON.parse(localStorage.getItem("watchlist"));
-    const authState = useSelector((state) => state.auth);
 
     const fetchMovieData = async () => {
         try {
@@ -48,116 +34,14 @@ const Movie = () => {
 
     };
 
-    const fetchUserLists = async () => {
-        const token = Cookies.get("access-token");
-        if (token) {
-            try {
-                const response = await api.get("/mylists", {
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                    }
-                });
-                return response.data;
-            } catch (error) {
-                console.log(error);
-                return [];
-            }
-        }
-        return [];
-    }
-
     useEffect(() => {
         fetchMovieData();
-        const storedFavourites = JSON.parse(localStorage.getItem("favourites")) || [];
-        setFavourites(storedFavourites);
-        const storedWatchlist = JSON.parse(localStorage.getItem("watchlist")) || [];
-        setWatchlist(storedWatchlist);
-        if (selectedList) {
-            console.log(`Salva il film nella lista: ${selectedList.name}`);
-        }
-    }, [id], [selectedList]);
+    }, [id]);
 
     if (!movie) {
         return <div className={"flex justify-center items-center h-screen "}><Spinner/></div>;
     }
 
-    const handleFavourites = (id) => {
-
-        const index = favourites.indexOf(id);
-        if (index === -1) {
-            favourites.push(id);
-        } else {
-            favourites.splice(index, 1);
-        }
-
-        localStorage.setItem("favourites", JSON.stringify(favourites));
-
-        setIsFavourite(!isFavourite);
-    };
-    const handleWatchlist = (id) => {
-
-        const index = watchlist.indexOf(id);
-        if (index === -1) {
-            watchlist.push(id);
-        } else {
-            watchlist.splice(index, 1);
-        }
-
-        localStorage.setItem("watchlist", JSON.stringify(watchlist));
-
-        setIsWatchlist(!isWatchlist);
-    };
-
-    const showLists = (id) => {
-
-        const index = favourites.indexOf(id);
-        if (index === -1) {
-            favourites.push(id);
-        } else {
-            favourites.splice(index, 1);
-        }
-
-        localStorage.setItem("favourites", JSON.stringify(favourites));
-    };
-
-
-    const closeCreateListPopup = () => {
-        setPopupVisible(false);
-        setListTitle('');
-        setListDescription('');
-    };
-
-    const createNewList = async () => {
-        if (listTitle.trim() === '') {
-            return;
-        }
-
-        const newList = {
-            id: 1,
-            user_id: authState.userId,
-            name: listTitle,
-            movies: [],
-            comments: [],
-            likes: []
-        };
-
-        console.log(authState)
-        const token = Cookies.get("access-token");
-        if (token) {
-            try {
-                const response = await api.post('/mylists', newList, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                    }
-                });
-
-                closeCreateListPopup();
-
-            } catch (error) {
-                console.error('Errore nella creazione della lista:', error);
-            }
-        }
-    };
 
     const img = <img className="rounded-t-lg w-70 h-90" src={imdbData.Poster} alt="Film"/>
 

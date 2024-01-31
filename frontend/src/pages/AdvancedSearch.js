@@ -247,30 +247,34 @@ const AdvancedSearch = () => {
             {searchResults.length > 0 &&
                 <>
                     <h2 className="text-2xl font-semibold mb-4">Search Results</h2>
-                    <div
-                        className="mx-8 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-8 mb-5">
-                        {loading ? (
-                            Array.from({length: 6}).map((_) => (
-                                <LoadingCardSkeleton key={Math.random()}/>
-                            ))
-                        ) : (
-                            searchResults.map((movie) => (
-                                <Card type={'movie'}
-                                      key={movie.id}
-                                      classes={" flex flex-col justify-between w-52 hover:shadow-lg hover:scale-105 transform transition ease-in-out duration-150"}
-                                      img={<Link to={`/movie/${movie.id}`} className="block">
-                                          <img className="w-full h-80 object-cover rounded-t-lg -z-20"
-                                               src={movie.poster} alt="Film"/>
-                                      </Link>}
-                                      text={<div>
-                                          <Link to={`/movie/${movie.id}`} className="block">
-                                              <h2 className="px-4 py-2 text-xl mb-2 overflow-hidden whitespace-nowrap overflow-ellipsis">{movie.title}</h2>
-                                          </Link>
-                                          <p className="text-base">{movie.release_year}</p></div>}
-                                      element={movie}/>
-                            ))
-                        )
-                        }
+                    <div className="mx-auto">
+                        <div
+                            className="mx-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8 mb-5">
+                            {loading ? (
+                                Array.from({length: 6}).map((_) => (
+                                    <LoadingCardSkeleton/>
+                                ))
+                            ) : (
+                                searchResults.map((movie) => (
+                                    <div key={movie.id} className='flex justify-center'>
+                                    <Card type={'movie'}
+                                          key={movie.id}
+                                          classes={" flex flex-col justify-between w-52 hover:shadow-lg hover:scale-105 transform transition ease-in-out duration-150"}
+                                          img={<Link to={`/movie/${movie.id}`} className="block">
+                                              <img className="w-full h-80 object-cover rounded-t-lg -z-20"
+                                                   src={movie.poster} alt="Film"/>
+                                          </Link>}
+                                          text={<div>
+                                              <Link to={`/movie/${movie.id}`} className="block">
+                                                  <h2 className="px-4 py-2 text-xl mb-2 overflow-hidden whitespace-nowrap overflow-ellipsis">{movie.title}</h2>
+                                              </Link>
+                                              <p className="text-base">{movie.release_year}</p></div>}
+                                          element={movie}/>
+                                    </div>
+                                ))
+                            )
+                            }
+                        </div>
                     </div>
                 </>
             }
