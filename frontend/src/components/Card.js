@@ -265,7 +265,8 @@ const Card = ({type, classes, img, text, element, removeMovieFromList, removeLis
                                                   movie={element}
                                                   removeMovieFromList={removeMovieFromList}
                                                   userLists={userLists}
-                                                  showAndHideFeedbackMessage={showAndHideFeedbackMessage}></MyMovieCard>
+                                                  showAndHideFeedbackMessage={showAndHideFeedbackMessage}
+                                                  openCreateListPopup={openCreateListPopup}></MyMovieCard>
 
             );
         }

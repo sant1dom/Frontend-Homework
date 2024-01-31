@@ -4,7 +4,7 @@ import Button from "../Button";
 import React from "react";
 import Dropdown from "../Dropdown";
 
-const MyMovieCard = ({movie, showDropdown, toggleDropdown, removeMovieFromList, userLists, showAndHideFeedbackMessage}) => {
+const MyMovieCard = ({movie, showDropdown, toggleDropdown, removeMovieFromList, userLists, showAndHideFeedbackMessage, openCreateListPopup}) => {
 
 
     return (
@@ -13,7 +13,7 @@ const MyMovieCard = ({movie, showDropdown, toggleDropdown, removeMovieFromList, 
                 <Button label={<FaPlus/>} rounded={true}
                         onClick={() => toggleDropdown(movie.id)}/>
                 {showDropdown && (
-                    <Dropdown movie={movie} elements={userLists} toggleDropdown={toggleDropdown} showAndHideFeedbackMessage={showAndHideFeedbackMessage}/>
+                    <Dropdown movie={movie} elements={userLists} openCreateListPopup={openCreateListPopup} toggleDropdown={toggleDropdown} showAndHideFeedbackMessage={showAndHideFeedbackMessage}/>
                 )}
                 <Button label={<FaTrash/>} rounded={true} variant="cancel"
                         onClick={() => removeMovieFromList(movie.id)}/>
@@ -30,6 +30,7 @@ MyMovieCard.propTypes = {
     removeMovieFromList: propTypes.func.isRequired,
     userLists: propTypes.array.isRequired,
     showAndHideFeedbackMessage: propTypes.func.isRequired,
+    openCreateListPopup: propTypes.func.isRequired,
 };
 
 export default MyMovieCard;
