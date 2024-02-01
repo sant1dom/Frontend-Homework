@@ -20,7 +20,7 @@ const Navbar = ({title, links, links_admin, backgroundColor, loading}) => {
     const MenuItem = React.memo(({to, label, onClick}) => (
         <Link
             to={to}
-            className="text-gray-700 px-4 py-2 text-sm"
+            className="text-gray-700 px-4 py-2 text-sm hover:text-blue-500"
             role="menuitem"
             tabIndex="-1"
             onClick={onClick}

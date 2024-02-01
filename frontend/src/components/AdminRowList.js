@@ -49,19 +49,6 @@ const AdminRowList = ({list}) => {
 			        classes={"bg-red-500 text-white rounded-full py-1 px-2 hover:bg-red-600 ml-2"} label={"Delete"}/>
 		</div>;
 
-	useEffect(() => {
-		const fetchData = async () => {
-			try {
-				const response = await api.get('/users/' + list.user_id, config);
-				setAuthor(response.data.email);
-				setAvatar(process.env.REACT_APP_BASE_URL + response.data.image);
-			} catch (error) {
-				console.log(error);
-			}
-		};
-		fetchData();
-	});
-
 	return (
 		showItem &&
 		<div className="mb-3 bg-white w-screen-sm mx-auto border-1 rounded-xl p-2 max-w-fit shadow-md">
@@ -85,8 +72,8 @@ const AdminRowList = ({list}) => {
 					</div>
 					<div>
 						<img className="object-cover w-8 h-8 border-2 border-gray-300 rounded-full mr-1 float-left"
-						     src={avatar}/>
-						<span className='float-left'>{author}</span>
+						     src={list.avatar}/>
+						<span className='float-left'>{list.author}</span>
 					</div>
 				</div>
 			</div>

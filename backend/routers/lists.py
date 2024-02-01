@@ -16,14 +16,18 @@ async def get_all_lists(user: user_dependency, db: Session = Depends(get_db)) ->
         raise HTTPException(status_code=403, detail="You are not allowed to view this resource")
 
     db_movie_lists = db.query(DBMovieList).all()
-
+    movie_lists = []
     for db_movie_list in db_movie_lists:
+        if db_movie_list.name == "Watchlist" or db_movie_list.name == "Favourites":
+            continue
         movie_list = MovieList(**db_movie_list.__dict__)
         movie_list.movies = [Movie(**movie.__dict__) for movie in db_movie_list.movies]
         movie_list.comments = [Comment(**comment.__dict__) for comment in db_movie_list.comments]
         movie_list.likes = [Like(**like.__dict__) for like in db_movie_list.likes]
+        movie_lists.append(movie_list)
 
-    return db_movie_lists
+    return movie_lists
+
 
 
 @router.delete("/all_lists/{movie_list_id}")

@@ -9,10 +9,6 @@ const AdminRowComment = ({comment}) => {
 	const [showItem, setShowItem] = useState(true);
 	const [showPopupDelete, setshowPopupDelete] = useState(false);
 
-	const [author, setAuthor] = useState('');
-	const [avatar, setAvatar] = useState('');
-	const [listName, setListName] = useState('');
-
 	const title = comment.comment.replace(new RegExp('"', 'g'), "&quot;").replace(new RegExp("'", 'g'), "’");
 
 	const token = Cookies.get("access-token");
@@ -48,21 +44,6 @@ const AdminRowComment = ({comment}) => {
 			        classes={"bg-red-500 text-white rounded-full py-1 px-2 hover:bg-red-600 ml-2"} label={"Delete"}/>
 		</div>;
 
-	useEffect(() => {
-		const fetchData = async () => {
-			try {
-				const response_author = await api.get('/users/' + comment.user_id, config);
-				setAuthor(response_author.data.email);
-				setAvatar(process.env.REACT_APP_BASE_URL + response_author.data.image);
-
-				const response_list = await api.get('/all_lists/' + comment.movie_list_id, config);
-				setListName(response_list.data.name);
-			} catch (error) {
-				console.log(error);
-			}
-		};
-		fetchData();
-	});
 
 	return (
 		showItem &&
@@ -73,12 +54,12 @@ const AdminRowComment = ({comment}) => {
 				<div style={{display: "block"}}>
 					{title}
 					<div className="flex space-x-4">
-						List: {listName}
+						List: {comment.listName}
 					</div>
 					<div>
 						<img className="object-cover w-8 h-8 border-2 border-gray-300 rounded-full mr-1 float-left"
-						     src={avatar}/>
-						<span className='float-left'>{author}</span>
+						     src={comment.avatar}/>
+						<span className='float-left'>{comment.author}</span>
 					</div>
 				</div>
 			</div>

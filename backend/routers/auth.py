@@ -64,6 +64,7 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_bearer)], db_dep
     except JWTError:
         raise HTTPException(status_code=401, detail="Invalid credentials")
 
+user_dependency = Annotated[dict, Depends(get_current_user)]
 
 @router.post("/register", status_code=201)
 async def create_user(user: UserCreate, db: db_dependency):
@@ -102,7 +103,8 @@ async def get_user(user: Annotated[dict, Depends(get_current_user)]):
 
 
 @router.post("/update_profile_image")
-async def update_profile_image(user: Annotated[dict, Depends(get_current_user)], db: db_dependency,
+async def update_profile_image(user: user_dependency,
+                               db: db_dependency,
                                file: UploadFile = File(...)):
     if file.content_type not in ["image/jpeg", "image/png", "image/jpg"]:
         raise HTTPException(status_code=400, detail="File must be an image")
@@ -127,7 +129,7 @@ async def update_profile_image(user: Annotated[dict, Depends(get_current_user)],
 
 
 @router.post("/refresh_token")
-async def refresh_token(user: Annotated[dict, Depends(get_current_user)], response: Response, db: db_dependency):
+async def refresh_token(user: user_dependency, response: Response, db: db_dependency):
     user = db.query(DBUser).filter(DBUser.id == user["id"]).first()
     token = create_access_token(user.id, user.email, user.is_superuser, user.profile_image,
                                 timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES))
@@ -146,4 +148,3 @@ async def change_password(user: Annotated[dict, Depends(get_current_user)], db: 
     return {"message": "Password changed successfully"}
 
 
-user_dependency = Annotated[dict, Depends(get_current_user)]

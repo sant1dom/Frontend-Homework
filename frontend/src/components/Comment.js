@@ -142,7 +142,7 @@ const Comment = ({content, onCommentDelete}) => {
 		<>
 			<div className="container px-0 mx-auto sm:px-5 mb-5 w-3/4 sm:w-1/2">
 				<div
-					className="flex-col py-4 bg-white border-b-2 border-r-2 border-gray-200 sm:px-4 sm:py-4 md:px-4 sm:rounded-lg shadow-2xl">
+					className="flex-col py-4 bg-white border-b-2 border-r-2 border-gray-200 sm:px-4 sm:py-4 md:px-4 sm:rounded-lg shadow-lg">
 					<div className="flex flex-row">
 						<div className="text-center">
 							<img className="mx-auto object-cover w-12 h-12 border-2 border-gray-300 rounded-full mb-3"

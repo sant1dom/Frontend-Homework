@@ -11,7 +11,7 @@ const Layout = ({loading}) => {
     ];
 
     if (authState.isAuth) {
-        links.push({text: "MyLists", url: "/mylists"});
+        links.push({text: "My Lists", url: "/mylists"});
         links.push({text: "Best Lists", url: "/bestlists"});
     }
 

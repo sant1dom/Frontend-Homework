@@ -27,9 +27,9 @@ function App() {
     const dispatch = useDispatch();
     const authState = useSelector((state) => state.auth);
     const [loading, setLoading] = useState(true);
-    const token = Cookies.get("access-token");
 
-    const refresh = (token) => {
+    const refresh = () => {
+        const token = Cookies.get("access-token");
         api.post('/auth/refresh_token', {}, {
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -51,6 +51,7 @@ function App() {
 
     // Check if the user is already logged in
     useEffect(() => {
+        const token = Cookies.get("access-token");
         if (token && !authState.isAuth) {
             api.get("/auth/current_user",
                 {
@@ -79,13 +80,10 @@ function App() {
 
     // Refresh token every 5 minutes
     useEffect(() => {
+        const token = Cookies.get("access-token");
         if (token) {
-            const expiration = new Date(Cookies.get("expiration"));
-            if (expiration.getTime() - new Date().getTime() < 5 * 60 * 1000) {
-                refresh(token);
-            }
             setInterval(() => {
-                refresh(token);
+                refresh();
             }, 5 * 60 * 1000);
         }
     }, []);
@@ -93,7 +91,8 @@ function App() {
     return (
         <>
             <BrowserRouter>
-                <div className="App bg-white bg-opacity-50 backdrop-filter backdrop-blur-lg" style={{minHeight: "91vh"}}>
+                <div className="App bg-white bg-opacity-50 backdrop-filter backdrop-blur-lg"
+                     style={{minHeight: "91vh"}}>
                     <Routes>
                         <Route path="/" element={<Layout loading={loading}/>}>
                             <Route index element={<Home/>}/>
