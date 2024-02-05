@@ -161,10 +161,6 @@ const SearchBar = ({placeholder = 'Search...', setShowMobileMenu}) => {
                 className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500"
                 tabIndex={0}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                onBlur={() => {
-                    setResults([]);
-                    setSearchTerm('');
-                }}
             />
             <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
                 <GoSearch className="w-5 h-5 text-gray-400"/>
